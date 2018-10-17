@@ -3,12 +3,16 @@ package model;
 import java.text.DateFormat;
 import java.util.Date;
 
+import dao.UsuarioDAO;
+
 public class Usuario {
 	
 	private Integer idUsuario;
 	private String username;
 	private String password;
 	private Date fechaBaja;
+	
+	public Usuario(){}
 	
 	public Usuario(int idUsuario, String username, String password, String fechaBaja) {
 		DateFormat df = DateFormat.getDateInstance();
@@ -47,6 +51,10 @@ public class Usuario {
 	}
 	public void setFechaBaja(Date fechaBaja) {
 		this.fechaBaja = fechaBaja;
+	}
+		
+	public void guardar(Usuario usuario){
+		UsuarioDAO.getInstancia().grabarUsuario(usuario);		
 	}
 	
 }

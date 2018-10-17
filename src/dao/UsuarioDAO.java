@@ -6,17 +6,33 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import excepciones.AccesoException;
-import excepciones.UsuarioException;
 import excepciones.ConexionException;
 import model.Usuario;
 
 public class UsuarioDAO {
+	
+	private static UsuarioDAO instancia;
+		
+	private UsuarioDAO(){ }
+	
+	public static UsuarioDAO getInstancia(){
+		if(instancia == null){
+			instancia = new UsuarioDAO();
+		}
+		return instancia;
+	}	
+	
+	public Usuario buscarUsuarioPorUsernameYpassword(String username, String password){
+		//TODO: hacer todo aca
+		return new Usuario();		
+		
+	}
 
 	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, UsuarioException, AccesoException{  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;  
-		try {    
+		try {
 			con = ConnectionFactory.getInstancia().getConection();
 		}
 		catch (ClassNotFoundException | SQLException e) {
