@@ -1,10 +1,10 @@
 package excepciones;
 
-public class ClubException extends Exception {
+public class UsuarioException extends Exception {
 
 	private static final long serialVersionUID = -5681818342699360460L;
 	
-	public ClubException(String mensaje){
+	public UsuarioException(String mensaje){
 		super(mensaje);
 	}
 }

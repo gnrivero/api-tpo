@@ -1,5 +1,6 @@
 package model;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 public class Usuario {
@@ -9,6 +10,20 @@ public class Usuario {
 	private String password;
 	private Date fechaBaja;
 	
+	public Usuario(int idUsuario, String username, String password, String fechaBaja) {
+		DateFormat df = DateFormat.getDateInstance();
+		
+		this.setIdUsuario(idUsuario);
+		this.setUsername(username);
+		this.setPassword(password);
+		
+		try {
+			Date d = df.parse(fechaBaja);
+			this.setFechaBaja(d);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
 	public Integer getIdUsuario() {
 		return idUsuario;
 	}

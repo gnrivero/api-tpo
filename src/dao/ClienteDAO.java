@@ -8,14 +8,15 @@ import java.sql.Statement;
 import excepciones.AccesoException;
 import excepciones.ClienteException;
 import excepciones.ConexionException;
-import negocio.Cliente;
+import model.Cliente;
 
 public class ClienteDAO {
 
 	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException{  
 		Connection con = null;  
 		Statement stmt = null;  
-		ResultSet rs = null;  
+		ResultSet rs = null;
+		
 		try {    
 			con = ConnectionFactory.getInstancia().getConection();
 		}

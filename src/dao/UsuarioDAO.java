@@ -8,7 +8,7 @@ import java.sql.Statement;
 import excepciones.AccesoException;
 import excepciones.UsuarioException;
 import excepciones.ConexionException;
-import negocio.Usuario;
+import model.Usuario;
 
 public class UsuarioDAO {
 
