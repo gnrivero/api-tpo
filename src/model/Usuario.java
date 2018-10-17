@@ -4,16 +4,16 @@ import java.util.Date;
 
 public class Usuario {
 	
-	private Integer idIsuario;
+	private Integer idUsuario;
 	private String username;
 	private String password;
 	private Date fechaBaja;
 	
-	public Integer getIdIsuario() {
-		return idIsuario;
+	public Integer getIdUsuario() {
+		return idUsuario;
 	}
-	public void setIdIsuario(Integer idIsuario) {
-		this.idIsuario = idIsuario;
+	public void setIdUsuario(Integer idUsuario) {
+		this.idUsuario = idUsuario;
 	}
 	public String getUsername() {
 		return username;
