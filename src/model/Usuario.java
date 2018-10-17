@@ -14,20 +14,13 @@ public class Usuario {
 	
 	public Usuario(){}
 	
-	public Usuario(int idUsuario, String username, String password, String fechaBaja) {
-		DateFormat df = DateFormat.getDateInstance();
-		
+	public Usuario(Integer idUsuario, String username, String password, Date fechaBaja) {		
 		this.setIdUsuario(idUsuario);
 		this.setUsername(username);
 		this.setPassword(password);
-		
-		try {
-			Date d = df.parse(fechaBaja);
-			this.setFechaBaja(d);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		this.setFechaBaja(fechaBaja);			
 	}
+	
 	public Integer getIdUsuario() {
 		return idUsuario;
 	}
@@ -54,7 +47,8 @@ public class Usuario {
 	}
 		
 	public void guardar(Usuario usuario){
-		UsuarioDAO.getInstancia().grabarUsuario(usuario);		
+		UsuarioDAO.getInstancia().grabarUsuario(usuario);
+		
 	}
 	
 }
