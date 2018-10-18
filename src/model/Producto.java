@@ -42,6 +42,23 @@ public class Producto {
 		this.precio = precio;
 	}
 	
+	public void addProducto(Producto prod)
+	{
+		
+	}
+	
+	public void removeProducto(Producto prod)
+	{
+		
+	}
+	
+	public void editProducto(Producto prod)
+	{
+		
+	}
+	
+	
+	
 	
 	
 }
