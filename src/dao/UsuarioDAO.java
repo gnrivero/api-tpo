@@ -113,11 +113,19 @@ public class UsuarioDAO {
 			throw new AccesoException("Error de acceso");
 		}
 		
-		String sentencia = "insert into usuarios values (" + usuario.getIdUsuario() + ",'" + usuario.getUsername() + "'," + usuario.getPassword() + usuario.getFechaBaja() + ")";
+		String sql = new StringBuilder()
+		.append("INSERT INTO usuarios (username, password, fechaBaja) VALUES (")		
+		.append(usuario.getUsername())
+		.append(",")
+		.append(usuario.getPassword())
+		.append(", ")
+		.append(usuario.getFechaBaja())
+		.toString();
+		
 		try {
-			stm.execute(sentencia);
+			stm.execute(sql);
 		} catch (SQLException e) {
-			throw new AccesoException("No se pudo guardar");
+			throw new AccesoException("No se pudo guardar usuario");
 		}
 	}
 }
