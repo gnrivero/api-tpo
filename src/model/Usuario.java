@@ -1,9 +1,10 @@
 package model;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 import dao.UsuarioDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 
 public class Usuario {
 	
@@ -46,9 +47,14 @@ public class Usuario {
 		this.fechaBaja = fechaBaja;
 	}
 		
-	public void guardar(Usuario usuario){
-		UsuarioDAO.getInstancia().grabarUsuario(usuario);
+	public void guardar(Usuario usuario) {
 		
+		try {
+			UsuarioDAO.getInstancia().grabarUsuario(usuario);
+		} catch (ConexionException | AccesoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 	
 }

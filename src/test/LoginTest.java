@@ -1,10 +1,14 @@
 package test;
 
+import controller.Sistema;
+
 public class LoginTest {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		
+		
+		Sistema.getInstance().loguearUsuario("jperez", "123456");
+		
 	}
 
 }
