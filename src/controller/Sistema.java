@@ -36,6 +36,10 @@ public class Sistema {
 		this.usuariosLogueados.put(usuario.getIdUsuario(), usuario);
 	}
 	
+	private void quitarUsuarioLogueado(Usuario usuario){
+		this.usuariosLogueados.remove(usuario.getIdUsuario());
+	}
+	
 	
 	public void loguearUsuario(String username, String password){
 		
@@ -56,7 +60,7 @@ public class Sistema {
 	}
 	
 	public void desloguearUsuario(Usuario usuario){
-		this.usuariosLogueados.remove(usuario.getIdUsuario());
+		this.quitarUsuarioLogueado(usuario);
 	}
 	//Fin Login
 
