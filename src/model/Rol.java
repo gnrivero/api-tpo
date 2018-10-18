@@ -1,4 +1,5 @@
 package model;
+
 import java.util.List;
 
 public class Rol {
@@ -26,8 +27,7 @@ public class Rol {
 	}
 
 	public boolean soy(int idRol)
-	{
-					
+	{		
 			return true;
 	}
 
