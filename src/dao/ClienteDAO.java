@@ -12,7 +12,7 @@ import model.Cliente;
 
 public class ClienteDAO {
 
-	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException{  
+	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;
