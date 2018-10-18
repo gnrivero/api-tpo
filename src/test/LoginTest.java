@@ -9,6 +9,7 @@ public class LoginTest {
 		
 		Sistema.getInstance().loguearUsuario("jperez", "123456");
 		
+		Sistema.getInstance().loguearUsuario("fruta", "123456");
 	}
 
 }
