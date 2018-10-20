@@ -7,6 +7,19 @@ public class ReclamoDistribucion extends Reclamo {
 	private Producto producto;
 	private Integer cantidad;
 	
+	public Producto getProducto() {
+		return producto;
+	}
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+	public Integer getCantidad() {
+		return cantidad;
+	}
+	public void setCantidad(Integer cantidad) {
+		this.cantidad = cantidad;
+	}
+	
 	@Override
 	public void addHoja(Reclamo reclamo) {
 		// TODO Auto-generated method stub
@@ -22,5 +35,10 @@ public class ReclamoDistribucion extends Reclamo {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void cerrar() {
+		// TODO Auto-generated method stub
+		
+	}	
 
 }

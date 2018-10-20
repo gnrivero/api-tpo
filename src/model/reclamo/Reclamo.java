@@ -3,18 +3,20 @@ package model.reclamo;
 import java.util.Date;
 
 import model.Cliente;
-import model.Producto;
 
 public abstract class Reclamo {
+	
+	public enum EstadoDeReclamo {
+		INGRESADO, EN_TRATAMIENTO, CERRADO, SOLUCIONADO;
+	}
 	
 	//protected List<AuditoriaReclamo> auditoria;
 	protected Integer nroReclamo;
 	protected Date fecha;
 	protected Date fechaCierre;
 	protected Cliente cliente;
-	protected String Descripcion;
-	protected String estado;
-	protected Producto producto;
+	protected String descripcion;
+	protected EstadoDeReclamo estado;
 	protected Integer tipoDeReclamo;
 	
 	public Integer getNroReclamo() {
@@ -42,22 +44,16 @@ public abstract class Reclamo {
 		this.cliente = cliente;
 	}
 	public String getDescripcion() {
-		return Descripcion;
+		return descripcion;
 	}
 	public void setDescripcion(String descripcion) {
-		Descripcion = descripcion;
+		this.descripcion = descripcion;
 	}
-	public String getEstado() {
+	public EstadoDeReclamo getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(EstadoDeReclamo estado) {
 		this.estado = estado;
-	}
-	public Producto getProducto() {
-		return producto;
-	}
-	public void setProducto(Producto producto) {
-		this.producto = producto;
 	}
 	public Integer getTipoDeReclamo() {
 		return tipoDeReclamo;
@@ -69,6 +65,18 @@ public abstract class Reclamo {
 	//Métodos
 	public boolean soy(Integer nroReclamo){		
 		return (this.nroReclamo.equals(nroReclamo));
+	}
+	
+	public boolean estaCerrado(){
+		return EstadoDeReclamo.CERRADO.equals(this.estado);
+	}
+	
+	public void cerrar() throws Exception {
+		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
+			this.setEstado(EstadoDeReclamo.CERRADO);
+		}else{
+			throw new Exception("No se puede pasar del estado actual a Cerrado");
+		}
 	}
 	
 	//Relacionados con composite

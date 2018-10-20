@@ -30,4 +30,10 @@ public class ReclamoZona extends Reclamo {
 		
 	}
 
+	@Override
+	public void cerrar() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

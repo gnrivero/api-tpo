@@ -1,47 +1,19 @@
 package model.reclamo;
 
-import java.util.Date;
 import java.util.List;
 
-import model.Producto;
+import model.Factura;
 
 public class ReclamoFacturacion extends Reclamo {
 	
-	private Date fechaFactura;
-	private List<Integer> nroFacturas;
-	private Producto producto;
-	private Integer cantidad;
+	private List<Factura> facturas;
 
-	public Date getFechaFactura() {
-		return fechaFactura;
+	public List<Factura> getNroFacturas() {
+		return facturas;
 	}
 
-	public void setFechaFactura(Date fechaFactura) {
-		this.fechaFactura = fechaFactura;
-	}
-
-	public List<Integer> getNroFacturas() {
-		return nroFacturas;
-	}
-
-	public void setNroFacturas(List<Integer> nroFacturas) {
-		this.nroFacturas = nroFacturas;
-	}
-
-	public Producto getProducto() {
-		return producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
+	public void setNroFacturas(List<Factura> nroFacturas) {
+		this.facturas = nroFacturas;
 	}
 
 	@Override
@@ -58,6 +30,12 @@ public class ReclamoFacturacion extends Reclamo {
 
 	@Override
 	public void getReclamos(Reclamo reclamo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cerrar() {
 		// TODO Auto-generated method stub
 		
 	}
