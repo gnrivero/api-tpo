@@ -42,7 +42,7 @@ public class UsuarioDAO {
 			throw new AccesoException("Error de acceso");
 		}					
 		
-		String SQL = "SELECT * FROM usuarios where username = " +  username + " AND password = " + password;
+		String SQL = "SELECT * FROM usuarios where username = '" +  username + "' AND password = '" + password + "'";
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
