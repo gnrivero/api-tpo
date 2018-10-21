@@ -2,18 +2,25 @@ package model.reclamo;
 
 import java.util.List;
 
+import model.Cliente;
 import model.Factura;
 
 public class ReclamoFacturacion extends Reclamo {
+		
+	private List<Factura> facturasReclamadas;
 	
-	private List<Factura> facturas;
+	public ReclamoFacturacion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) {
+		super(descripcion, tipoDeReclamo, cliente);
+		
+		this.facturasReclamadas = facturas;
+	}
 
 	public List<Factura> getNroFacturas() {
-		return facturas;
+		return facturasReclamadas;
 	}
 
 	public void setNroFacturas(List<Factura> nroFacturas) {
-		this.facturas = nroFacturas;
+		this.facturasReclamadas = nroFacturas;
 	}
 
 	@Override
@@ -35,7 +42,7 @@ public class ReclamoFacturacion extends Reclamo {
 	}
 
 	@Override
-	public void cerrar() {
+	public void guardar() {
 		// TODO Auto-generated method stub
 		
 	}

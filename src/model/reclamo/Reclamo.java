@@ -1,13 +1,16 @@
 package model.reclamo;
 
 import java.util.Date;
-
 import model.Cliente;
 
 public abstract class Reclamo {
 	
 	public enum EstadoDeReclamo {
 		INGRESADO, EN_TRATAMIENTO, CERRADO, SOLUCIONADO;
+	}
+	
+	public enum TipoDeReclamo{
+		CANTIDADES, FALTANTES, PRODUCTO, ZONA, FACTURACION, COMPUESTO;
 	}
 	
 	//protected List<AuditoriaReclamo> auditoria;
@@ -17,7 +20,13 @@ public abstract class Reclamo {
 	protected Cliente cliente;
 	protected String descripcion;
 	protected EstadoDeReclamo estado;
-	protected Integer tipoDeReclamo;
+	protected TipoDeReclamo tipoDeReclamo;
+	
+	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){		
+		this.estado = EstadoDeReclamo.INGRESADO;
+		this.cliente = cliente;
+		this.tipoDeReclamo = tipoDeReclamo;		
+	}
 	
 	public Integer getNroReclamo() {
 		return nroReclamo;
@@ -55,10 +64,10 @@ public abstract class Reclamo {
 	public void setEstado(EstadoDeReclamo estado) {
 		this.estado = estado;
 	}
-	public Integer getTipoDeReclamo() {
+	public TipoDeReclamo getTipoDeReclamo() {
 		return tipoDeReclamo;
 	}
-	public void setTipoDeReclamo(Integer tipoDeReclamo) {
+	public void setTipoDeReclamo(TipoDeReclamo tipoDeReclamo) {
 		this.tipoDeReclamo = tipoDeReclamo;
 	}
 	
@@ -74,9 +83,14 @@ public abstract class Reclamo {
 	public void cerrar() throws Exception {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.CERRADO);
+			this.setFechaCierre(new Date());
 		}else{
 			throw new Exception("No se puede pasar del estado actual a Cerrado");
 		}
+	}
+	
+	public void guardar(){
+		System.out.println("Guardo reclamo " + this.tipoDeReclamo);
 	}
 	
 	//Relacionados con composite

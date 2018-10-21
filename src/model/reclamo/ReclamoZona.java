@@ -1,8 +1,15 @@
 package model.reclamo;
 
+import model.Cliente;
+
 public class ReclamoZona extends Reclamo {	
 	
 	private String zona;
+		
+	public ReclamoZona(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, String zona) {
+		super(descripcion, tipoDeReclamo, cliente);
+		this.zona = zona;
+	}
 	
 	public String getZona() {
 		return zona;
@@ -32,6 +39,12 @@ public class ReclamoZona extends Reclamo {
 
 	@Override
 	public void cerrar() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void guardar() {
 		// TODO Auto-generated method stub
 		
 	}

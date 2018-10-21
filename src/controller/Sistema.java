@@ -1,20 +1,28 @@
 package controller;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.UsuarioException;
+import model.Cliente;
+import model.Factura;
+import model.Producto;
 import model.Rol;
 import model.RolPorUsuario;
 import model.Tablero;
 import model.Usuario;
+import model.reclamo.Reclamo;
+import model.reclamo.Reclamo.TipoDeReclamo;
+import model.reclamo.ReclamoCompuesto;
+import model.reclamo.ReclamoDistribucion;
+import model.reclamo.ReclamoFacturacion;
+import model.reclamo.ReclamoZona;
 import view.ClienteView;
 import view.ProductoView;
-import view.ReclamoView;
 
 public class Sistema {
 		
@@ -118,8 +126,19 @@ public class Sistema {
 	/*PRODUCTO*/
 	
 	/*RECLAMO*/
-	public void registrarReclamo(ReclamoView reclamo) {
-		
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad){
+		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);		
+		reclamoAcrear.guardar();
+	}
+	
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente,String zona){
+		Reclamo reclamoAcrear = new ReclamoZona(descripcion, tipoDeReclamo, cliente, zona);
+		reclamoAcrear.guardar();
+	}
+	
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas){
+		Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
+		reclamoAcrear.guardar();
 	}
 	
 	public void cambiarEstadoDeReclamo(Integer nroReclamo, String estadoReclamoNuevo) {
@@ -130,8 +149,11 @@ public class Sistema {
 		
 	}
 	
-	public void registrarReclamoCompuesto(List<ReclamoView> reclamos) {
+	public void registrarReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) { 
 		
+		Reclamo reclamoCompuesto = new ReclamoCompuesto(descripcion, tipoDeReclamo, cliente, reclamos);
+		
+		reclamoCompuesto.guardar();		
 	}
 	/*RECLAMO*/
 }

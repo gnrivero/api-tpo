@@ -3,8 +3,15 @@ package model.reclamo;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Cliente;
+
 public class ReclamoCompuesto extends Reclamo {
 	
+	public ReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) {
+		super(descripcion, tipoDeReclamo, cliente);
+		this.reclamosHijos.addAll(reclamos);
+	}
+
 	private List<Reclamo> reclamosHijos = new ArrayList<Reclamo>();
 
 	@Override
@@ -23,7 +30,7 @@ public class ReclamoCompuesto extends Reclamo {
 	}
 
 	@Override
-	public void cerrar() throws Exception {				
+	public void cerrar() throws Exception {
 		
 		for(Reclamo reclamoHijo : reclamosHijos){
 			if(!reclamoHijo.estaCerrado()){
@@ -34,6 +41,13 @@ public class ReclamoCompuesto extends Reclamo {
 		super.cerrar();
 	}
 
-	
-
+	@Override
+	public void guardar() {
+		
+		super.guardar();				
+		
+		for(Reclamo reclamoHijo : reclamosHijos){
+			reclamoHijo.guardar();
+		}
+	}
 }

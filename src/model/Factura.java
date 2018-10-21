@@ -1,6 +1,7 @@
 package model;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,28 +11,14 @@ public class Factura {
 	private int nroFactura;
 	private Date fechaFactura;
 	private float montoTotal;
-	private static float IVA;
-	private List <ItemFactura> itemFactura;
+	private static float IVA = 21;
+	private List<ItemFactura> itemFactura;
 	
-
-	public float calcularTotal()
-	{
-		float total=0;
-		
-		for(ItemFactura item: this.itemFactura){
-			total+=item.getMontoItem();
-		}
-		
-		return total;
+	public Factura(){
+		this.fechaFactura = new Date();
+		this.itemFactura = new ArrayList<ItemFactura>();
 	}
-	public float calcularSubTotal()
-	{
-		float subTotal=0;
-		return subTotal;
-	}
-
-	
-	
+		
 	
 	public int getNroFactura() {
 		return nroFactura;
@@ -51,11 +38,29 @@ public class Factura {
 	public void setMontoTotal(float montoTotal) {
 		this.montoTotal = montoTotal;
 	}
+	public List<ItemFactura> getItemFactura() {
+		return itemFactura;
+	}
+
+
+	public void setItemFactura(List<ItemFactura> itemFactura) {
+		this.itemFactura = itemFactura;
+	}
+
 	public float getIVA() {
 		return IVA;
+	}	
+	
+	public float calcularTotal(){
+		return this.calcularSubTotal() * ((IVA/100) + 1);
 	}
-	public void setIVA(float iVA) {
-		IVA = iVA;
-	}
+	
+	public float calcularSubTotal(){
+		float subTotal=0;
+		for(ItemFactura item : this.itemFactura){
+			subTotal+= item.calcularTotal();
+		}
+		return subTotal;
+	}	
 
 }
