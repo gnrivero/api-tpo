@@ -11,6 +11,17 @@ import excepciones.ConexionException;
 import model.Cliente;
 
 public class ClienteDAO {
+	
+	private static ClienteDAO instancia;
+	
+	private ClienteDAO(){}
+	
+	public static ClienteDAO getInstancia(){
+		if(instancia == null){
+			instancia = new ClienteDAO();
+		}
+		return instancia;
+	}
 
 	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException {  
 		Connection con = null;  
@@ -47,8 +58,8 @@ public class ClienteDAO {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
 	}
-
-	public void grabarCliente(Cliente cliente) throws ConexionException, AccesoException {
+	
+	public void crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
 		Connection con;
 		try {
@@ -71,4 +82,9 @@ public class ClienteDAO {
 			throw new AccesoException("No se pudo guardar");
 		}
 	}
+	
+	public void actualizarCliente(Cliente cliente){
+		
+	}
+	
 }

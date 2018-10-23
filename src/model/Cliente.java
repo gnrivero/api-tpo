@@ -1,5 +1,9 @@
 package model;
 
+import dao.ClienteDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+
 public class Cliente {
 
 	private Integer idCliente;
@@ -54,5 +58,13 @@ public class Cliente {
 
 	public String getMail() {
 		return mail;
+	}
+	
+	public void guardar(Cliente cliente) throws ConexionException, AccesoException{		
+		if(cliente.getIdCliente() == null){
+			ClienteDAO.getInstancia().crearCliente(cliente);
+		}else{
+			ClienteDAO.getInstancia().actualizarCliente(cliente);
+		}		
 	}
 }
