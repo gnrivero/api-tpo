@@ -21,12 +21,6 @@ CREATE TABLE clientes
 	CONSTRAINT mail_pk PRIMARY KEY (mail)
 )
 GO
-
-	private int nroFactura;
-	private Date fechaFactura;
-	private float montoTotal;
-	private static float IVA;
-	private List <ItemFactura> itemFactura;
 	
 CREATE TABLE facturas
 (
@@ -41,10 +35,12 @@ GO
 CREATE TABLE itemFactura
 (
 	idItemFactura INT IDENTITY,
+	codigo INT NOT NULL,
 	montoItem FLOAT NOT NULL,
 	cantidad INT NOT NULL,
 	nroFactura INT NOT NULL,
-	CONSTRAINT nroFactura_fk FOREIGN KEY (nroFactura) REFERENCES facturas
+	CONSTRAINT nroFactura_fk FOREIGN KEY (nroFactura) REFERENCES facturas,
+	CONSTRAINT codigo_fk FOREIGN KEY (codigo) REFERENCES productos
 )
 GO
 
@@ -62,8 +58,8 @@ GO
 CREATE TABLE tipoReclamo
 (
 	idTipoReclamo INT IDENTITY,
-	TipoReclamo CHAR(20) NOT NULL
-	CONSTRAINT tiporeclamo_pk PRIMARY KEY (TipoReclamo)
+	tipoDeReclamo CHAR(20) NOT NULL
+	CONSTRAINT tipoDeReclamo_pk PRIMARY KEY (tipoDeReclamo)
 )
 GO
 
@@ -76,8 +72,9 @@ CREATE TABLE reclamo_comp
 	Descripcion VARCHAR(100) NOT NULL, 
 	estado CHAR(20) NOT NULL,
 	idProducto INT NOT NULL,
-	tipoDeReclamo INT NOT NULL,
-	CONSTRAINT nroReclamo_pk PRIMARY KEY (nroReclamo)
+	tipoDeReclamo CHAR(20) NOT NULL,
+	CONSTRAINT nroReclamo_pk PRIMARY KEY (nroReclamo),
+	CONSTRAINT tipoDeReclamo_fk FOREIGN KEY (tipoDeReclamo) REFERENCES tipoReclamo 
 )
 GO
 
@@ -90,10 +87,11 @@ CREATE TABLE reclamo_simp
 	Descripcion VARCHAR(100) NOT NULL, 
 	estado CHAR(20) NOT NULL,
 	idProducto INT NOT NULL,
-	tipoDeReclamo INT NOT NULL,
+	tipoDeReclamo CHAR(20) NOT NULL,
 	reclamoComp INT NULL,
 	CONSTRAINT nroReclamosimp_pk PRIMARY KEY (nroReclamo),
-	CONSTRAINT reclamoComp_fk FOREIGN KEY (nroReclamo) REFERENCES reclamo_comp
+	CONSTRAINT reclamoComp_fk FOREIGN KEY (nroReclamo) REFERENCES reclamo_comp,
+	CONSTRAINT tipoDeReclamo2_fk FOREIGN KEY (tipoDeReclamo) REFERENCES tipoReclamo
 )
 GO
 
