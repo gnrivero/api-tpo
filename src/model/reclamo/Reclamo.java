@@ -15,17 +15,19 @@ public abstract class Reclamo {
 	
 	//protected List<AuditoriaReclamo> auditoria;
 	protected Integer nroReclamo;
+	protected String descripcion;
+	protected TipoDeReclamo tipoDeReclamo;
+	protected EstadoDeReclamo estado;
 	protected Date fecha;
 	protected Date fechaCierre;
 	protected Cliente cliente;
-	protected String descripcion;
-	protected EstadoDeReclamo estado;
-	protected TipoDeReclamo tipoDeReclamo;
 	
-	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){		
+	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){
+		this.descripcion = descripcion;
+		this.tipoDeReclamo = tipoDeReclamo;
 		this.estado = EstadoDeReclamo.INGRESADO;
+		this.fecha = new Date();
 		this.cliente = cliente;
-		this.tipoDeReclamo = tipoDeReclamo;		
 	}
 	
 	public Integer getNroReclamo() {

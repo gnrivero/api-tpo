@@ -35,7 +35,7 @@ public class ReclamosTest {
 		
 		Reclamo rFaltantes = new ReclamoDistribucion("Falta detergente", TipoDeReclamo.FALTANTES, cliente, producto_1, 1);
 		Reclamo rProducto = new ReclamoDistribucion("Me piden detergente", TipoDeReclamo.PRODUCTO, cliente, producto_1, 1);
-				
+		
 		reclamos.add(rFaltantes);
 		reclamos.add(rProducto);
 		
