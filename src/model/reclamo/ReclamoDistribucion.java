@@ -1,5 +1,6 @@
 package model.reclamo;
 
+import dao.ReclamoDAO;
 import model.Cliente;
 import model.Producto;
 
@@ -7,7 +8,7 @@ public class ReclamoDistribucion extends Reclamo {
 	
 	private Producto producto;
 	private Integer cantidad;
-		
+	
 	public ReclamoDistribucion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, Integer cantidad) {
 		super(descripcion, tipoDeReclamo, cliente);
 		this.producto = producto;
@@ -42,15 +43,20 @@ public class ReclamoDistribucion extends Reclamo {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public void cerrar() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public void guardar() {
-		System.out.println("Guardando reclamo de " + this.tipoDeReclamo);		
+		try {
+			
+			if (this.nroReclamo == null){ 
+				ReclamoDAO.getInstancia().crearReclamo(this);
+			} else {
+				ReclamoDAO.getInstancia().actualizarReclamo(this);
+			}						
+			
+		}catch(Exception e){
+			
+		}	
 	}	
 
 }

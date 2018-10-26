@@ -1,6 +1,10 @@
 package model.reclamo;
 
 import java.util.Date;
+
+import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.Cliente;
 
 public abstract class Reclamo {
@@ -91,9 +95,7 @@ public abstract class Reclamo {
 		}
 	}
 	
-	public void guardar(){
-		System.out.println("Guardo reclamo " + this.tipoDeReclamo);
-	}
+	abstract void guardar();
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);

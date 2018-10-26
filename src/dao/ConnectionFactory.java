@@ -5,20 +5,34 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-
-	private static ConnectionFactory instancia;
-	//String connectionUrl = "jdbc:sqlserver://bd;databaseName=TPO_AI;user=AI_4084_08;password=AI_4084_08";//para ejecución en Laboratorio
-	String connectionUrl = "jdbc:sqlserver://localhost:1433;databaseName=TPO_AI;User=SA;Password=F3nix.83!";//para ejecución en localhost
 	
-	private ConnectionFactory() throws ClassNotFoundException{
-		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-	}
+	private String host;
+	private String port;
+	private String database;
+	private String user;
+	private String password;
+	private String connectionUrl;
+	
+	
+	//Singleton
+	private static ConnectionFactory instancia = null;
 	
 	public static ConnectionFactory getInstancia() throws ClassNotFoundException{
 		if(instancia == null)
 			instancia = new ConnectionFactory();
 		return instancia;
 	}
+	
+	
+	private ConnectionFactory() throws ClassNotFoundException {
+		
+		Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+		
+		//host = "bd"; port = "1433"; database = "TPO_AI"; user = "AI_4084_08"; password = "AI_4084_08";//LABO
+		host = "localhost"; port = "1433"; database = "TPO_AI"; user = "SA"; password = "F3nix.83!";//LOCAL
+		
+		connectionUrl = "jdbc:sqlserver://" + host + ":" + port +";databaseName=" + database + ";User=" + user + ";Password=" + password;//para ejecución en localhost
+	}		
 	
 	public Connection getConection() throws SQLException{
 		return DriverManager.getConnection(connectionUrl);

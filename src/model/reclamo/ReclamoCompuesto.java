@@ -3,6 +3,9 @@ package model.reclamo;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.Cliente;
 
 public class ReclamoCompuesto extends Reclamo {
@@ -44,10 +47,20 @@ public class ReclamoCompuesto extends Reclamo {
 	@Override
 	public void guardar() {
 		
-		super.guardar();				
-		
-		for(Reclamo reclamoHijo : reclamosHijos){
-			reclamoHijo.guardar();
-		}
+		try {
+			
+			if (this.nroReclamo == null) {
+				ReclamoDAO.getInstancia().crearReclamo(this);
+			}else{
+				ReclamoDAO.getInstancia().actualizarReclamo(this);
+			}			
+			
+			for(Reclamo reclamoHijo : reclamosHijos){
+				reclamoHijo.guardar();
+			}
+			
+		}catch(Exception e){
+			
+		}		
 	}
 }

@@ -7,6 +7,7 @@ import java.sql.Statement;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import model.reclamo.Reclamo;
+import model.reclamo.ReclamoDistribucion;
 
 public class ReclamoDAO {
 	
@@ -21,8 +22,13 @@ public class ReclamoDAO {
 		return instancia;
 	}
 	
-	public void crearReclamo(Reclamo reclamo) throws ConexionException, AccesoException {
-		
+	private static final String INSERT_RECLAMOS_ABSTRACT = "INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente";
+	private static final String INSERT_RECLAMO_DIST = INSERT_RECLAMOS_ABSTRACT + ", idproducto, cantidad)";
+	private static final String INSERT_RECLAMO_ZONA = INSERT_RECLAMOS_ABSTRACT + ", zona)";
+	private static final String INSERT_RECLAMO_FACTURACION = INSERT_RECLAMOS_ABSTRACT + ")";
+	
+	public void crearReclamo(ReclamoDistribucion reclamo) throws ConexionException, AccesoException {
+
 		Connection con;
 		try {
 			con = ConnectionFactory.getInstancia().getConection();
@@ -34,21 +40,24 @@ public class ReclamoDAO {
 		try {
 			stm = con.createStatement();
 		} catch (SQLException e) {
-			throw new AccesoException("Error de acceso");
+			throw new AccesoException("No se pudo ");
 		}
 		
 		
-		StringBuilder sqlBuilder = new StringBuilder("INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente) VALUES (");
-		sqlBuilder.append("'").append(reclamo.getDescripcion()).append("'), ")
-		.append(reclamo.getTipoDeReclamo()).append(", ")
-		.append(reclamo.getEstado()).append(", ")
-		.append(reclamo.getFecha()).append(", ")
-		.append(reclamo.getCliente().getIdCliente());
-		
+		String sql = INSERT_RECLAMOS_ABSTRACT + INSERT_RECLAMO_DIST
+				+ " VALUES "		
+				+ "('" + reclamo.getDescripcion() + "', "
+				+ "'" + reclamo.getTipoDeReclamo() + "', "
+				+ "'" + reclamo.getEstado() + "', "
+				+ "'" + reclamo.getFecha() + "', "
+				+ reclamo.getCliente().getIdCliente() + ", "
+				+ reclamo.getProducto().getIdProducto() +", "
+				+ reclamo.getCantidad() +")";
+
 		try {
-			stm.execute(sqlBuilder.toString());
+			stm.execute(sql.toString());
 		} catch (SQLException e) {
-			throw new AccesoException("No se pudo guardar Reclamo");
+			throw new AccesoException("No se pudo guardar" );
 		}
 	}
 	
