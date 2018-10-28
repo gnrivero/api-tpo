@@ -1,6 +1,9 @@
 CREATE DATABASE TPO_AI
 GO
 
+USE TPO_AI
+GO
+
 CREATE TABLE usuarios
 (
 	idUsuario INT IDENTITY,
