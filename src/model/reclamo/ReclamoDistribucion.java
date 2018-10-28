@@ -3,11 +3,14 @@ package model.reclamo;
 import dao.ReclamoDAO;
 import model.Cliente;
 import model.Producto;
+import model.TipoDeReclamo;
 
 public class ReclamoDistribucion extends Reclamo {
 	
 	private Producto producto;
 	private Integer cantidad;
+	
+	public ReclamoDistribucion(){}
 	
 	public ReclamoDistribucion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, Integer cantidad) {
 		super(descripcion, tipoDeReclamo, cliente);

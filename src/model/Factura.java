@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Factura {
 	
-	private int nroFactura;
+	private Integer nroFactura;
 	private Date fechaFactura;
 	private float montoTotal;
 	private static float IVA = 21;
@@ -20,10 +20,10 @@ public class Factura {
 	}
 		
 	
-	public int getNroFactura() {
+	public Integer getNroFactura() {
 		return nroFactura;
 	}
-	public void setNroFactura(int nroFactura) {
+	public void setNroFactura(Integer nroFactura) {
 		this.nroFactura = nroFactura;
 	}
 	public Date getFechaFactura() {

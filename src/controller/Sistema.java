@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dao.ReclamoDAO;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -141,7 +142,13 @@ public class Sistema {
 		reclamoAcrear.guardar();
 	}
 	
-	public void cambiarEstadoDeReclamo(Integer nroReclamo, String estadoReclamoNuevo) {
+	public void tratarReclamo(Integer nroReclamo) {
+		
+		ReclamoDAO.getInstancia().listar(sql);
+		
+	}
+	
+	public void cerrarReclamo(Integer nroReclamo) {
 		
 	}
 	

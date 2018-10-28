@@ -15,12 +15,12 @@ public class ReclamoFacturacion extends Reclamo {
 		this.facturasReclamadas = facturas;
 	}
 
-	public List<Factura> getNroFacturas() {
+	public List<Factura> getFacturas() {
 		return facturasReclamadas;
 	}
 
-	public void setNroFacturas(List<Factura> nroFacturas) {
-		this.facturasReclamadas = nroFacturas;
+	public void setFacturas(List<Factura> facturasReclamadas) {
+		this.facturasReclamadas = facturasReclamadas;
 	}
 
 	@Override

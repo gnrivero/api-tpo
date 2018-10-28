@@ -8,6 +8,7 @@ import java.sql.Statement;
 import excepciones.AccesoException;
 import excepciones.ClienteException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.Cliente;
 
 public class ClienteDAO {
@@ -23,7 +24,7 @@ public class ClienteDAO {
 		return instancia;
 	}
 
-	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException {  
+	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, AccesoException, NegocioException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;
@@ -52,7 +53,7 @@ public class ClienteDAO {
 				return cliente;
 			}
 			else{
-				throw new ClienteException("El cliente id = " + idCliente + " no existe");
+				throw new NegocioException("El cliente id = " + idCliente + " no existe");
 			}
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");

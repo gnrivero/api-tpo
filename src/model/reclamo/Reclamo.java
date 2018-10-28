@@ -2,20 +2,11 @@ package model.reclamo;
 
 import java.util.Date;
 
-import dao.ReclamoDAO;
-import excepciones.AccesoException;
-import excepciones.ConexionException;
 import model.Cliente;
+import model.EstadoDeReclamo;
+import model.TipoDeReclamo;
 
 public abstract class Reclamo {
-	
-	public enum EstadoDeReclamo {
-		INGRESADO, EN_TRATAMIENTO, CERRADO, SOLUCIONADO;
-	}
-	
-	public enum TipoDeReclamo{
-		CANTIDADES, FALTANTES, PRODUCTO, ZONA, FACTURACION, COMPUESTO;
-	}
 	
 	//protected List<AuditoriaReclamo> auditoria;
 	protected Integer nroReclamo;
@@ -26,7 +17,11 @@ public abstract class Reclamo {
 	protected Date fechaCierre;
 	protected Cliente cliente;
 	
-	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){
+	//Constructor Default
+	public Reclamo(){}
+	
+	//Constructor para nuevos reclamos
+	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Cliente cliente){
 		this.descripcion = descripcion;
 		this.tipoDeReclamo = tipoDeReclamo;
 		this.estado = EstadoDeReclamo.INGRESADO;
@@ -86,6 +81,10 @@ public abstract class Reclamo {
 		return EstadoDeReclamo.CERRADO.equals(this.estado);
 	}
 	
+	public void tratar() {
+		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
+	}
+	
 	public void cerrar() throws Exception {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.CERRADO);
@@ -93,9 +92,10 @@ public abstract class Reclamo {
 		}else{
 			throw new Exception("No se puede pasar del estado actual a Cerrado");
 		}
-	}
+	}	
 	
-	abstract void guardar();
+	
+	abstract public void guardar();
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);
