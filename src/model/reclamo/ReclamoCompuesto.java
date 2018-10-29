@@ -6,7 +6,9 @@ import java.util.List;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.Cliente;
+import model.TipoDeReclamo;
 
 public class ReclamoCompuesto extends Reclamo {
 	
@@ -33,11 +35,11 @@ public class ReclamoCompuesto extends Reclamo {
 	}
 
 	@Override
-	public void cerrar() throws Exception {
+	public void cerrar() throws NegocioException, ConexionException, AccesoException  {
 		
 		for(Reclamo reclamoHijo : reclamosHijos){
 			if(!reclamoHijo.estaCerrado()){
-				throw new Exception("No se puede cerrar el reclamo, existen reclamos dependientes abiertos");
+				throw new NegocioException("No se puede cerrar el reclamo, existen reclamos dependientes abiertos");
 			}
 		}
 		
@@ -45,22 +47,16 @@ public class ReclamoCompuesto extends Reclamo {
 	}
 
 	@Override
-	public void guardar() {
+	public void guardar() throws ConexionException, AccesoException, NegocioException {
 		
-		try {
-			
-			if (this.nroReclamo == null) {
-				ReclamoDAO.getInstancia().crearReclamo(this);
-			}else{
-				ReclamoDAO.getInstancia().actualizarReclamo(this);
-			}			
-			
-			for(Reclamo reclamoHijo : reclamosHijos){
-				reclamoHijo.guardar();
-			}
-			
-		}catch(Exception e){
-			
-		}		
+		if (this.nroReclamo == null) {
+			ReclamoDAO.getInstancia().crearReclamo(this);
+		}else{
+			ReclamoDAO.getInstancia().actualizarReclamo(this);
+		}			
+		
+		for(Reclamo reclamoHijo : reclamosHijos){
+			reclamoHijo.guardar();
+		}
 	}
 }

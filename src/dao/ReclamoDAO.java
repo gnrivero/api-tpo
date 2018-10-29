@@ -4,13 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import excepciones.AccesoException;
-import excepciones.ClienteException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
-import excepciones.ReclamoException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.EstadoDeReclamoFactory;
@@ -20,6 +17,7 @@ import model.Producto;
 import model.TipoDeReclamo;
 import model.TipoDeReclamoFactory;
 import model.reclamo.Reclamo;
+import model.reclamo.ReclamoCompuesto;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
@@ -41,6 +39,11 @@ public class ReclamoDAO extends DAO {
 	private static final String INSERT_RECLAMO_DIST = INSERT_RECLAMO + ", idproducto, cantidad)";
 	private static final String INSERT_RECLAMO_ZONA = INSERT_RECLAMO + ", zona)";	
 	
+	
+	
+	public void crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
+		throw new NegocioException("Unimplemented");
+	}	
 	
 	public void crearReclamo(ReclamoDistribucion reclamo) throws ConexionException, AccesoException {
 		

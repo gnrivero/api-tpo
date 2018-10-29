@@ -1,23 +1,30 @@
 package model;
 
+import java.util.Date;
+
 import dao.ClienteDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 
 public class Cliente {
-
+	
 	private Integer idCliente;
 	private String nombre;
 	private String domicilio;
 	private String telefono;
 	private String mail;
+	private Date fechaBaja;
 	
-	public Cliente(int idCliente, String nombre, String domicilio, String telefono, String mail) {
-		this.setIdCliente(idCliente);
-		this.setNombre(nombre);
-		this.setDomicilio(domicilio);
-		this.setTelefono(telefono);
-		this.setMail(mail);
+	public Cliente(String nombre, String domicilio, String telefono, String mail) {		
+		this.nombre = nombre;
+		this.domicilio = domicilio;
+		this.telefono = telefono;
+		this.mail = mail;
+	}
+	
+	public Cliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail) {		
+		this(nombre, domicilio, telefono, mail);
+		this.idCliente = idCliente;	
 	}
 	
 	public void setIdCliente(Integer idCliente) {
@@ -60,11 +67,26 @@ public class Cliente {
 		return mail;
 	}
 	
-	public void guardar(Cliente cliente) throws ConexionException, AccesoException{		
-		if(cliente.getIdCliente() == null){
-			ClienteDAO.getInstancia().crearCliente(cliente);
+	public Date getFechaBaja() {
+		return fechaBaja;
+	}
+
+	public void setFechaBaja(Date fechaBaja) {
+		this.fechaBaja = fechaBaja;
+	}
+	
+	public void darDeBaja() throws ConexionException, AccesoException{
+		
+		this.setFechaBaja(new Date());
+		
+		this.guardar();
+	}
+
+	public void guardar() throws ConexionException, AccesoException{		
+		if(this.getIdCliente() == null){
+			ClienteDAO.getInstancia().crearCliente(this);
 		}else{
-			ClienteDAO.getInstancia().actualizarCliente(cliente);
+			ClienteDAO.getInstancia().actualizarCliente(this);
 		}		
 	}
 }

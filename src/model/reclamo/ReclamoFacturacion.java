@@ -4,6 +4,7 @@ import java.util.List;
 
 import model.Cliente;
 import model.Factura;
+import model.TipoDeReclamo;
 
 public class ReclamoFacturacion extends Reclamo {
 		

@@ -6,12 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import excepciones.AccesoException;
-import excepciones.ClienteException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
 
-public class ClienteDAO {
+public class ClienteDAO extends DAO {
 	
 	private static ClienteDAO instancia;
 	
@@ -62,30 +61,24 @@ public class ClienteDAO {
 	
 	public void crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
-		Connection con;
-		try {
-			con = ConnectionFactory.getInstancia().getConection();
-		} catch (ClassNotFoundException | SQLException e) {
-			throw new ConexionException("No esta disponible el acceso al Servidor");
-		} 
+		String sql = "INSERT INTO clientes () "
+					+ "VALUES (" + cliente.getIdCliente() + ",'" + cliente.getNombre() + "'," + cliente.getDomicilio() + cliente.getTelefono() + cliente.getMail() + ")";
 		
-		Statement stm;
-		try {
-			stm = con.createStatement();
-		} catch (SQLException e) {
-			throw new AccesoException("Error de acceso");
-		}
-		
-		String sentencia = "insert into clientes values (" + cliente.getIdCliente() + ",'" + cliente.getNombre() + "'," + cliente.getDomicilio() + cliente.getTelefono() + cliente.getMail() + ")";
-		try {
-			stm.execute(sentencia);
-		} catch (SQLException e) {
-			throw new AccesoException("No se pudo guardar");
-		}
+		crear(sql);
 	}
 	
-	public void actualizarCliente(Cliente cliente){
+	public void actualizarCliente(Cliente cliente) throws ConexionException, AccesoException{
 		
+		String sql = "UPDATE clientes SET "
+					+ " nombre = '" + cliente.getNombre() + "', "
+					+ " domicilio = '" + cliente.getDomicilio() + "', "
+					+ " telefono = '" + cliente.getTelefono() + "', "
+					+ " mail = '" + cliente.getMail() + "', "
+					+ " fechabaja = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(cliente.getFechaBaja()) +"' "
+					+ " WHERE idcliente = " + cliente.getIdCliente();  
+				
+		
+		actualizar(sql);
 	}
 	
 }

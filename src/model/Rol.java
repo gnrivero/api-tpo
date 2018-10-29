@@ -3,33 +3,32 @@ package model;
 import java.util.List;
 
 public class Rol {
-
+	
 	private int idRol;
-	private String denominacion;
-	private List <Integer> tiposDeReclamo;
+	private String descripcion;
+	private List<TipoDeReclamo> tiposDeReclamo;
+	
 	public int getIdRol() {
 		return idRol;
 	}
 	public void setIdRol(int idRol) {
 		this.idRol = idRol;
 	}
-	public String getDenominacion() {
-		return denominacion;
+	public String getDescripcion() {
+		return descripcion;
 	}
-	public void setDenominacion(String denominacion) {
-		this.denominacion = denominacion;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
-	public List<Integer> getTiposDeReclamo() {
+	public List<TipoDeReclamo> getTiposDeReclamo() {
 		return tiposDeReclamo;
 	}
-	public void setTiposDeReclamo(List<Integer> tiposDeReclamo) {
+	public void setTiposDeReclamo(List<TipoDeReclamo> tiposDeReclamo) {
 		this.tiposDeReclamo = tiposDeReclamo;
 	}
 
-	public boolean soy(int idRol)
-	{		
-			return true;
+	public boolean soy(int idRol){		
+		return true;
 	}
-
 
 } 

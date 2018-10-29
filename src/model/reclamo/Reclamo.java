@@ -2,6 +2,9 @@ package model.reclamo;
 
 import java.util.Date;
 
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
@@ -21,7 +24,7 @@ public abstract class Reclamo {
 	public Reclamo(){}
 	
 	//Constructor para nuevos reclamos
-	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Cliente cliente){
+	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){
 		this.descripcion = descripcion;
 		this.tipoDeReclamo = tipoDeReclamo;
 		this.estado = EstadoDeReclamo.INGRESADO;
@@ -85,17 +88,19 @@ public abstract class Reclamo {
 		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
 	}
 	
-	public void cerrar() throws Exception {
+	public void cerrar() throws NegocioException, ConexionException, AccesoException {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.CERRADO);
 			this.setFechaCierre(new Date());
+			
+			this.guardar();
 		}else{
-			throw new Exception("No se puede pasar del estado actual a Cerrado");
+			throw new NegocioException("No se puede pasar del estado actual a Cerrado");
 		}
 	}	
 	
 	
-	abstract public void guardar();
+	abstract public void guardar() throws ConexionException, AccesoException, NegocioException;
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);

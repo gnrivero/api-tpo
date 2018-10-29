@@ -1,6 +1,7 @@
 package model.reclamo;
 
 import model.Cliente;
+import model.TipoDeReclamo;
 
 public class ReclamoZona extends Reclamo {	
 	

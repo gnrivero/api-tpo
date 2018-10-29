@@ -8,9 +8,9 @@ import model.Cliente;
 import model.Factura;
 import model.ItemFactura;
 import model.Producto;
+import model.TipoDeReclamo;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoDistribucion;
-import model.reclamo.Reclamo.TipoDeReclamo;
 
 public class ReclamosTest {
 	
@@ -50,7 +50,7 @@ public class ReclamosTest {
 		System.out.println("El subtotal de la factura es " + factura.calcularSubTotal());
 		System.out.println("El total de la factura es " + factura.calcularTotal());
 		
-		Sistema.getInstance().registrarReclamo("Reclamo Factura", TipoDeReclamo.FACTURACION, cliente, facturas);		
+		Sistema.getInstance().registrarReclamo("Reclamo Factura", model.TipoDeReclamo.FACTURACION, cliente, facturas);		
 	}
 	
 	
