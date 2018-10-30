@@ -16,6 +16,15 @@ public class UsuarioTest {
 		
 	}
 	
+	public static void main(String[] args) {
+		
+		crearNuevoUsuario();
+
+		editarUsuario();
+		
+		System.exit(0);
+	}
+	
 	
 	public static void crearNuevoUsuario(){
 		
@@ -29,15 +38,6 @@ public class UsuarioTest {
 	
 	public static void editarUsuario(){
 		
-	}
-
-	public static void main(String[] args) {
-		
-		crearNuevoUsuario();
-
-		editarUsuario();
-		
-		System.exit(0);
-	}
+	}	
 
 }

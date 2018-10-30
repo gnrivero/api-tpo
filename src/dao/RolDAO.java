@@ -8,7 +8,14 @@ public class RolDAO extends DAO {
 	
 	private static RolDAO instancia;
 	
-	public void crearRol(Rol rol) throws ConexionException, AccesoException{
+	public static RolDAO getInstancia(){
+		if(instancia == null)
+			instancia = new RolDAO();
+		
+		return instancia;
+	}
+	
+	public void crearRol(Rol rol) throws ConexionException, AccesoException {
 		
 		String sql = "INSERT INTO roles (descripcion) VALUES ('" + rol.getDescripcion() + "' )"; 
 		
