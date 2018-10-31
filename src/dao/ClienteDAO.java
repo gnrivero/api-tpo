@@ -40,7 +40,7 @@ public class ClienteDAO extends DAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
 		}
-		String SQL = "SELECT * FROM clientes where id_cliente = " + idCliente;
+		String SQL = "SELECT * FROM clientes WHERE idcliente = " + idCliente;
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -48,7 +48,7 @@ public class ClienteDAO extends DAO {
 		}
 		try {
 			if(rs.next()){
-				Cliente cliente = new Cliente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"));
 				return cliente;
 			}
 			else{
@@ -61,8 +61,11 @@ public class ClienteDAO extends DAO {
 	
 	public void crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
-		String sql = "INSERT INTO clientes () "
-					+ "VALUES (" + cliente.getIdCliente() + ",'" + cliente.getNombre() + "'," + cliente.getDomicilio() + cliente.getTelefono() + cliente.getMail() + ")";
+		String sql = "INSERT INTO clientes (nombre, domicilio, telefono, mail) VALUES "
+					+ "('" + cliente.getNombre() + "', "  
+					+ " '" + cliente.getDomicilio() + "', " 
+					+ " '" + cliente.getTelefono() +"', " 
+					+ " '" + cliente.getMail() + "')";
 		
 		crear(sql);
 	}

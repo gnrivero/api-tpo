@@ -37,7 +37,7 @@ public abstract class DAO {
 		}
 		
 		try {
-			stm.execute(sql.toString());
+			stm.execute(sql);
 		} catch (SQLException e) {			
 			throw new AccesoException("No se pudo guardar");
 		}

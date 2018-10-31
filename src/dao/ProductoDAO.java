@@ -52,7 +52,7 @@ public class ProductoDAO extends DAO {
 		
 		try {	
 			if(rs.next()){
-				return new Producto(rs.getString("titulo"), rs.getString("descripcion"), rs.getFloat("precio"));
+				return new Producto(rs.getInt("idproducto"), rs.getString("codigo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getFloat("precio"));
 			}
 			else{
 				throw new NegocioException("El producto id: " + idProducto + " no existe");
@@ -60,6 +60,17 @@ public class ProductoDAO extends DAO {
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
+	}
+	
+	public void crearProducto(Producto producto) throws ConexionException, AccesoException{
+		
+		String sql = "INSERT INTO productos (codigo, titulo, descripcion, precio) VALUES "
+				+ "('" + producto.getCodigo() + "', "
+				+ "'" + producto.getTitulo() + "', "
+				+ "'" + producto.getDescripcion() + "', "				
+				+ producto.getPrecio() + ")";
+		
+		crear(sql);
 	}
 
 }

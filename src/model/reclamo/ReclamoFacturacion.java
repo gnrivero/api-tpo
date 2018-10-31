@@ -2,6 +2,9 @@ package model.reclamo;
 
 import java.util.List;
 
+import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.Cliente;
 import model.Factura;
 import model.TipoDeReclamo;
@@ -43,9 +46,12 @@ public class ReclamoFacturacion extends Reclamo {
 	}
 
 	@Override
-	public void guardar() {
-		// TODO Auto-generated method stub
-		
+	public void guardar() throws ConexionException, AccesoException {
+		if (this.nroReclamo == null){
+			ReclamoDAO.getInstancia().crearReclamoFacturacion(this);
+		} else {
+			ReclamoDAO.getInstancia().actualizarReclamo(this);
+		}	
 	}
 
 }

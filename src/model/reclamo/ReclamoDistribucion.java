@@ -1,6 +1,8 @@
 package model.reclamo;
 
 import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.Cliente;
 import model.Producto;
 import model.TipoDeReclamo;
@@ -48,18 +50,12 @@ public class ReclamoDistribucion extends Reclamo {
 	}
 	
 	@Override
-	public void guardar() {
-		try {
-			
-			if (this.nroReclamo == null){ 
-				ReclamoDAO.getInstancia().crearReclamo(this);
-			} else {
-				ReclamoDAO.getInstancia().actualizarReclamo(this);
-			}						
-			
-		}catch(Exception e){
-			
-		}	
+	public void guardar() throws ConexionException, AccesoException {			
+		if (this.nroReclamo == null){
+			ReclamoDAO.getInstancia().crearReclamoDistribucion(this);
+		} else {
+			ReclamoDAO.getInstancia().actualizarReclamo(this);
+		}									
 	}	
 
 }

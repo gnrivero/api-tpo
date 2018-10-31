@@ -1,5 +1,8 @@
 package model.reclamo;
 
+import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.Cliente;
 import model.TipoDeReclamo;
 
@@ -45,9 +48,12 @@ public class ReclamoZona extends Reclamo {
 	}
 
 	@Override
-	public void guardar() {
-		// TODO Auto-generated method stub
-		
+	public void guardar() throws ConexionException, AccesoException {
+		if (this.nroReclamo == null){
+			ReclamoDAO.getInstancia().crearReclamoZona(this);
+		} else {
+			ReclamoDAO.getInstancia().actualizarReclamo(this);
+		}	
 	}
 
 }

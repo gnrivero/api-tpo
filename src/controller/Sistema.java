@@ -3,6 +3,7 @@ package controller;
 import java.util.List;
 
 import dao.ClienteDAO;
+import dao.ProductoDAO;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -109,20 +110,19 @@ public class Sistema {
 	}
 	//Fin: Roles
 	
-	/* CLIENTE */
+	//Cliente
 	public void agregarCliente(String nombre, String domicilio, String telefono, String mail) throws NegocioException {
-		Cliente nuevoCliente = new Cliente(nombre, domicilio, telefono, mail);
-		
+		Cliente nuevoCliente = new Cliente(nombre, domicilio, telefono, mail);		
 		try {
 			nuevoCliente.guardar();
 		} catch (ConexionException | AccesoException e) {
 			e.printStackTrace();
-			throw new NegocioException("No se pudo guardar el cliente");
+			throw new NegocioException("No se pudo crear el cliente");
 		}			
 	}
 	
 	public void modificarCliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail) throws NegocioException {
-		Cliente cliente = new Cliente(nombre, domicilio, telefono, mail);
+		Cliente cliente = new Cliente(idCliente, nombre, domicilio, telefono, mail);
 		try {
 			cliente.guardar();
 		} catch (ConexionException | AccesoException e) {
@@ -141,49 +141,79 @@ public class Sistema {
 			throw new NegocioException("No se pudo eliminar cliente");
 		}
 	}
-	/*CLIENTE*/
 	
-	/*PRODUCTO*/
-	public void agregarProducto(ProductoView producto) {
-		
-	}
-	public void modificarProducto(Integer idProducto, ProductoView producto) {
-		
-	}
-	public void eliminarProducto(Integer idProducto) {
-		
-	}
-	/*PRODUCTO*/
-	
-	/*RECLAMO*/
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad){
-		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);		
+	public Cliente obtenerCliente(Integer idCliente) throws NegocioException{
 		try {
-			reclamoAcrear.guardar();
+			return ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 		} catch (ConexionException | AccesoException | NegocioException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NegocioException("No se pudo cargar cliente");
+		}
+	}
+	//Fin: Cliente
+	
+	//Producto
+	public void agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {		
+		Producto producto = new Producto(codigo, titulo, descripcion, precio);
+		try {
+			producto.guardar();
+		} catch (ConexionException | AccesoException e) {
+			throw new NegocioException("No se pudo crear producto");
 		}
 	}
 	
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente,String zona){
+	public void modificarProducto(Integer idProducto, ProductoView producto) {
+		
+	}
+	
+	public void eliminarProducto(Integer idProducto) {
+		
+	}
+	
+	public Producto obtenerProducto(Integer idProducto) throws NegocioException{		
+		try {
+			return ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
+		} catch (NegocioException | ConexionException | AccesoException e) {
+			throw new NegocioException("No se pudo cargar producto");
+		}		
+	}
+	//Fin: Producto
+	
+	//Reclamo
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad) throws NegocioException{
+		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
+		try {
+			reclamoAcrear.guardar();
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
+		}
+	}
+	
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente,String zona) throws NegocioException{
 		Reclamo reclamoAcrear = new ReclamoZona(descripcion, tipoDeReclamo, cliente, zona);
 		try {
 			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
 		}
 	}
 	
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas){
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) throws NegocioException{
 		Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
 		try {
 			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
-			
-			e.printStackTrace();
+			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);			
 		}
+	}
+	
+	public void registrarReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) throws NegocioException { 
+		
+		Reclamo reclamoCompuesto = new ReclamoCompuesto(descripcion, tipoDeReclamo, cliente, reclamos);		
+		try {
+			reclamoCompuesto.guardar();
+		} catch (ConexionException | AccesoException | NegocioException e) {			
+			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
+		}		
 	}
 	
 	public void tratarReclamo(Integer nroReclamo) {
@@ -196,17 +226,6 @@ public class Sistema {
 	
 	public void agregarDescripcionReclamo(Integer nroReclamo, String descripcion) {
 		
-	}
-	
-	public void registrarReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) { 
-		
-		Reclamo reclamoCompuesto = new ReclamoCompuesto(descripcion, tipoDeReclamo, cliente, reclamos);
-		
-		try {
-			reclamoCompuesto.guardar();
-		} catch (ConexionException | AccesoException | NegocioException e) {			
-			e.printStackTrace();
-		}		
-	}
-	/*RECLAMO*/
+	}	
+	//Fin: Reclamo
 }

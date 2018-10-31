@@ -1,8 +1,8 @@
--- DROP DATABASE TPO_AI;
+DROP DATABASE TPO_AI;
 
 CREATE DATABASE TPO_AI;
 
-USE TPO_AI
+USE TPO_AI;
 
 CREATE TABLE roles
 (
@@ -56,7 +56,7 @@ CREATE TABLE facturas
 CREATE TABLE productos
 (
 	idproducto INT IDENTITY,
-	codigo INT NOT NULL,
+	codigo VARCHAR(25) NOT NULL,
 	titulo VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
 	precio FLOAT NOT NULL,
@@ -93,9 +93,12 @@ CREATE TABLE reclamos
 	idestadoreclamo INT NOT NULL,
 	idtiporeclamo INT NOT NULL,
 	fecha DATETIME NOT NULL,
-	fechacierre DATETIME,
+	fechacierre DATETIME NULL,
 	idcliente INT NOT NULL,
-	nroreclamocompuesto INT NULL,
+	idproducto INT NULL,
+	cantidad INT NULL,
+	zona VARCHAR(10) NULL,
+	nroreclamocompuesto INT NULL,	
 	CONSTRAINT nroreclamo_pk PRIMARY KEY (nroreclamo),
 	CONSTRAINT reclamocomp_fk FOREIGN KEY (nroreclamocompuesto) REFERENCES reclamoscompuestos (nroreclamo)
 )
