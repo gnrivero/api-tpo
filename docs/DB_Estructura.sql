@@ -1,4 +1,4 @@
-DROP DATABASE TPO_AI;
+-- DROP DATABASE TPO_AI;
 
 CREATE DATABASE TPO_AI;
 
@@ -30,8 +30,6 @@ CREATE TABLE tiposdereclamoporroles
 	idtipodereclamo INT NOT NULL,	
 	CONSTRAINT rol_fk_tr FOREIGN KEY (idrol) REFERENCES roles
 )
-GO
-
 
 
 CREATE TABLE clientes
@@ -44,7 +42,7 @@ CREATE TABLE clientes
 	fechabaja DATETIME NULL,
 	CONSTRAINT idcliente_pk PRIMARY KEY (idcliente)
 )
-GO
+
 
 CREATE TABLE facturas
 (

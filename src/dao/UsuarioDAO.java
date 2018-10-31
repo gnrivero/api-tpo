@@ -8,7 +8,6 @@ import java.sql.Statement;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
-import excepciones.UsuarioException;
 import model.Rol;
 import model.Usuario;
 
@@ -53,10 +52,7 @@ public class UsuarioDAO extends DAO {
 		try {
 			if(rs.next()){
 				
-				//TODO: cargar esto 
-				Rol rol = new Rol();
-				rol.setIdRol(1);
-				rol.setDescripcion("Admin");
+				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
 				
 				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rol, rs.getDate("fechabaja"));
 				
@@ -72,7 +68,7 @@ public class UsuarioDAO extends DAO {
 		
 	}
 	
-	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, UsuarioException, AccesoException {  
+	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, AccesoException, NegocioException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;  
@@ -88,7 +84,7 @@ public class UsuarioDAO extends DAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
 		}
-		String SQL = "SELECT * FROM usuarios where idusuario = " + idUsuario;
+		String SQL = "SELECT * FROM usuarios WHERE idusuario = " + idUsuario;
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -97,16 +93,13 @@ public class UsuarioDAO extends DAO {
 		try {
 			if(rs.next()){
 				
-				//TODO: cargar esto 
-				Rol rol = new Rol();
-				rol.setIdRol(1);
-				rol.setDescripcion("Admin");				
+				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
 				
 				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rol, rs.getDate("fechabaja"));
 				return usuario;
 			}
 			else{
-				throw new UsuarioException("El usuario id: " + idUsuario + " no existe");
+				throw new NegocioException("El usuario id: " + idUsuario + " no existe");
 			}
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");

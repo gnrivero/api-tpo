@@ -12,7 +12,6 @@ import model.Cliente;
 import model.Factura;
 import model.Producto;
 import model.Rol;
-import model.RolPorUsuario;
 import model.Tablero;
 import model.TipoDeReclamo;
 import model.Usuario;
@@ -45,7 +44,7 @@ public class Sistema {
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;
 	private Tablero tablero;
-		
+	
 	public Usuario getUsuarioLogueado() {
 		return usuarioLogueado;
 	}
@@ -68,9 +67,8 @@ public class Sistema {
 		
 		try {
 			Usuario usuario = UsuarioDAO.getInstancia().buscarUsuarioPorUsernameYpassword(username, password);
-			this.setUsuarioLogueado(usuario);
-		} catch (ConexionException | AccesoException e) {
-			e.printStackTrace();
+			this.usuarioLogueado = usuario;
+		} catch (ConexionException | AccesoException e) {			
 			throw new NegocioException("Error de autenticacion. Verifique Username y Contraseña"); 
 		}						
 	}
@@ -79,13 +77,12 @@ public class Sistema {
 		this.usuarioLogueado =  null;
 	}
 	
-	public void crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException{
+	public void crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
 		
 		Usuario nuevoUsuario = new Usuario(username, password, rol);
 		try {
 			nuevoUsuario.guardar();
-		} catch (ConexionException | AccesoException e) {			
-			e.printStackTrace();
+		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo crear usuario");
 		}
 		
@@ -93,21 +90,10 @@ public class Sistema {
 	/*Fin: Usuario*/
 	
 	//Roles
-	public void asociarRolUsuario(Integer idUsuario, Integer idRol) {
-		
-	}
-	
 	public void crearNuevoRol(String nombre, List<Integer> tiposDeReclamo) {
 		
 	}
 	
-	private List<RolPorUsuario> buscarRolPorUsuario(Integer idUsuario, Integer idRol) {
-		return null;
-	}
-	
-	private void agregarNuevoRol(Rol rol) {
-		
-	}
 	//Fin: Roles
 	
 	//Cliente
@@ -142,6 +128,7 @@ public class Sistema {
 		}
 	}
 	
+	//TODO: Esto deberia devolver un ClienteView
 	public Cliente obtenerCliente(Integer idCliente) throws NegocioException{
 		try {
 			return ClienteDAO.getInstancia().obtenerClientePorId(idCliente);

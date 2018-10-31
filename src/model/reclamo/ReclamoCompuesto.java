@@ -12,6 +12,8 @@ import model.TipoDeReclamo;
 
 public class ReclamoCompuesto extends Reclamo {
 	
+	public ReclamoCompuesto(){}
+	
 	public ReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) {
 		super(descripcion, tipoDeReclamo, cliente);
 		this.reclamosHijos.addAll(reclamos);

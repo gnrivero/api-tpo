@@ -26,3 +26,6 @@ select * from clientes;
 
 INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente, idproducto, cantidad) 
 VALUES ('Me piden detergente', 3, 1, '2018-10-30 21:28:58', 1, 1, 2)
+
+select * from reclamos;
+

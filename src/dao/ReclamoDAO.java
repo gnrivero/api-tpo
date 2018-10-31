@@ -38,11 +38,20 @@ public class ReclamoDAO extends DAO {
 	private static final String INSERT_RECLAMO = "INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente";
 	private static final String INSERT_RECLAMO_DIST = INSERT_RECLAMO + ", idproducto, cantidad)";
 	private static final String INSERT_RECLAMO_ZONA = INSERT_RECLAMO + ", zona)";	
-	
+	private static final String INSERT_RECLAMO_COMP = "INSERT INTO reclamoscompuestos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente)";
 	
 	
 	public void crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
-		throw new NegocioException("Unimplemented");
+		String sql = INSERT_RECLAMO_COMP
+				+ " VALUES "
+				+ "('" + reclamo.getDescripcion() + "', "
+				+ reclamo.getTipoDeReclamo().getId() + ", "
+				+ reclamo.getEstado().getId() + ", "
+				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
+				+ reclamo.getCliente().getIdCliente() + ", "
+				+ " )";
+		
+		crear(sql);
 	}	
 	
 	public void crearReclamoDistribucion(ReclamoDistribucion reclamo) throws ConexionException, AccesoException {
@@ -106,12 +115,7 @@ public class ReclamoDAO extends DAO {
 		actualizar(sql);
 	}
 	
-	public void listarReclamo(Integer nroReclamo){
-		
-		
-	}
-
-	public ReclamoDistribucion leer(String sql) throws AccesoException, ConexionException, NegocioException {
+	public ReclamoCompuesto obtenerReclamoCompuesto(Integer nroReclamo) throws AccesoException, ConexionException, NegocioException {
 		
 		Connection con = null;
 		Statement stmt = null;
@@ -131,7 +135,61 @@ public class ReclamoDAO extends DAO {
 		}
 		
 		try {
-			rs = stmt.executeQuery(sql);
+			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE nroreclamo = " + nroReclamo);
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}
+		
+		try {
+			
+			ReclamoCompuesto reclamo = new ReclamoCompuesto();
+			
+			if(rs.next()){
+				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
+								
+				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
+				reclamo.setDescripcion(rs.getString("descripcion"));
+				reclamo.setEstado(estado);
+				reclamo.setTipoDeReclamo(tipoDeReclamo);
+				reclamo.setCliente(cliente);
+				reclamo.setFecha(rs.getDate("fecha"));
+				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				
+				return reclamo;
+			}
+			else{
+				throw new NegocioException("El cliente id = " + reclamo.getNroReclamo() + " no existe");
+			}
+			
+		} catch (SQLException e) {
+			throw new ConexionException("No es posible acceder a los datos");
+		}			
+	}
+
+	public ReclamoDistribucion obtenerReclamoDistribucion(Integer nroReclamo) throws AccesoException, ConexionException, NegocioException {
+		
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+		
+		try {
+			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE nroreclamo = " + nroReclamo);
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de consulta");
 		}
@@ -139,6 +197,7 @@ public class ReclamoDAO extends DAO {
 		try {
 			
 			ReclamoDistribucion reclamo = new ReclamoDistribucion();
+			
 			if(rs.next()){
 				
 				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
