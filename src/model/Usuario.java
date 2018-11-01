@@ -5,6 +5,7 @@ import java.util.Date;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 
 public class Usuario {
 	
@@ -12,14 +13,18 @@ public class Usuario {
 	private String username;
 	private String password;
 	private Date fechaBaja;
+	private Rol rol;
 	
-	public Usuario(){}
+	public Usuario(String username, String password, Rol rol){
+		this.username = username;
+		this.password = password;
+		this.rol = rol;
+	}
 	
-	public Usuario(Integer idUsuario, String username, String password, Date fechaBaja) {		
+	public Usuario(Integer idUsuario, String username, String password, Rol rol, Date fechaBaja) {
+		this(username, password, rol);
 		this.setIdUsuario(idUsuario);
-		this.setUsername(username);
-		this.setPassword(password);
-		this.setFechaBaja(fechaBaja);			
+		this.setFechaBaja(fechaBaja);
 	}
 	
 	public Integer getIdUsuario() {
@@ -46,15 +51,19 @@ public class Usuario {
 	public void setFechaBaja(Date fechaBaja) {
 		this.fechaBaja = fechaBaja;
 	}
-		
-	public void guardar(Usuario usuario) {
-		
-		try {
-			UsuarioDAO.getInstancia().grabarUsuario(usuario);
-		} catch (ConexionException | AccesoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+	public Rol getRol() {
+		return rol;
+	}
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+	
+	public void guardar() throws ConexionException, AccesoException, NegocioException {
+		if (this.getIdUsuario() == null){
+			UsuarioDAO.getInstancia().crearUsuario(this);
+		}else{
+			UsuarioDAO.getInstancia().actualizarUsuario(this);
+		}
 	}
 	
 }

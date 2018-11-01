@@ -1,47 +1,30 @@
 package model.reclamo;
 
-import java.util.Date;
 import java.util.List;
 
-import model.Producto;
+import dao.ReclamoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+import model.Cliente;
+import model.Factura;
+import model.TipoDeReclamo;
 
 public class ReclamoFacturacion extends Reclamo {
+		
+	private List<Factura> facturasReclamadas;
 	
-	private Date fechaFactura;
-	private List<Integer> nroFacturas;
-	private Producto producto;
-	private Integer cantidad;
-
-	public Date getFechaFactura() {
-		return fechaFactura;
+	public ReclamoFacturacion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) {
+		super(descripcion, tipoDeReclamo, cliente);
+		
+		this.facturasReclamadas = facturas;
 	}
 
-	public void setFechaFactura(Date fechaFactura) {
-		this.fechaFactura = fechaFactura;
+	public List<Factura> getFacturas() {
+		return facturasReclamadas;
 	}
 
-	public List<Integer> getNroFacturas() {
-		return nroFacturas;
-	}
-
-	public void setNroFacturas(List<Integer> nroFacturas) {
-		this.nroFacturas = nroFacturas;
-	}
-
-	public Producto getProducto() {
-		return producto;
-	}
-
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-
-	public Integer getCantidad() {
-		return cantidad;
-	}
-
-	public void setCantidad(Integer cantidad) {
-		this.cantidad = cantidad;
+	public void setFacturas(List<Factura> facturasReclamadas) {
+		this.facturasReclamadas = facturasReclamadas;
 	}
 
 	@Override
@@ -60,6 +43,15 @@ public class ReclamoFacturacion extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void guardar() throws ConexionException, AccesoException {
+		if (this.nroReclamo == null){
+			ReclamoDAO.getInstancia().crearReclamoFacturacion(this);
+		} else {
+			ReclamoDAO.getInstancia().actualizarReclamo(this);
+		}	
 	}
 
 }

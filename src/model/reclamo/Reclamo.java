@@ -2,20 +2,35 @@ package model.reclamo;
 
 import java.util.Date;
 
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.Cliente;
-import model.Producto;
+import model.EstadoDeReclamo;
+import model.TipoDeReclamo;
 
 public abstract class Reclamo {
 	
 	//protected List<AuditoriaReclamo> auditoria;
 	protected Integer nroReclamo;
+	protected String descripcion;
+	protected TipoDeReclamo tipoDeReclamo;
+	protected EstadoDeReclamo estado;
 	protected Date fecha;
 	protected Date fechaCierre;
 	protected Cliente cliente;
-	protected String Descripcion;
-	protected String estado;
-	protected Producto producto;
-	protected Integer tipoDeReclamo;
+	
+	//Constructor Default
+	public Reclamo(){}
+	
+	//Constructor para nuevos reclamos
+	public Reclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente){
+		this.descripcion = descripcion;
+		this.tipoDeReclamo = tipoDeReclamo;
+		this.estado = EstadoDeReclamo.INGRESADO;
+		this.fecha = new Date();
+		this.cliente = cliente;
+	}
 	
 	public Integer getNroReclamo() {
 		return nroReclamo;
@@ -42,27 +57,21 @@ public abstract class Reclamo {
 		this.cliente = cliente;
 	}
 	public String getDescripcion() {
-		return Descripcion;
+		return descripcion;
 	}
 	public void setDescripcion(String descripcion) {
-		Descripcion = descripcion;
+		this.descripcion = descripcion;
 	}
-	public String getEstado() {
+	public EstadoDeReclamo getEstado() {
 		return estado;
 	}
-	public void setEstado(String estado) {
+	public void setEstado(EstadoDeReclamo estado) {
 		this.estado = estado;
 	}
-	public Producto getProducto() {
-		return producto;
-	}
-	public void setProducto(Producto producto) {
-		this.producto = producto;
-	}
-	public Integer getTipoDeReclamo() {
+	public TipoDeReclamo getTipoDeReclamo() {
 		return tipoDeReclamo;
 	}
-	public void setTipoDeReclamo(Integer tipoDeReclamo) {
+	public void setTipoDeReclamo(TipoDeReclamo tipoDeReclamo) {
 		this.tipoDeReclamo = tipoDeReclamo;
 	}
 	
@@ -70,6 +79,28 @@ public abstract class Reclamo {
 	public boolean soy(Integer nroReclamo){		
 		return (this.nroReclamo.equals(nroReclamo));
 	}
+	
+	public boolean estaCerrado(){
+		return EstadoDeReclamo.CERRADO.equals(this.estado);
+	}
+	
+	public void tratar() {
+		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
+	}
+	
+	public void cerrar() throws NegocioException, ConexionException, AccesoException {
+		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
+			this.setEstado(EstadoDeReclamo.CERRADO);
+			this.setFechaCierre(new Date());
+			
+			this.guardar();
+		}else{
+			throw new NegocioException("No se puede pasar del estado actual a Cerrado");
+		}
+	}	
+	
+	
+	abstract public void guardar() throws ConexionException, AccesoException, NegocioException;
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);

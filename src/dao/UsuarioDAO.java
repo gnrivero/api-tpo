@@ -7,10 +7,11 @@ import java.sql.Statement;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
-import excepciones.UsuarioException;
+import excepciones.NegocioException;
+import model.Rol;
 import model.Usuario;
 
-public class UsuarioDAO {
+public class UsuarioDAO extends DAO {
 	
 	private static UsuarioDAO instancia;
 		
@@ -23,7 +24,7 @@ public class UsuarioDAO {
 		return instancia;
 	}
 	
-	public Usuario buscarUsuarioPorUsernameYpassword(String username, String password) throws ConexionException, AccesoException, UsuarioException{
+	public Usuario buscarUsuarioPorUsernameYpassword(String username, String password) throws ConexionException, AccesoException, NegocioException {
 				
 		Connection con = null;  
 		Statement stmt = null;  
@@ -42,7 +43,7 @@ public class UsuarioDAO {
 			throw new AccesoException("Error de acceso");
 		}					
 		
-		String SQL = "SELECT * FROM usuarios where username = " +  username + " AND password = " + password;
+		String SQL = "SELECT * FROM usuarios WHERE username = '" +  username + "' AND password = '" + password + "'";
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -50,19 +51,24 @@ public class UsuarioDAO {
 		}
 		try {
 			if(rs.next()){
-				Usuario usuario = new Usuario(rs.getInt("idUsuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechaBaja"));
+				
+				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
+				
+				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rol, rs.getDate("fechabaja"));
+				
 				return usuario;
 			}
-			else{
-				throw new UsuarioException("El usuario " + username + " no existe");
+			else {
+				throw new NegocioException("El usuario " + username + " no existe");
 			}
+			
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}								
 		
 	}
-
-	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, UsuarioException, AccesoException{  
+	
+	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, AccesoException, NegocioException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;  
@@ -78,7 +84,7 @@ public class UsuarioDAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
 		}
-		String SQL = "SELECT * FROM usuarios where id_usuario = " + idUsuario;
+		String SQL = "SELECT * FROM usuarios WHERE idusuario = " + idUsuario;
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -86,46 +92,31 @@ public class UsuarioDAO {
 		}
 		try {
 			if(rs.next()){
-				Usuario usuario = new Usuario(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDate(4));
+				
+				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
+				
+				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rol, rs.getDate("fechabaja"));
 				return usuario;
 			}
 			else{
-				throw new UsuarioException("El usuario id = " + idUsuario + " no existe");
+				throw new NegocioException("El usuario id: " + idUsuario + " no existe");
 			}
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
 	}
 
-	public void grabarUsuario(Usuario usuario) throws ConexionException, AccesoException {
+	public void crearUsuario(Usuario usuario) throws ConexionException, AccesoException {
 		
-		Connection con;
-		try {
-			con = ConnectionFactory.getInstancia().getConection();
-		} catch (ClassNotFoundException | SQLException e) {
-			throw new ConexionException("No esta disponible el acceso al Servidor");
-		} 
+		String sql = "INSERT INTO usuarios (username, password, idrol) VALUES ("
+				   + "'" + usuario.getUsername() + "', "
+				   + "'" + usuario.getPassword() + "', "
+				   + "'" + usuario.getRol().getIdRol() + "')";
 		
-		Statement stm;
-		try {
-			stm = con.createStatement();
-		} catch (SQLException e) {
-			throw new AccesoException("Error de acceso");
-		}
-		
-		String sql = new StringBuilder()
-		.append("INSERT INTO usuarios (username, password, fechaBaja) VALUES (")		
-		.append(usuario.getUsername())
-		.append(",")
-		.append(usuario.getPassword())
-		.append(", ")
-		.append(usuario.getFechaBaja())
-		.toString();
-		
-		try {
-			stm.execute(sql);
-		} catch (SQLException e) {
-			throw new AccesoException("No se pudo guardar usuario");
-		}
+		crear(sql);
+	}
+	
+	public void actualizarUsuario(Usuario usuario) throws NegocioException {
+		throw new NegocioException("Unimplemented");
 	}
 }

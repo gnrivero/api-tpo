@@ -1,26 +1,43 @@
 package model;
 
+import dao.ProductoDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+
 /**
  * @author Maria
  *
  */
 public class Producto {
 
-	private int idProducto;
-	private int codigo;
+	private Integer idProducto;
+	private String codigo;
 	private String titulo;
-	private String Descripcion;
+	private String descripcion;
 	private float precio;
-	public int getIdProducto() {
+	
+	public Producto(Integer idProducto,  String codigo , String titulo, String descripcion, float precio){
+		this(codigo, titulo, descripcion, precio);		
+		this.idProducto = idProducto;		
+	}
+	
+	public Producto(String codigo , String titulo, String descripcion, float precio){
+		this.codigo = codigo;
+		this.titulo = titulo;
+		this.descripcion = descripcion;
+		this.precio = precio;
+	}
+	
+	public Integer getIdProducto() {
 		return idProducto;
 	}
-	public void setIdProducto(int idProducto) {
+	public void setIdProducto(Integer idProducto) {
 		this.idProducto = idProducto;
 	}
-	public int getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 	public String getTitulo() {
@@ -30,10 +47,10 @@ public class Producto {
 		this.titulo = titulo;
 	}
 	public String getDescripcion() {
-		return Descripcion;
+		return descripcion;
 	}
 	public void setDescripcion(String descripcion) {
-		Descripcion = descripcion;
+		this.descripcion = descripcion;
 	}
 	public float getPrecio() {
 		return precio;
@@ -42,23 +59,7 @@ public class Producto {
 		this.precio = precio;
 	}
 	
-	public void addProducto(Producto prod)
-	{
-		
+	public void guardar() throws ConexionException, AccesoException {
+		ProductoDAO.getInstancia().crearProducto(this);
 	}
-	
-	public void removeProducto(Producto prod)
-	{
-		
-	}
-	
-	public void editProducto(Producto prod)
-	{
-		
-	}
-	
-	
-	
-	
-	
 }

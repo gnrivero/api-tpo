@@ -6,13 +6,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import excepciones.AccesoException;
-import excepciones.ClienteException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.Cliente;
 
-public class ClienteDAO {
+public class ClienteDAO extends DAO {
+	
+	private static ClienteDAO instancia;
+	
+	private ClienteDAO(){}
+	
+	public static ClienteDAO getInstancia(){
+		if(instancia == null){
+			instancia = new ClienteDAO();
+		}
+		return instancia;
+	}
 
-	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, ClienteException, AccesoException {  
+	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, AccesoException, NegocioException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;
@@ -29,7 +40,7 @@ public class ClienteDAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
 		}
-		String SQL = "SELECT * FROM clientes where id_cliente = " + idCliente;
+		String SQL = "SELECT * FROM clientes WHERE idcliente = " + idCliente;
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -37,38 +48,40 @@ public class ClienteDAO {
 		}
 		try {
 			if(rs.next()){
-				Cliente cliente = new Cliente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"));
 				return cliente;
 			}
 			else{
-				throw new ClienteException("El cliente id = " + idCliente + " no existe");
+				throw new NegocioException("El cliente id = " + idCliente + " no existe");
 			}
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
 	}
-
-	public void grabarCliente(Cliente cliente) throws ConexionException, AccesoException {
+	
+	public void crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
-		Connection con;
-		try {
-			con = ConnectionFactory.getInstancia().getConection();
-		} catch (ClassNotFoundException | SQLException e) {
-			throw new ConexionException("No esta disponible el acceso al Servidor");
-		} 
+		String sql = "INSERT INTO clientes (nombre, domicilio, telefono, mail) VALUES "
+					+ "('" + cliente.getNombre() + "', "  
+					+ " '" + cliente.getDomicilio() + "', " 
+					+ " '" + cliente.getTelefono() +"', " 
+					+ " '" + cliente.getMail() + "')";
 		
-		Statement stm;
-		try {
-			stm = con.createStatement();
-		} catch (SQLException e) {
-			throw new AccesoException("Error de acceso");
-		}
-		
-		String sentencia = "insert into clientes values (" + cliente.getIdCliente() + ",'" + cliente.getNombre() + "'," + cliente.getDomicilio() + cliente.getTelefono() + cliente.getMail() + ")";
-		try {
-			stm.execute(sentencia);
-		} catch (SQLException e) {
-			throw new AccesoException("No se pudo guardar");
-		}
+		crear(sql);
 	}
+	
+	public void actualizarCliente(Cliente cliente) throws ConexionException, AccesoException{
+		
+		String sql = "UPDATE clientes SET "
+					+ " nombre = '" + cliente.getNombre() + "', "
+					+ " domicilio = '" + cliente.getDomicilio() + "', "
+					+ " telefono = '" + cliente.getTelefono() + "', "
+					+ " mail = '" + cliente.getMail() + "', "
+					+ " fechabaja = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(cliente.getFechaBaja()) +"' "
+					+ " WHERE idcliente = " + cliente.getIdCliente();  
+				
+		
+		actualizar(sql);
+	}
+	
 }
