@@ -57,7 +57,7 @@ public class ReclamoCompuesto extends Reclamo {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}			
 		
-		for(Reclamo reclamoHijo : reclamosHijos){
+		for(Reclamo reclamoHijo : reclamosHijos){		
 			reclamoHijo.guardar();
 		}
 	}

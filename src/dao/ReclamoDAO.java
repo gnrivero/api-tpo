@@ -106,8 +106,8 @@ public class ReclamoDAO extends DAO {
 		
 		String sql = "UPDATE reclamos SET "
 				+ " descripcion = " + reclamo.getDescripcion()
-				+ " idtiporeclamo = " + reclamo.getTipoDeReclamo().getId() //TODO: Sacar el id de tipo de algun lado. Ej: Enum
-				+ " idestadoreclamo = " + reclamo.getEstado().getId() //TODO: Sacar el id de tipo de algun lado. Ej: Enum
+				+ " idtiporeclamo = " + reclamo.getTipoDeReclamo().getId() 
+				+ " idestadoreclamo = " + reclamo.getEstado().getId() 
 				+ " fechacierre = " + reclamo.getFechaCierre() 
 				+ " idcliente = " + reclamo.getCliente().getIdCliente()
 				+ " WHERE nroreclamo = " + reclamo.getNroReclamo();
@@ -212,6 +212,115 @@ public class ReclamoDAO extends DAO {
 				reclamo.setCliente(cliente);
 				reclamo.setProducto(producto);
 				reclamo.setCantidad(rs.getInt("cantidad"));
+				reclamo.setFecha(rs.getDate("fecha"));
+				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				
+				return reclamo;
+			}
+			else{
+				throw new NegocioException("El cliente id = " + reclamo.getNroReclamo() + " no existe");
+			}
+			
+		} catch (SQLException e) {
+			throw new ConexionException("No es posible acceder a los datos");
+		}			
+	}
+	
+	public ReclamoZona obtenerReclamoZona(Integer nroReclamo) throws AccesoException, ConexionException, NegocioException {
+		
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+		
+		try {
+			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE nroreclamo = " + nroReclamo);
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}
+		
+		try {
+			
+			ReclamoZona reclamo = new ReclamoZona();
+			
+			if(rs.next()){
+				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
+				
+				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
+				reclamo.setDescripcion(rs.getString("descripcion"));
+				reclamo.setEstado(estado);
+				reclamo.setTipoDeReclamo(tipoDeReclamo);
+				reclamo.setCliente(cliente);	
+				reclamo.setZona(rs.getString("zona"));
+				reclamo.setFecha(rs.getDate("fecha"));
+				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				
+				return reclamo;
+			}
+			else{
+				throw new NegocioException("El cliente id = " + reclamo.getNroReclamo() + " no existe");
+			}
+			
+		} catch (SQLException e) {
+			throw new ConexionException("No es posible acceder a los datos");
+		}			
+	}
+
+	public ReclamoFacturacion obtenerReclamoFacturacion(Integer nroReclamo) throws AccesoException, ConexionException, NegocioException {
+		
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+		
+		try {
+			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE nroreclamo = " + nroReclamo);
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}
+		
+		try {
+			
+			ReclamoFacturacion reclamo = new ReclamoFacturacion();
+			
+			if(rs.next()){
+				
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
+				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
+				
+				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
+				reclamo.setDescripcion(rs.getString("descripcion"));
+				reclamo.setEstado(estado);
+				reclamo.setTipoDeReclamo(tipoDeReclamo);
+				reclamo.setCliente(cliente);
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
 				

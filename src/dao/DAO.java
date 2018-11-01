@@ -14,7 +14,7 @@ import excepciones.ConexionException;
  * La idea es seguir los metodos de CRUD
  * 
  * Create: crear()
- * Read: no está definido ni implementado porque no se como hacerlo devolviendo objetos genericos. Lo genera cada clase.
+ * Retrieve	: no está definido ni implementado porque no se como hacerlo devolviendo objetos genericos. Lo genera cada clase.
  * Update: actualizar()
  * Delete: no está definido. (no se si debería)
  */
