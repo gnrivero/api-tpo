@@ -28,6 +28,16 @@ public class RolDAO extends DAO {
 		crear(sql);
 	}
 	
+	public void actualizarRol(Rol rol) throws ConexionException, AccesoException {
+		
+		String sql = "UPDATE roles SET "
+				+ " idrol = " + rol.getIdRol() + ", "
+				+ " descripcion = '" + rol.getDescripcion() + "' "
+				+ " WHERE idrol = " + rol.getIdRol();
+		
+		actualizar(sql);
+	}
+	
 	
 	public Rol obtenerRolPorId(Integer idRol) throws ConexionException, AccesoException, NegocioException {
 		
@@ -55,11 +65,9 @@ public class RolDAO extends DAO {
 			throw new AccesoException("Error de consulta");
 		}
 		try {
-			if(rs.next()){
+			if(rs.next()){							
 				
-				Rol rol = new Rol();
-				rol.setIdRol(rs.getInt("idrol"));
-				rol.setDescripcion(rs.getString("descripcion"));				
+				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));			
 				
 				return rol;
 			}

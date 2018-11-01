@@ -90,7 +90,7 @@ public class Sistema {
 	/*Fin: Usuario*/
 	
 	//Roles
-	public void crearNuevoRol(String nombre, List<Integer> tiposDeReclamo) {
+	public void crearNuevoRol(String nombre, List<Integer> idsTiposReclamo) {
 		
 	}
 	

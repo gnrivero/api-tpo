@@ -10,6 +10,9 @@ public class ReclamoZona extends Reclamo {
 	
 	private String zona;
 		
+	
+	public ReclamoZona(){}
+	
 	public ReclamoZona(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, String zona) {
 		super(descripcion, tipoDeReclamo, cliente);
 		this.zona = zona;

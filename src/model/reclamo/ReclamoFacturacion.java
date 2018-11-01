@@ -13,6 +13,8 @@ public class ReclamoFacturacion extends Reclamo {
 		
 	private List<Factura> facturasReclamadas;
 	
+	public ReclamoFacturacion(){}
+	
 	public ReclamoFacturacion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) {
 		super(descripcion, tipoDeReclamo, cliente);
 		
