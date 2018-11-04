@@ -8,6 +8,7 @@ import excepciones.NegocioException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
+import view.ReclamoView;
 
 public abstract class Reclamo {
 	
@@ -105,6 +106,8 @@ public abstract class Reclamo {
 	
 	
 	abstract public void guardar() throws ConexionException, AccesoException, NegocioException;
+	
+	abstract public ReclamoView toView();
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);

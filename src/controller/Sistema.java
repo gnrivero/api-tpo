@@ -1,9 +1,11 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.ClienteDAO;
 import dao.ProductoDAO;
+import dao.ReclamoDAO;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -21,6 +23,7 @@ import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import view.ProductoView;
+import view.ReclamoView;
 
 public class Sistema {
 		
@@ -165,7 +168,7 @@ public class Sistema {
 	}
 	//Fin: Producto
 	
-	//Reclamo
+	//Reclamos
 	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad) throws NegocioException{
 		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
 		try {
@@ -203,8 +206,18 @@ public class Sistema {
 		}		
 	}
 	
-	public void tratarReclamo(Integer nroReclamo) {
-		
+	public List<ReclamoView> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws NegocioException {
+		try {
+			
+			List<Reclamo> reclamos = ReclamoDAO.getInstancia().obtenerReclamosPorTipo(tipo);							
+			List<ReclamoView> reclamosViews = new ArrayList<ReclamoView>();
+			
+			reclamos.forEach(r -> reclamosViews.add(r.toView()));
+						
+			return reclamosViews;
+		} catch (ConexionException | AccesoException | NegocioException e) {			
+			throw new NegocioException("No se pudo cargar reclamos " + tipo.getDenominacion());
+		}		
 	}
 	
 	public void cerrarReclamo(Integer nroReclamo) {
@@ -214,5 +227,5 @@ public class Sistema {
 	public void agregarDescripcionReclamo(Integer nroReclamo, String descripcion) {
 		
 	}	
-	//Fin: Reclamo
+	//Fin: Reclamos
 }

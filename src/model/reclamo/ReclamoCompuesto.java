@@ -3,12 +3,14 @@ package model.reclamo;
 import java.util.ArrayList;
 import java.util.List;
 
+import dao.DAOhelper;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
 import model.TipoDeReclamo;
+import view.ReclamoView;
 
 public class ReclamoCompuesto extends Reclamo {
 	
@@ -62,5 +64,21 @@ public class ReclamoCompuesto extends Reclamo {
 			reclamoHijo.nroReclamoCompuesto = nroReclamoCompuesto;
 			reclamoHijo.guardar();
 		}
+	}
+
+	@Override
+	public ReclamoView toView() {
+		
+		ReclamoView view = new ReclamoView();
+		view.nroReclamo = this.nroReclamo;
+		view.descripcion = this.descripcion;
+		view.tipoDeReclamo = this.tipoDeReclamo.getDenominacion();
+		view.estadoDeReclamo = this.estado.getDenominacion();
+		view.fechaDeReclamo = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha);
+		if(this.fechaCierre != null)
+			view.fechaDeCierre = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre);
+		view.cliente = this.cliente.getNombre();
+		
+		return view;
 	}
 }

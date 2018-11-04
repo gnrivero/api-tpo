@@ -15,13 +15,21 @@ import model.TipoDeReclamo;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
+import view.ReclamoView;
 
 public class ReclamosTest {
 		
 	public static void main(String[] args) {
 		
-		//generarReclamoZona();
+		//generacionDeReclamos();
 		
+		obtencionDeReclamos();
+		
+		
+		System.exit(0);	
+	}
+	
+	public static void generacionDeReclamos(){
 		generarReclamoDistribucion();
 		
 		try {
@@ -37,8 +45,22 @@ public class ReclamosTest {
 		}
 		
 		generarReclamoFacturacion();
+	}
+	
+	
+	public static void obtencionDeReclamos(){
+				
+		//Obtener reclamos zona
+		try {
+			List<ReclamoView> reclamosViews = Sistema.getInstance().obtenerReclamosPorTipo(TipoDeReclamo.ZONA);
+			
+			reclamosViews.forEach(rv -> System.out.println(rv));
+			
+		} catch (NegocioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		System.exit(0);	
 	}
 	
 	public static void generarReclamoZona(){

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -150,8 +152,8 @@ public class ReclamoDAO extends DAO {
 			
 			if(rs.next()){
 				
-				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
-				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 								
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
@@ -204,8 +206,8 @@ public class ReclamoDAO extends DAO {
 			
 			if(rs.next()){
 				
-				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
-				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(rs.getInt("idproducto"));
 								
@@ -261,8 +263,8 @@ public class ReclamoDAO extends DAO {
 			
 			if(rs.next()){
 				
-				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
-				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
 				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
@@ -316,8 +318,8 @@ public class ReclamoDAO extends DAO {
 			
 			if(rs.next()){
 				
-				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadodereclamo"));				
-				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
 				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
@@ -328,6 +330,8 @@ public class ReclamoDAO extends DAO {
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
 				
+				//TODO: cargar facturas
+				
 				return reclamo;
 			}
 			else{
@@ -337,6 +341,72 @@ public class ReclamoDAO extends DAO {
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}			
+	}
+	
+	public List<Reclamo> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws ConexionException, AccesoException, NegocioException{
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+		
+		try {
+			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE idtiporeclamo = " + tipo.getId());
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}
+		
+		try {
+			
+			List<Reclamo> reclamos = new ArrayList<Reclamo>();						
+			
+			while(rs.next()){
+				
+				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
+				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
+				
+				Reclamo reclamo = null;
+				
+				if (TipoDeReclamo.ZONA.equals(tipo)){
+					reclamo = new ReclamoZona();					
+				} else if (TipoDeReclamo.FACTURACION.equals(tipo)){					
+					reclamo = new ReclamoFacturacion();					
+				}else if(TipoDeReclamo.CANTIDADES.equals(tipo) 
+							|| TipoDeReclamo.FALTANTES.equals(tipo)
+								|| TipoDeReclamo.PRODUCTO.equals(tipo)){
+					reclamo = new ReclamoDistribucion();
+				} else {
+					reclamo = new ReclamoCompuesto();
+				}
+											
+				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
+				reclamo.setDescripcion(rs.getString("descripcion"));
+				reclamo.setEstado(estado);
+				reclamo.setTipoDeReclamo(tipoDeReclamo);
+				reclamo.setCliente(cliente);
+				reclamo.setFecha(rs.getDate("fecha"));
+				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				
+				reclamos.add(reclamo);
+			}
+			
+			return reclamos;
+			
+		} catch (SQLException e) {
+			throw new ConexionException("No es posible acceder a los datos");
+		}
 	}
 
 }

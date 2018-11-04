@@ -61,12 +61,11 @@ public class Factura {
 	}
 	
 	public void guardar(){
-		if(this.nroFactura==null){
+		if (this.nroFactura==null) {
 			
-		}else{
+		} else {
 			
-		}
-		
+		}		
 	}
 
 }
