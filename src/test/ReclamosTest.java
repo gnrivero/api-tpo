@@ -4,24 +4,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.Sistema;
+import dao.FacturaDAO;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
+import model.Factura;
 import model.Producto;
 import model.TipoDeReclamo;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoDistribucion;
+import model.reclamo.ReclamoFacturacion;
 
 public class ReclamosTest {
 		
 	public static void main(String[] args) {
 		
-		generarReclamoZona();
+		//generarReclamoZona();
 		
 		generarReclamoDistribucion();
 		
 		try {
 			generarReclamoCompuesto();
 		} catch (NegocioException e) {
+			e.printStackTrace();
+		} catch (AccesoException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ConexionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -33,7 +44,6 @@ public class ReclamosTest {
 	public static void generarReclamoZona(){
 		
 		//Cargo cliente
-		
 		Cliente cliente = null;
 		try {
 			cliente = Sistema.getInstance().obtenerCliente(1);
@@ -42,7 +52,7 @@ public class ReclamosTest {
 		}	
 		
 		try {
-			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Almagro");
+			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
 		} catch (NegocioException e) {
 			e.printStackTrace();
 		}
@@ -76,8 +86,8 @@ public class ReclamosTest {
 //		}				
 	}
 	
-	public static void generarReclamoCompuesto() throws NegocioException{
-				
+	public static void generarReclamoCompuesto() throws NegocioException, AccesoException, ConexionException{
+		
 		//Cargo cliente
 		Cliente cliente = Sistema.getInstance().obtenerCliente(1);
 		
@@ -85,13 +95,25 @@ public class ReclamosTest {
 		Producto producto = Sistema.getInstance().obtenerProducto(2);//Papel
 		
 		//Reclamos Hoja
-		Reclamo rFaltantes = new ReclamoDistribucion("Falta detergente", TipoDeReclamo.FALTANTES, cliente, producto, 1);
-		Reclamo rProducto = new ReclamoDistribucion("Me piden detergente", TipoDeReclamo.PRODUCTO, cliente, producto, 1);
+		Reclamo rFaltantes = new ReclamoDistribucion("Falta Papel", TipoDeReclamo.FALTANTES, cliente, producto, 12);
+		Reclamo rProducto = new ReclamoDistribucion("Me piden Papel", TipoDeReclamo.PRODUCTO, cliente, producto, 1);
+		
+		
+		Factura fact_2 = FacturaDAO.getInstancia().obtenerFactura(2);
+		Factura fact_3 = FacturaDAO.getInstancia().obtenerFactura(3);
+				
+		List<Factura> facturas = new ArrayList<Factura>();
+		facturas.add(fact_2);
+		facturas.add(fact_3);
+		
+		Reclamo rFacturacion = new ReclamoFacturacion("Refacturar", TipoDeReclamo.FACTURACION, cliente, facturas);			
 		
 		List<Reclamo> reclamos = new ArrayList<Reclamo>();		
 		reclamos.add(rFaltantes);
 		reclamos.add(rProducto);
+		reclamos.add(rFacturacion);
 		
+		//Creo reclamo compuesto		
 		try {
 			Sistema.getInstance().registrarReclamoCompuesto("Reclamo Compuesto", TipoDeReclamo.COMPUESTO, cliente, reclamos);
 		} catch (NegocioException e) {
@@ -111,9 +133,8 @@ public class ReclamosTest {
 //			Sistema.getInstance().registrarReclamo("Reclamo Factura", model.TipoDeReclamo.FACTURACION, cliente, facturas);
 //		} catch (NegocioException e) {
 //			e.printStackTrace();
+		
 //		}		
 	}
-	
-	
-	
+
 }

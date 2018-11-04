@@ -39,4 +39,19 @@ select * from reclamos;
 select * from reclamoscompuestos
 
 
+-- Factura
+select * from facturas;
+select * from itemsfacturas;
+
+INSERT INTO facturas (fechafactura) VALUES (CURRENT_TIMESTAMP);
+
+INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
+VALUES (2, 78, 2, 2),
+(3, 500, 1, 2)
+
+INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
+VALUES (3, 500, 1, 3)
+;
+
+
 

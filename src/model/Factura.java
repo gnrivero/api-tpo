@@ -1,7 +1,6 @@
 package model;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,11 +12,18 @@ public class Factura {
 	private static float IVA = 21;
 	private List<ItemFactura> itemFactura;
 	
-	public Factura(){
+	
+	public Factura(List<ItemFactura> itemFactura){
 		this.fechaFactura = new Date();
-		this.itemFactura = new ArrayList<ItemFactura>();
+		this.itemFactura = itemFactura;
 	}
-		
+	
+	public Factura(Integer nroFactura, Date fechaFactura, List<ItemFactura> itemFactura){
+		this.nroFactura = nroFactura;
+		this.fechaFactura = fechaFactura;
+		this.itemFactura = itemFactura;
+	}
+	
 	
 	public Integer getNroFactura() {
 		return nroFactura;

@@ -1,13 +1,33 @@
 package model;
 
 public class ItemFactura {
-
-	private int cantidad;
+	
+	private Integer idItemFactura;
+	private float montoItem;
+	private int cantidad;	
 	private Producto producto;
 	
-	public ItemFactura(int cantidad, Producto producto){
+	public ItemFactura(Integer idItemFactura, float montoItem, int cantidad, Producto producto){
+		this.idItemFactura = idItemFactura;
+		this.montoItem = montoItem;
 		this.cantidad = cantidad;
 		this.producto = producto;
+	}
+	
+	public Integer getIdItemFactura() {
+		return idItemFactura;
+	}
+
+	public void setIdItemFactura(Integer idItemFactura) {
+		this.idItemFactura = idItemFactura;
+	}
+
+	public float getMontoItem() {
+		return montoItem;
+	}
+
+	public void setMontoItem(float montoItem) {
+		this.montoItem = montoItem;
 	}
 	
 	public int getCantidad() {
@@ -26,6 +46,7 @@ public class ItemFactura {
 	}
 
 	public float calcularTotal(){		
-		return producto.getPrecio() * cantidad;
+		return this.montoItem * cantidad;
 	}
+	
 }

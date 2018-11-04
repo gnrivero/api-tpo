@@ -75,6 +75,9 @@ public abstract class Reclamo {
 	public void setTipoDeReclamo(TipoDeReclamo tipoDeReclamo) {
 		this.tipoDeReclamo = tipoDeReclamo;
 	}
+	public Integer getNroReclamoCompuesto() {
+		return nroReclamoCompuesto;
+	}
 	
 	//Métodos
 	public boolean soy(Integer nroReclamo){		

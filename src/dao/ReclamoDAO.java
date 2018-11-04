@@ -36,11 +36,13 @@ public class ReclamoDAO extends DAO {
 	}
 	
 	private static final String INSERT_RECLAMO = "INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente";
-	private static final String INSERT_RECLAMO_DIST = INSERT_RECLAMO + ", idproducto, cantidad)";
-	private static final String INSERT_RECLAMO_ZONA = INSERT_RECLAMO + ", zona)";	
+	private static final String INSERT_RECLAMO_DIST = INSERT_RECLAMO + ", idproducto, cantidad, nroreclamocompuesto)";
+	private static final String INSERT_RECLAMO_ZONA = INSERT_RECLAMO + ", zona, nroreclamocompuesto)";
+	private static final String INSERT_RECLAMO_FACT = INSERT_RECLAMO + ", nroreclamocompuesto)";
 	private static final String INSERT_RECLAMO_COMP = "INSERT INTO reclamoscompuestos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente)";
 	
 	
+	//Creacion de Reclamos
 	public Integer crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
 		String sql = INSERT_RECLAMO_COMP
 				+ " VALUES "
@@ -63,7 +65,8 @@ public class ReclamoDAO extends DAO {
 				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
 				+ reclamo.getCliente().getIdCliente() + ", "
 				+ reclamo.getProducto().getIdProducto() +", "
-				+ reclamo.getCantidad() +")";
+				+ reclamo.getCantidad() +", "
+				+ reclamo.getNroReclamoCompuesto() + ")";
 		
 		crear(sql);
 	}
@@ -78,25 +81,27 @@ public class ReclamoDAO extends DAO {
 				+ reclamo.getEstado().getId() + ", "
 				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
 				+ reclamo.getCliente().getIdCliente() + ", "
-				+ "'" + reclamo.getZona() + "')";		
+				+ "'" + reclamo.getZona() + "', "
+				+ reclamo.getNroReclamoCompuesto() + ")";		
 		
 		crear(sql);
 	}
 	
 	public void crearReclamoFacturacion(ReclamoFacturacion reclamo) throws ConexionException, AccesoException {
 		
-		String sql = INSERT_RECLAMO + ")" 
-				+ " VALUES "
+		String sql = INSERT_RECLAMO_FACT  
+				+ " VALUES " 
 				+ "('" + reclamo.getDescripcion() + "', "
-				+ "'" + reclamo.getTipoDeReclamo() + "', "
-				+ "'" + reclamo.getEstado() + "', "
+				+ reclamo.getTipoDeReclamo().getId() + ", "
+				+ reclamo.getEstado().getId() + ", "
 				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
-				+ reclamo.getCliente().getIdCliente() + ")";
+				+ reclamo.getCliente().getIdCliente() + ", "
+				+ reclamo.getNroReclamoCompuesto() + ")";
 		
-		crear(sql);
+		Integer nroReclamoFacturacion = crear(sql);
 		
 		for (Factura factura : reclamo.getFacturas()){
-			FacturaReclamo fr = new FacturaReclamo(factura.getNroFactura(), reclamo.getNroReclamo());
+			FacturaReclamo fr = new FacturaReclamo(factura.getNroFactura(), nroReclamoFacturacion);
 			fr.guardar();			
 		}		
 	}

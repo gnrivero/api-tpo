@@ -19,7 +19,7 @@ public class FacturaReclamoDAO extends DAO {
 	
 	public void crear(FacturaReclamo facturaReclamo) throws ConexionException, AccesoException {
 		
-		String sql = "INSERT INTO facturareclamo VALUES ( " 
+		String sql = "INSERT INTO facturasreclamos VALUES (" 
 					 + facturaReclamo.getNroFactura() +", " 
 					 + facturaReclamo.getNroReclamo() + ")";  
 		
