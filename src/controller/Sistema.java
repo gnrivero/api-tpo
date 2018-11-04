@@ -3,6 +3,8 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
 import dao.ClienteDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
@@ -24,6 +26,7 @@ import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import view.ProductoView;
 import view.ReclamoView;
+import vista.forms.JFormLogin;
 
 public class Sistema {
 		
@@ -43,6 +46,13 @@ public class Sistema {
 		return instance;
 	}
 	//Fin: Singleton
+	
+	//Pantalla de login
+	public static void main(String[] args) {
+		Tablero modelo = new Tablero();
+		JFrame f = new JFormLogin(modelo);
+		f.setVisible(true);
+	}
 	
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;

@@ -2,6 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/grivero/dev/workspace-uade-neon/api-tpo/mssqljdbc7_0_0_jre8.jar"/>
+	<classpathentry kind="lib" path="/home/emiliox/Dropbox/UADE/Lic.Gtion.TI/00.En Curso/25 3.4.082 Aplicaciones Interactivas/TPO/api-tpo/docs/mssqljdbc7_0_0_jre8.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
