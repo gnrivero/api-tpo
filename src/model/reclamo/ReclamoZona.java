@@ -44,13 +44,7 @@ public class ReclamoZona extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void cerrar() {
-		// TODO Auto-generated method stub
-		
-	}
+	}	
 
 	@Override
 	public void guardar() throws ConexionException, AccesoException {

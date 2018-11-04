@@ -45,7 +45,7 @@ public class ReclamoDAO extends DAO {
 	
 	
 	//Creacion de Reclamos
-	public Integer crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
+	public Integer crearReclamoCompuesto(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
 		String sql = INSERT_RECLAMO_COMP
 				+ " VALUES "
 				+ "('" + reclamo.getDescripcion() + "', "
@@ -111,12 +111,15 @@ public class ReclamoDAO extends DAO {
 	public void actualizarReclamo(Reclamo reclamo) throws AccesoException, ConexionException {
 		
 		String sql = "UPDATE reclamos SET "
-				+ " descripcion = " + reclamo.getDescripcion()
-				+ " idtiporeclamo = " + reclamo.getTipoDeReclamo().getId() 
-				+ " idestadoreclamo = " + reclamo.getEstado().getId() 
-				+ " fechacierre = " + reclamo.getFechaCierre() 
-				+ " idcliente = " + reclamo.getCliente().getIdCliente()
-				+ " WHERE nroreclamo = " + reclamo.getNroReclamo();
+				+ " descripcion = '" + reclamo.getDescripcion() + "', "
+				+ " idtiporeclamo = " + reclamo.getTipoDeReclamo().getId() + ", " 
+				+ " idestadoreclamo = " + reclamo.getEstado().getId() + ", ";
+		
+				if(reclamo.getFechaCierre() != null)
+					sql += " fechacierre = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFechaCierre()) + "', ";
+				
+				sql +=  " idcliente = " + reclamo.getCliente().getIdCliente()
+					+ " WHERE nroreclamo = " + reclamo.getNroReclamo();
 		
 		actualizar(sql);
 	}
@@ -343,7 +346,18 @@ public class ReclamoDAO extends DAO {
 		}			
 	}
 	
-	public List<Reclamo> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws ConexionException, AccesoException, NegocioException{
+	
+	/**
+	 * Metodo Genérico para obtener reclamos
+	 * 
+	 * @param sql
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	private List<Reclamo> obtenerReclamos(String sql) throws ConexionException, AccesoException, NegocioException {
+		
 		Connection con = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -362,7 +376,7 @@ public class ReclamoDAO extends DAO {
 		}
 		
 		try {
-			rs = stmt.executeQuery("SELECT * FROM reclamos WHERE idtiporeclamo = " + tipo.getId());
+			rs = stmt.executeQuery(sql);
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de consulta");
 		}
@@ -377,15 +391,15 @@ public class ReclamoDAO extends DAO {
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				
-				Reclamo reclamo = null;
-				
-				if (TipoDeReclamo.ZONA.equals(tipo)){
+				Reclamo reclamo = null;				
+
+				if (TipoDeReclamo.ZONA.equals(tipoDeReclamo)){
 					reclamo = new ReclamoZona();					
-				} else if (TipoDeReclamo.FACTURACION.equals(tipo)){					
+				} else if (TipoDeReclamo.FACTURACION.equals(tipoDeReclamo)){					
 					reclamo = new ReclamoFacturacion();					
-				}else if(TipoDeReclamo.CANTIDADES.equals(tipo) 
-							|| TipoDeReclamo.FALTANTES.equals(tipo)
-								|| TipoDeReclamo.PRODUCTO.equals(tipo)){
+				}else if(TipoDeReclamo.CANTIDADES.equals(tipoDeReclamo) 
+							|| TipoDeReclamo.FALTANTES.equals(tipoDeReclamo)
+								|| TipoDeReclamo.PRODUCTO.equals(tipoDeReclamo)){
 					reclamo = new ReclamoDistribucion();
 				} else {
 					reclamo = new ReclamoCompuesto();
@@ -407,6 +421,56 @@ public class ReclamoDAO extends DAO {
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
+	}	
+	
+	
+	/**
+	 * Obtengo reclamos por su {@link TipoDeReclamo}
+	 * @param tipo
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	public List<Reclamo> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws ConexionException, AccesoException, NegocioException{
+		
+		String tabla = (tipo.equals(TipoDeReclamo.COMPUESTO)) ? "reclamoscompuestos" : "reclamos";
+		String sql = "SELECT * FROM " + tabla +" WHERE idtiporeclamo = " + tipo.getId();
+		
+		return obtenerReclamos(sql);
+	}
+	
+	
+	/**
+	 * Obtengo una lista de reclamos en base al reclamo Compuesto que lo contiene
+	 * 
+	 * @param nroReclamoCompuesto
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	public List<Reclamo> obtenerReclamosPorReclamoCompuesto(Integer nroReclamoCompuesto) throws ConexionException, AccesoException, NegocioException{
+		
+		String sql = "SELECT * FROM reclamos WHERE nroreclamocompuesto = " + nroReclamoCompuesto;
+		
+		return obtenerReclamos(sql);
+	}
+	
+	
+	/**
+	 * Obtengo un reclamo por su nro identificador
+	 * 
+	 * @param nroDeReclamo
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	public Reclamo obtenerReclamoPorNroDeReclamo(Integer nroDeReclamo) throws ConexionException, AccesoException, NegocioException{
+		String sql = "SELECT * FROM reclamos WHERE nroreclamo = " + nroDeReclamo;
+		
+		return obtenerReclamos(sql).get(0);
 	}
 
 }

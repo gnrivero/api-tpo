@@ -33,6 +33,8 @@ public class Sistema {
 	private Sistema(){		
 		this.usuarioLogueado = null;
 		this.tablero = new Tablero();
+		
+		
 	}
 	
 	public static Sistema getInstance(){
@@ -220,12 +222,28 @@ public class Sistema {
 		}		
 	}
 	
-	public void cerrarReclamo(Integer nroReclamo) {
-		
+	
+	public void comenzarTratamientoReclamo(Integer nroReclamo) throws NegocioException {
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
+			reclamo.comenzarTratamiento();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo pasar reclamo a Tratamiento " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}	
 	}
 	
-	public void agregarDescripcionReclamo(Integer nroReclamo, String descripcion) {
+	public void cerrarReclamo(Integer nroReclamo) throws NegocioException {
 		
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
+			reclamo.cerrar();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}				
 	}	
 	//Fin: Reclamos
 }

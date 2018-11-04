@@ -89,8 +89,10 @@ public abstract class Reclamo {
 		return EstadoDeReclamo.CERRADO.equals(this.estado);
 	}
 	
-	public void tratar() {
+	public void comenzarTratamiento() throws ConexionException, AccesoException, NegocioException {
 		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
+		
+		this.guardar();
 	}
 	
 	public void cerrar() throws NegocioException, ConexionException, AccesoException {
@@ -100,7 +102,7 @@ public abstract class Reclamo {
 			
 			this.guardar();
 		}else{
-			throw new NegocioException("No se puede pasar del estado actual a Cerrado");
+			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.CERRADO.getDenominacion());
 		}
 	}	
 	

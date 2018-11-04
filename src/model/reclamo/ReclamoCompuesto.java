@@ -55,7 +55,7 @@ public class ReclamoCompuesto extends Reclamo {
 		
 		Integer nroReclamoCompuesto = null;
 		if (this.nroReclamo == null) {
-			nroReclamoCompuesto = ReclamoDAO.getInstancia().crearReclamo(this);
+			nroReclamoCompuesto = ReclamoDAO.getInstancia().crearReclamoCompuesto(this);
 		}else{
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}			

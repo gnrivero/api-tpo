@@ -34,6 +34,7 @@ VALUES ('Me piden detergente', 3, 1, '2018-10-30 21:28:58', 1, 1, 2)
 
 -- Reclamos Hoja/Simples
 select * from reclamos;
+select * from reclamos where nroreclamo = 11;
 
 -- Reclamos Compuestos
 select * from reclamoscompuestos

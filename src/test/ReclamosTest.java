@@ -25,6 +25,9 @@ public class ReclamosTest {
 		
 		obtencionDeReclamos();
 		
+		cerrarReclamo(11);
+		comenzarTratamientoReclamo(11);
+		cerrarReclamo(11);
 		
 		System.exit(0);	
 	}
@@ -157,6 +160,22 @@ public class ReclamosTest {
 //			e.printStackTrace();
 		
 //		}		
+	}
+	
+	public static void comenzarTratamientoReclamo(Integer nroReclamo){
+		try {
+			Sistema.getInstance().comenzarTratamientoReclamo(nroReclamo);
+		} catch (NegocioException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	public static void cerrarReclamo(Integer nroReclamo){
+		try {
+			Sistema.getInstance().cerrarReclamo(nroReclamo);
+		} catch (NegocioException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
