@@ -65,10 +65,8 @@ public class RolDAO extends DAO {
 			throw new AccesoException("Error de consulta");
 		}
 		try {
-			if(rs.next()){							
-				
-				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));			
-				
+			if(rs.next()){
+				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));				
 				return rol;
 			}
 			else {

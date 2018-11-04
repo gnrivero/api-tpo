@@ -51,13 +51,15 @@ public class ReclamoCompuesto extends Reclamo {
 	@Override
 	public void guardar() throws ConexionException, AccesoException, NegocioException {
 		
+		Integer nroReclamoCompuesto = null;
 		if (this.nroReclamo == null) {
-			ReclamoDAO.getInstancia().crearReclamo(this);
+			nroReclamoCompuesto = ReclamoDAO.getInstancia().crearReclamo(this);
 		}else{
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}			
 		
-		for(Reclamo reclamoHijo : reclamosHijos){		
+		for(Reclamo reclamoHijo : reclamosHijos){
+			reclamoHijo.nroReclamoCompuesto = nroReclamoCompuesto;
 			reclamoHijo.guardar();
 		}
 	}

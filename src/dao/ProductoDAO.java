@@ -23,6 +23,14 @@ public class ProductoDAO extends DAO {
 		return instancia;
 	}
 	
+	public void borrar(Integer idProducto) throws ConexionException, AccesoException{
+	
+		String sql = "DELETE FROM ";//TODO: continuar aca
+		
+		crear(sql);
+	}
+	
+	
 	public Producto obtenerProductoPorId(Integer idProducto) throws NegocioException, ConexionException, AccesoException {
 		
 		Connection con = null;

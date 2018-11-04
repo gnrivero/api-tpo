@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,14 +21,23 @@ import excepciones.ConexionException;
  */
 public abstract class DAO {
 	
-	protected void crear(String sql) throws ConexionException, AccesoException {
-		
-		Connection con;
+	
+	/**
+	 * Crea un Objeto en la base de datos y devuelve la clave primaria generada
+	 * 
+	 * @param sql
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 */
+	protected Integer crear(String sql) throws ConexionException, AccesoException {
+		Connection con = null;
+		ResultSet rs = null;
 		try {
 			con = ConnectionFactory.getInstancia().getConection();
 		} catch (ClassNotFoundException | SQLException e) {
 			throw new ConexionException("No esta disponible el acceso al Servidor");
-		} 
+		}
 		
 		Statement stm;
 		try {
@@ -37,16 +47,32 @@ public abstract class DAO {
 		}
 		
 		try {
-			stm.execute(sql);
+			
+			sql +=";SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];";
+			
+			rs = stm.executeQuery(sql);
+			
+			while(rs.next()){						
+				return rs.getInt("SCOPE_IDENTITY");			
+			}
+			throw new AccesoException("No se pudo recuperar la clave primaria");
+			
 		} catch (SQLException e) {			
 			throw new AccesoException("No se pudo guardar");
 		}
-		
 	}
 	
+	
+	/**
+	 * Actualiza un registro
+	 * 
+	 * @param sql
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 */
 	protected void actualizar(String sql) throws ConexionException, AccesoException {
 		
-		Connection con;
+		Connection con = null;
 		try {
 			con = ConnectionFactory.getInstancia().getConection();
 		} catch (ClassNotFoundException | SQLException e) {

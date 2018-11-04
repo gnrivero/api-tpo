@@ -19,6 +19,7 @@ public abstract class Reclamo {
 	protected Date fecha;
 	protected Date fechaCierre;
 	protected Cliente cliente;
+	protected Integer nroReclamoCompuesto;
 	
 	//Constructor Default
 	public Reclamo(){}

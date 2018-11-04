@@ -10,7 +10,6 @@ public class Factura {
 	
 	private Integer nroFactura;
 	private Date fechaFactura;
-	private float montoTotal;
 	private static float IVA = 21;
 	private List<ItemFactura> itemFactura;
 	
@@ -32,17 +31,9 @@ public class Factura {
 	public void setFechaFactura(Date fechaFactura) {
 		this.fechaFactura = fechaFactura;
 	}
-	public float getMontoTotal() {
-		return montoTotal;
-	}
-	public void setMontoTotal(float montoTotal) {
-		this.montoTotal = montoTotal;
-	}
 	public List<ItemFactura> getItemFactura() {
 		return itemFactura;
 	}
-
-
 	public void setItemFactura(List<ItemFactura> itemFactura) {
 		this.itemFactura = itemFactura;
 	}
@@ -61,6 +52,15 @@ public class Factura {
 			subTotal+= item.calcularTotal();
 		}
 		return subTotal;
-	}	
+	}
+	
+	public void guardar(){
+		if(this.nroFactura==null){
+			
+		}else{
+			
+		}
+		
+	}
 
 }

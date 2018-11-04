@@ -41,17 +41,16 @@ public class ReclamoDAO extends DAO {
 	private static final String INSERT_RECLAMO_COMP = "INSERT INTO reclamoscompuestos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente)";
 	
 	
-	public void crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
+	public Integer crearReclamo(ReclamoCompuesto reclamo) throws ConexionException, AccesoException, NegocioException {
 		String sql = INSERT_RECLAMO_COMP
 				+ " VALUES "
 				+ "('" + reclamo.getDescripcion() + "', "
 				+ reclamo.getTipoDeReclamo().getId() + ", "
 				+ reclamo.getEstado().getId() + ", "
 				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
-				+ reclamo.getCliente().getIdCliente() + ", "
-				+ " )";
+				+ reclamo.getCliente().getIdCliente() + ")";
 		
-		crear(sql);
+		return crear(sql);		
 	}	
 	
 	public void crearReclamoDistribucion(ReclamoDistribucion reclamo) throws ConexionException, AccesoException {
@@ -75,11 +74,11 @@ public class ReclamoDAO extends DAO {
 		String sql = INSERT_RECLAMO_ZONA
 				+ " VALUES "
 				+ "('" + reclamo.getDescripcion() + "', "
-				+ "'" + reclamo.getTipoDeReclamo() + "', "
-				+ "'" + reclamo.getEstado() + "', "
+				+ reclamo.getTipoDeReclamo().getId() + ", "
+				+ reclamo.getEstado().getId() + ", "
 				+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFecha()) + "', "
 				+ reclamo.getCliente().getIdCliente() + ", "
-				+ reclamo.getZona() + ")";		
+				+ "'" + reclamo.getZona() + "')";		
 		
 		crear(sql);
 	}

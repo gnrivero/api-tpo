@@ -2,7 +2,10 @@ USE TPO_AI
 
 -- Roles
 INSERT INTO roles (descripcion) VALUES ('Admin');
+
 INSERT INTO roles (descripcion) VALUES ('Responsable Facturacion');
+SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
+
 INSERT INTO roles (descripcion) VALUES ('Responsable Distribucion');
 INSERT INTO roles (descripcion) VALUES ('Responsable Zona Entrega');
 INSERT INTO roles (descripcion) VALUES ('Consulta');
@@ -27,5 +30,13 @@ select * from clientes;
 INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente, idproducto, cantidad) 
 VALUES ('Me piden detergente', 3, 1, '2018-10-30 21:28:58', 1, 1, 2)
 
+
+
+-- Reclamos Hoja/Simples
 select * from reclamos;
+
+-- Reclamos Compuestos
+select * from reclamoscompuestos
+
+
 
