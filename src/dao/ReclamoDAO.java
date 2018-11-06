@@ -468,6 +468,7 @@ public class ReclamoDAO extends DAO {
 	 * @throws NegocioException
 	 */
 	public Reclamo obtenerReclamoPorNroDeReclamo(Integer nroDeReclamo) throws ConexionException, AccesoException, NegocioException{
+				
 		String sql = "SELECT * FROM reclamos WHERE nroreclamo = " + nroDeReclamo;
 		
 		return obtenerReclamos(sql).get(0);

@@ -25,9 +25,9 @@ public class ReclamosTest {
 		
 		obtencionDeReclamos();
 		
-		cerrarReclamo(11);
-		comenzarTratamientoReclamo(11);
-		cerrarReclamo(11);
+//		cerrarReclamo(11);
+//		comenzarTratamientoReclamo(11);
+//		cerrarReclamo(11);
 		
 		System.exit(0);	
 	}
@@ -55,7 +55,7 @@ public class ReclamosTest {
 				
 		//Obtener reclamos zona
 		try {
-			List<ReclamoView> reclamosViews = Sistema.getInstance().obtenerReclamosPorTipo(TipoDeReclamo.ZONA);
+			List<ReclamoView> reclamosViews = Sistema.getInstance().obtenerReclamosPorTipo(TipoDeReclamo.COMPUESTO);
 			
 			reclamosViews.forEach(rv -> System.out.println(rv));
 			

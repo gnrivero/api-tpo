@@ -5,6 +5,7 @@ import java.util.List;
 import model.reclamo.Reclamo;
 import observer.Observado;
 
+
 public class Tablero extends Observado {
 	
 	private String nombre;

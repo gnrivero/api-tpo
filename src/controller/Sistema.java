@@ -3,8 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFrame;
-
 import dao.ClienteDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
@@ -26,7 +24,6 @@ import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import view.ProductoView;
 import view.ReclamoView;
-import vista.forms.JFormLogin;
 
 public class Sistema {
 		
@@ -35,9 +32,7 @@ public class Sistema {
 
 	private Sistema(){		
 		this.usuarioLogueado = null;
-		this.tablero = new Tablero();
-		
-		
+		this.tablero = new Tablero();		
 	}
 	
 	public static Sistema getInstance(){
@@ -47,14 +42,7 @@ public class Sistema {
 		
 		return instance;
 	}
-	//Fin: Singleton
-	
-	//Pantalla de login
-	public static void main(String[] args) {
-		Tablero modelo = new Tablero();
-		JFrame f = new JFormLogin(modelo);
-		f.setVisible(true);
-	}
+	//Fin: Singleton	
 	
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;
@@ -82,14 +70,14 @@ public class Sistema {
 		
 		try {
 			Usuario usuario = UsuarioDAO.getInstancia().buscarUsuarioPorUsernameYpassword(username, password);
-			this.usuarioLogueado = usuario;
+			this.setUsuarioLogueado(usuario);
 		} catch (ConexionException | AccesoException e) {			
 			throw new NegocioException("Error de autenticacion. Verifique Username y Contraseña"); 
 		}						
 	}
 	
 	public void desloguearUsuario(){
-		this.usuarioLogueado =  null;
+		this.setUsuarioLogueado(null);		
 	}
 	
 	public void crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
