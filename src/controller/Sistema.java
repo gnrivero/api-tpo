@@ -242,6 +242,18 @@ public class Sistema {
 		} catch (NegocioException e){
 			throw e;
 		}				
-	}	
+	}
+	
+	public void cerrarReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
+		
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
+			reclamo.cerrar();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}				
+	}
 	//Fin: Reclamos
 }

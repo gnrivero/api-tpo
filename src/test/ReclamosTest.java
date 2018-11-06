@@ -25,7 +25,13 @@ public class ReclamosTest {
 		
 		obtencionDeReclamos();
 		
-//		cerrarReclamo(11);
+		try {
+			Sistema.getInstance().cerrarReclamo(9, TipoDeReclamo.COMPUESTO);
+		} catch (NegocioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 //		comenzarTratamientoReclamo(11);
 //		cerrarReclamo(11);
 		

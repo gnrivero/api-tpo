@@ -21,6 +21,7 @@ import model.TipoDeReclamoFactory;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoCompuesto;
 import model.reclamo.ReclamoDistribucion;
+import model.reclamo.ReclamoFactory;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 
@@ -391,19 +392,7 @@ public class ReclamoDAO extends DAO {
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				
-				Reclamo reclamo = null;				
-
-				if (TipoDeReclamo.ZONA.equals(tipoDeReclamo)){
-					reclamo = new ReclamoZona();					
-				} else if (TipoDeReclamo.FACTURACION.equals(tipoDeReclamo)){					
-					reclamo = new ReclamoFacturacion();					
-				}else if(TipoDeReclamo.CANTIDADES.equals(tipoDeReclamo) 
-							|| TipoDeReclamo.FALTANTES.equals(tipoDeReclamo)
-								|| TipoDeReclamo.PRODUCTO.equals(tipoDeReclamo)){
-					reclamo = new ReclamoDistribucion();
-				} else {
-					reclamo = new ReclamoCompuesto();
-				}
+				Reclamo reclamo = ReclamoFactory.getReclamo(tipoDeReclamo);							
 											
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
@@ -472,6 +461,33 @@ public class ReclamoDAO extends DAO {
 		String sql = "SELECT * FROM reclamos WHERE nroreclamo = " + nroDeReclamo;
 		
 		return obtenerReclamos(sql).get(0);
+	}
+	
+	
+	/**
+	 * Devuelve reclamos en base a su numero y tipo
+	 * 
+	 * @param nroReclamo
+	 * @param tipo
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	public Reclamo obtenerReclamosPorNumeroYtipo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws ConexionException, AccesoException, NegocioException{
+		
+		String tabla = (tipoDeReclamo.equals(TipoDeReclamo.COMPUESTO)) ? "reclamoscompuestos" : "reclamos";
+		
+		String sql = "SELECT * FROM " + tabla +" WHERE idtiporeclamo = " + tipoDeReclamo.getId() + " AND nroreclamo = " + nroReclamo;
+		
+		Reclamo reclamo = obtenerReclamos(sql).get(0);
+		
+		if (tipoDeReclamo.equals(TipoDeReclamo.COMPUESTO)){
+			List<Reclamo> reclamosHoja = this.obtenerReclamosPorReclamoCompuesto(reclamo.getNroReclamo());			
+			reclamosHoja.forEach(r -> reclamo.addHoja(r));
+		}
+				
+		return reclamo;
 	}
 
 }
