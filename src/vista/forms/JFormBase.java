@@ -16,6 +16,7 @@ public abstract class JFormBase extends JFrame implements IObservador{
 		this.modelo.agregarObservador(this);
 		this.setSize(640, 480);
 		this.setLocationRelativeTo(null);
+		this.setTitle("JFormBase");
 	}	
 	
 	protected Tablero getModelo() {
