@@ -2,7 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JFrame;
 import dao.ClienteDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
@@ -24,7 +23,6 @@ import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import view.ProductoView;
 import view.ReclamoView;
-import vista.forms.JFormTablero;
 
 public class Sistema {
 		
@@ -45,13 +43,6 @@ public class Sistema {
 	}
 
 	//Fin: Singleton
-	
-	//Pantalla de Tablero
-	public static void fireTablero() {
-		Tablero modelo = new Tablero();
-		JFrame f = new JFormTablero(modelo);
-		f.setVisible(true);
-	}
 	
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;
