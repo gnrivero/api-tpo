@@ -2,13 +2,34 @@ USE TPO_AI
 
 -- Roles
 INSERT INTO roles (descripcion) VALUES ('Admin');
-
 INSERT INTO roles (descripcion) VALUES ('Responsable Facturacion');
-SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
-
 INSERT INTO roles (descripcion) VALUES ('Responsable Distribucion');
 INSERT INTO roles (descripcion) VALUES ('Responsable Zona Entrega');
+INSERT INTO roles (descripcion) VALUES ('Call Center');
 INSERT INTO roles (descripcion) VALUES ('Consulta');
+
+
+select * from tiposdereclamoporroles;
+
+-- Tipos de reclamos por roles
+
+INSERT INTO tiposdereclamoporroles VALUES 
+(2, 5),
+(3, 1),
+(3, 2),
+(3, 3),
+(4, 4),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 6)
+;
+
+
+
+-- SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
 
 SELECT * FROM roles;
 
@@ -52,4 +73,9 @@ VALUES (2, 78, 2, 2),
 
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
 VALUES (3, 500, 1, 3);
+
+
+select * from roles;
+
+
 
