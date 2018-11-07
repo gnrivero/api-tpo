@@ -31,7 +31,7 @@ public class Sistema {
 	//Singleton
 	private static Sistema instance;
 
-	private Sistema(){		
+	private Sistema(){
 		this.usuarioLogueado = null;
 		this.tablero = new Tablero();		
 	}

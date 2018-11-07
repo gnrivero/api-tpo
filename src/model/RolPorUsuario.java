@@ -1,6 +1,5 @@
 package model;
 
-import dao.RolUsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 
@@ -28,7 +27,7 @@ public class RolPorUsuario {
 	}
 	
 	public void guardar() throws ConexionException, AccesoException {
-		RolUsuarioDAO.getInstancia().crear(this);
+		//RolUsuarioDAO.getInstancia().crear(this);
 	}
 	
 }

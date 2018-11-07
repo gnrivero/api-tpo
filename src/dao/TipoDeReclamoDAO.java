@@ -1,5 +1,17 @@
 package dao;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import excepciones.AccesoException;
+import excepciones.ConexionException;
+import model.TipoDeReclamo;
+import model.TipoDeReclamoFactory;
+
 public class TipoDeReclamoDAO extends DAO {
 
 	private static TipoDeReclamoDAO instancia;
@@ -9,14 +21,6 @@ public class TipoDeReclamoDAO extends DAO {
 			instancia = new TipoDeReclamoDAO();
 
 		return instancia;
-	}
-
-	public void crearTipoDeReclamoPorRol(TipoDeReclamoPorRol tipoDeReclamoPorRol)
-			throws ConexionException, AccesoException {
-		String sql = "INSERT INTO tiposdereclamoporroles (idrol, idtipodereclamo) VALUES ('"
-				+ tipoDeReclamoPorRol.getNroRol() + "', '" + tipoDeReclamoPorRol.getIdTipoDeReclamo() + "')";
-
-		crear(sql);
 	}
 
 	public List<TipoDeReclamo> getTiposdeReclamoPorRol(Integer idRol) throws ConexionException, AccesoException {
@@ -44,13 +48,13 @@ public class TipoDeReclamoDAO extends DAO {
 			throw new AccesoException("Error de consulta");
 		}
 		try {
-			List<TipoDeReclamo> tiposDeReclamoPorRol = new List<TipoDeReclamo>();
+			List<TipoDeReclamo> tiposDeReclamoPorRol = new ArrayList<TipoDeReclamo>();
 			
 			while(rs.next()){
-				tiposDeReclamoPorRol.Add(TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo")));
+				tiposDeReclamoPorRol.add(TipoDeReclamoFactory.get(rs.getInt("idtipodereclamo")));
 			}
 			
-			return tiposdereclamo;
+			return tiposDeReclamoPorRol;
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}	
