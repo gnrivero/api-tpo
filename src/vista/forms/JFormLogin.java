@@ -39,10 +39,10 @@ public class JFormLogin extends JFormBase {
 		frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.setSize(320, 240);
 		frame.setAlwaysOnTop(true);
 		frame.add(top);
 		frame.add(bot);
+		frame.setTitle("Login");
 		frame.pack();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
@@ -61,6 +61,7 @@ public class JFormLogin extends JFormBase {
 					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password		
 					System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
 					//Sistema.getInstance().desloguearUsuario();
+					Sistema.fireTablero();
 					frame.dispose();
 				} catch (NegocioException e) {
 					//System.out.println("Error al hacer login");
