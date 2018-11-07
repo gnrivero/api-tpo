@@ -66,7 +66,11 @@ public class RolDAO extends DAO {
 		}
 		try {
 			if(rs.next()){
-				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));				
+				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));
+				
+				List<TiposDeReclamoPorRol> tiposDeReclamoPorRol = TiposDeReclamoPorRolDAO.getInstance().getTiposdeReclamoPorRol(rol.getIdRol())  
+				rol.setTiposDeReclamo(tiposDeReclamoPorRol);
+						
 				return rol;
 			}
 			else {
