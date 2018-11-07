@@ -1,7 +1,6 @@
 package app;
 
 import javax.swing.JFrame;
-
 import model.Tablero;
 import vista.forms.JFormLogin;
 
@@ -11,6 +10,5 @@ public class App {
 		//Pantalla de login	
 		Tablero modelo = new Tablero();
 		JFrame f = new JFormLogin(modelo);
-		f.setVisible(true);	
 	}
 }
