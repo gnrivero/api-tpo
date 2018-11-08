@@ -1,4 +1,4 @@
-package vista.forms;
+package gui.forms;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import controller.Sistema;
 import excepciones.NegocioException;
+import gui.TableroPantalla;
 import model.Tablero;
 
 public class JFormLogin extends JFormBase {
@@ -59,9 +60,9 @@ public class JFormLogin extends JFormBase {
 			public void actionPerformed (ActionEvent evt) {
 				try {			
 					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password		
-					System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
-					//Sistema.getInstance().desloguearUsuario();
-					Sistema.fireTablero();
+					
+					TableroPantalla.getInstance().getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+					
 					frame.dispose();
 				} catch (NegocioException e) {
 					//System.out.println("Error al hacer login");
