@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import dao.ClienteDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
@@ -21,7 +22,6 @@ import model.reclamo.ReclamoCompuesto;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
-import view.ProductoView;
 import view.ReclamoView;
 
 public class Sistema {
