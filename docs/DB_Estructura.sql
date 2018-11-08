@@ -43,14 +43,6 @@ CREATE TABLE clientes
 	CONSTRAINT idcliente_pk PRIMARY KEY (idcliente)
 )
 
-
-CREATE TABLE facturas
-(
-	nrofactura INT NOT NULL,
-	fechafactura DATETIME NOT NULL,
-	CONSTRAINT nroFactura_pk PRIMARY KEY (nroFactura)
-)
-
 CREATE TABLE productos
 (
 	idproducto INT IDENTITY,
@@ -61,7 +53,14 @@ CREATE TABLE productos
 	CONSTRAINT codigo_pk PRIMARY KEY (idproducto)
 )
 
-CREATE TABLE itemfacturas
+CREATE TABLE facturas
+(
+	nrofactura INT IDENTITY,
+	fechafactura DATETIME NOT NULL,
+	CONSTRAINT nroFactura_pk PRIMARY KEY (nrofactura)
+)
+
+CREATE TABLE itemsfacturas
 (
 	iditemfactura INT IDENTITY,
 	idproducto INT NOT NULL,
@@ -95,8 +94,16 @@ CREATE TABLE reclamos
 	idcliente INT NOT NULL,
 	idproducto INT NULL,
 	cantidad INT NULL,
-	zona VARCHAR(10) NULL,
+	zona VARCHAR(50) NULL,
 	nroreclamocompuesto INT NULL,	
 	CONSTRAINT nroreclamo_pk PRIMARY KEY (nroreclamo),
 	CONSTRAINT reclamocomp_fk FOREIGN KEY (nroreclamocompuesto) REFERENCES reclamoscompuestos (nroreclamo)
+)
+
+CREATE TABLE facturasreclamos
+(
+	nrofactura INT NOT NULL,
+	nroreclamo INT NOT NULL,
+	CONSTRAINT nroFactura_fr_fk FOREIGN KEY (nrofactura) REFERENCES facturas (nrofactura),
+	CONSTRAINT nroReclamo_fr_fk FOREIGN KEY (nroreclamo) REFERENCES reclamos (nroreclamo)
 )

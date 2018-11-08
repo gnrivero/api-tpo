@@ -1,10 +1,12 @@
 package model.reclamo;
 
+import dao.DAOhelper;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import model.Cliente;
 import model.TipoDeReclamo;
+import view.ReclamoView;
 
 public class ReclamoZona extends Reclamo {	
 	
@@ -42,13 +44,7 @@ public class ReclamoZona extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void cerrar() {
-		// TODO Auto-generated method stub
-		
-	}
+	}	
 
 	@Override
 	public void guardar() throws ConexionException, AccesoException {
@@ -57,6 +53,22 @@ public class ReclamoZona extends Reclamo {
 		} else {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}	
+	}
+	
+	@Override
+	public ReclamoView toView() {
+		
+		ReclamoView view = new ReclamoView();
+		view.nroReclamo = this.nroReclamo;
+		view.descripcion = this.descripcion;
+		view.tipoDeReclamo = this.tipoDeReclamo.getDenominacion();
+		view.estadoDeReclamo = this.estado.getDenominacion();
+		view.fechaDeReclamo = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha);
+		if(this.fechaCierre != null)
+			view.fechaDeCierre = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre);
+		view.cliente = this.cliente.getNombre();
+		
+		return view;	
 	}
 
 }

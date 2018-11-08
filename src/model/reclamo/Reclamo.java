@@ -8,6 +8,7 @@ import excepciones.NegocioException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
+import view.ReclamoView;
 
 public abstract class Reclamo {
 	
@@ -19,6 +20,7 @@ public abstract class Reclamo {
 	protected Date fecha;
 	protected Date fechaCierre;
 	protected Cliente cliente;
+	protected Integer nroReclamoCompuesto;
 	
 	//Constructor Default
 	public Reclamo(){}
@@ -74,6 +76,9 @@ public abstract class Reclamo {
 	public void setTipoDeReclamo(TipoDeReclamo tipoDeReclamo) {
 		this.tipoDeReclamo = tipoDeReclamo;
 	}
+	public Integer getNroReclamoCompuesto() {
+		return nroReclamoCompuesto;
+	}
 	
 	//Métodos
 	public boolean soy(Integer nroReclamo){		
@@ -84,8 +89,10 @@ public abstract class Reclamo {
 		return EstadoDeReclamo.CERRADO.equals(this.estado);
 	}
 	
-	public void tratar() {
+	public void comenzarTratamiento() throws ConexionException, AccesoException, NegocioException {
 		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
+		
+		this.guardar();
 	}
 	
 	public void cerrar() throws NegocioException, ConexionException, AccesoException {
@@ -95,12 +102,14 @@ public abstract class Reclamo {
 			
 			this.guardar();
 		}else{
-			throw new NegocioException("No se puede pasar del estado actual a Cerrado");
+			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.CERRADO.getDenominacion());
 		}
 	}	
 	
 	
 	abstract public void guardar() throws ConexionException, AccesoException, NegocioException;
+	
+	abstract public ReclamoView toView();
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);

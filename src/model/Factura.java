@@ -1,7 +1,6 @@
 package model;
 
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,15 +9,21 @@ public class Factura {
 	
 	private Integer nroFactura;
 	private Date fechaFactura;
-	private float montoTotal;
 	private static float IVA = 21;
 	private List<ItemFactura> itemFactura;
 	
-	public Factura(){
+	
+	public Factura(List<ItemFactura> itemFactura){
 		this.fechaFactura = new Date();
-		this.itemFactura = new ArrayList<ItemFactura>();
+		this.itemFactura = itemFactura;
 	}
-		
+	
+	public Factura(Integer nroFactura, Date fechaFactura, List<ItemFactura> itemFactura){
+		this.nroFactura = nroFactura;
+		this.fechaFactura = fechaFactura;
+		this.itemFactura = itemFactura;
+	}
+	
 	
 	public Integer getNroFactura() {
 		return nroFactura;
@@ -32,17 +37,9 @@ public class Factura {
 	public void setFechaFactura(Date fechaFactura) {
 		this.fechaFactura = fechaFactura;
 	}
-	public float getMontoTotal() {
-		return montoTotal;
-	}
-	public void setMontoTotal(float montoTotal) {
-		this.montoTotal = montoTotal;
-	}
 	public List<ItemFactura> getItemFactura() {
 		return itemFactura;
 	}
-
-
 	public void setItemFactura(List<ItemFactura> itemFactura) {
 		this.itemFactura = itemFactura;
 	}
@@ -61,6 +58,14 @@ public class Factura {
 			subTotal+= item.calcularTotal();
 		}
 		return subTotal;
-	}	
+	}
+	
+	public void guardar(){
+		if (this.nroFactura==null) {
+			
+		} else {
+			
+		}		
+	}
 
 }

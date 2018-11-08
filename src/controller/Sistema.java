@@ -1,9 +1,10 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
-
 import dao.ClienteDAO;
 import dao.ProductoDAO;
+import dao.ReclamoDAO;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -21,15 +22,16 @@ import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import view.ProductoView;
+import view.ReclamoView;
 
 public class Sistema {
 		
 	//Singleton
 	private static Sistema instance;
 
-	private Sistema(){		
+	private Sistema(){
 		this.usuarioLogueado = null;
-		this.tablero = new Tablero();
+		this.tablero = new Tablero();		
 	}
 	
 	public static Sistema getInstance(){
@@ -39,6 +41,7 @@ public class Sistema {
 		
 		return instance;
 	}
+
 	//Fin: Singleton
 	
 	//Miembros de Sistema
@@ -67,14 +70,14 @@ public class Sistema {
 		
 		try {
 			Usuario usuario = UsuarioDAO.getInstancia().buscarUsuarioPorUsernameYpassword(username, password);
-			this.usuarioLogueado = usuario;
+			this.setUsuarioLogueado(usuario);
 		} catch (ConexionException | AccesoException e) {			
 			throw new NegocioException("Error de autenticacion. Verifique Username y Contraseña"); 
 		}						
 	}
 	
 	public void desloguearUsuario(){
-		this.usuarioLogueado =  null;
+		this.setUsuarioLogueado(null);		
 	}
 	
 	public void crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
@@ -193,7 +196,7 @@ public class Sistema {
 	}
 	//Fin: Producto
 	
-	//Reclamo
+	//Reclamos
 	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad) throws NegocioException{
 		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
 		try {
@@ -231,16 +234,54 @@ public class Sistema {
 		}		
 	}
 	
-	public void tratarReclamo(Integer nroReclamo) {
-		
+	public List<ReclamoView> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws NegocioException {
+		try {
+			
+			List<Reclamo> reclamos = ReclamoDAO.getInstancia().obtenerReclamosPorTipo(tipo);							
+			List<ReclamoView> reclamosViews = new ArrayList<ReclamoView>();
+			
+			reclamos.forEach(r -> reclamosViews.add(r.toView()));
+						
+			return reclamosViews;
+		} catch (ConexionException | AccesoException | NegocioException e) {			
+			throw new NegocioException("No se pudo cargar reclamos " + tipo.getDenominacion());
+		}		
 	}
 	
-	public void cerrarReclamo(Integer nroReclamo) {
-		
+	
+	public void comenzarTratamientoReclamo(Integer nroReclamo) throws NegocioException {
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
+			reclamo.comenzarTratamiento();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo pasar reclamo a Tratamiento " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}	
 	}
 	
-	public void agregarDescripcionReclamo(Integer nroReclamo, String descripcion) {
+	public void cerrarReclamo(Integer nroReclamo) throws NegocioException {
 		
-	}	
-	//Fin: Reclamo
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
+			reclamo.cerrar();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}				
+	}
+	
+	public void cerrarReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
+		
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
+			reclamo.cerrar();
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}				
+	}
+	//Fin: Reclamos
 }

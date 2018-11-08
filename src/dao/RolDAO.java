@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Rol;
+import model.TipoDeReclamo;
 
 public class RolDAO extends DAO {
 	
@@ -65,10 +67,12 @@ public class RolDAO extends DAO {
 			throw new AccesoException("Error de consulta");
 		}
 		try {
-			if(rs.next()){							
+			if(rs.next()){
+				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));
 				
-				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));			
-				
+				List<TipoDeReclamo> tiposDeReclamoPorRol = TipoDeReclamoDAO.getInstancia().getTiposdeReclamoPorRol(rol.getIdRol());  
+				rol.setTiposDeReclamo(tiposDeReclamoPorRol);
+						
 				return rol;
 			}
 			else {

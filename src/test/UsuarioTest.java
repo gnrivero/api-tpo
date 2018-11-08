@@ -8,12 +8,8 @@ public class UsuarioTest {
 	
 	static Rol rolAdmin;
 	
-	static {
-		
-		rolAdmin = new Rol();
-		rolAdmin.setIdRol(1);
-		rolAdmin.setDescripcion("Admin");
-		
+	static {		
+		rolAdmin = new Rol(1, "Admin");		
 	}
 	
 	public static void main(String[] args) {

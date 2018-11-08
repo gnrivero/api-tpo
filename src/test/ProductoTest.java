@@ -11,6 +11,10 @@ public class ProductoTest {
 		System.exit(0);
 	}
 	
+	//static Producto detergente = new Producto("ABC78A", "Detergente","Lava cosas",50);
+	//static Producto papelSecar = new Producto("BOC433", "Papel","Seca cosas",34);
+	//static Producto matafuegos = new Producto("FE8EOQ", "Matafuegos","Apaga el fuego",500);
+	
 	public static void crearProductos(){
 		
 		try{
