@@ -151,10 +151,38 @@ public class Sistema {
 		}
 	}
 	
-	public void modificarProducto(Integer idProducto, ProductoView producto) {
-		
+	public void modificarProducto(Integer idProducto, String codigo, String titulo, String descripcion, float precio) throws NegocioException {
+		Producto product = new Producto(idProducto, codigo, titulo, descripcion, precio);
+		try 
+		{
+			product.guardar();
+		}
+			catch (ConexionException | AccesoException e) 
+			{
+			e.printStackTrace();
+			throw new NegocioException("No se pudo actualizar el producto");
+			}	
+		}	
+/***
+ * 	public void eliminarMaterial (String cod)
+	{
+		int i;
+		String p = new String ();
+		for (i=0; i<this.MaterialesV.size(); i++)
+		{
+			p = this.MaterialesV.elementAt(i).getCodigo();
+			if (p.equals(cod))
+			{
+				AdmPersistenciaMaterial.getInstancia().delete(this.MaterialesV.elementAt(i));
+				this.MaterialesV.remove(i);
+				i = this.MaterialesV.size();
+			}
+		}
 	}
-	
+
+ * @param idProducto
+ */
+
 	public void eliminarProducto(Integer idProducto) {
 		
 	}
