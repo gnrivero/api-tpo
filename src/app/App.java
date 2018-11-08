@@ -2,15 +2,15 @@ package app;
 
 import javax.swing.JFrame;
 
-import controller.Sistema;
-import model.Tablero;
-import vista.forms.JFormLogin;
+import gui.TableroPantalla;
 
 public class App {
 
 	public static void main(String[] args) {
-		//Pantalla de login	
-		Tablero modelo = Sistema.getInstance().getTablero();
-		JFrame f = new JFormLogin(modelo);
+		
+		TableroPantalla tablero = TableroPantalla.getInstance();
+		tablero.setTitle("Tablero de Gestion de Reclamos");
+		tablero.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				
 	}
 }
