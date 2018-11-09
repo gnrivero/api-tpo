@@ -1,4 +1,4 @@
-package vista.forms;
+package gui.forms;
 
 import java.util.ArrayList;
 import java.util.List;
