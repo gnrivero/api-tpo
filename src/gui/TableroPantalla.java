@@ -55,15 +55,15 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		container.add(usuarioLogueado);
 		
 		btnCargarReclamo = new JButton("Cargar Reclamo");
-		btnCargarReclamo.setBounds(10, 30, 150, 30);
+		btnCargarReclamo.setBounds(10, 40, 150, 30);
 		container.add(btnCargarReclamo);
 		
 		btnCargarVariosReclamos = new JButton("Cargar Varios Reclamos");
-		btnCargarVariosReclamos.setBounds(170, 30, 180, 30);
+		btnCargarVariosReclamos.setBounds(170, 40, 180, 30);
 		container.add(btnCargarVariosReclamos);
 		
 		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
-		btnAdministrarUsuarios.setBounds(360, 30, 150, 30);
+		btnAdministrarUsuarios.setBounds(360, 40, 150, 30);
 		container.add(btnAdministrarUsuarios);
 		
 		if(Sistema.getInstance().getUsuarioLogueado() == null){
