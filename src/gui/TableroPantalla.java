@@ -2,20 +2,23 @@ package gui;
 
 import java.awt.Container;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import controller.Sistema;
 import gui.forms.JFormLogin;
+import observer.IObservador;
 
-public class TableroPantalla extends JFrame {
+public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private static final long serialVersionUID = -1088336668792687527L;
 	
 	//Singleton
 	private static TableroPantalla tableroPantalla = null;
 		
-	private TableroPantalla(){
+	private TableroPantalla(){		
+		Sistema.getInstance().agregarObservador(this);		
 		configurar();
 		eventos();
 	}
@@ -28,6 +31,10 @@ public class TableroPantalla extends JFrame {
 	}
 	//Singleton
 	private JLabel usuarioLogueado;
+	private JButton btnCargarReclamo, btnCargarVariosReclamos;
+	private JButton btnAdministrarUsuarios;
+	
+	
 	
 	public JLabel getUsuarioLogueado() {
 		return usuarioLogueado;
@@ -43,10 +50,21 @@ public class TableroPantalla extends JFrame {
 		Container container = this.getContentPane();
 		container.setLayout(null);
 		
-		
-		usuarioLogueado = new JLabel("");
+		usuarioLogueado = new JLabel();
 		usuarioLogueado.setBounds(10, 10, 100, 30);
 		container.add(usuarioLogueado);
+		
+		btnCargarReclamo = new JButton("Cargar Reclamo");
+		btnCargarReclamo.setBounds(10, 30, 150, 30);
+		container.add(btnCargarReclamo);
+		
+		btnCargarVariosReclamos = new JButton("Cargar Varios Reclamos");
+		btnCargarVariosReclamos.setBounds(170, 30, 180, 30);
+		container.add(btnCargarVariosReclamos);
+		
+		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
+		btnAdministrarUsuarios.setBounds(360, 30, 150, 30);
+		container.add(btnAdministrarUsuarios);
 		
 		if(Sistema.getInstance().getUsuarioLogueado() == null){
 			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
@@ -58,5 +76,10 @@ public class TableroPantalla extends JFrame {
 	
 	private void eventos(){
 		
+	}
+
+	@Override
+	public void actualizar() {
+		this.getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());	
 	}
 }

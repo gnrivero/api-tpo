@@ -22,9 +22,10 @@ import model.reclamo.ReclamoCompuesto;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
+import observer.Observado;
 import view.ReclamoView;
 
-public class Sistema {
+public class Sistema extends Observado {
 		
 	//Singleton
 	private static Sistema instance;
@@ -71,6 +72,9 @@ public class Sistema {
 		try {
 			Usuario usuario = UsuarioDAO.getInstancia().buscarUsuarioPorUsernameYpassword(username, password);
 			this.setUsuarioLogueado(usuario);
+			
+			this.notificarObservadores();
+			
 		} catch (ConexionException | AccesoException e) {			
 			throw new NegocioException("Error de autenticacion. Verifique Username y Contraseña"); 
 		}						

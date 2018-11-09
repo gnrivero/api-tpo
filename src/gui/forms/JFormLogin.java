@@ -59,10 +59,7 @@ public class JFormLogin extends JFormBase {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed (ActionEvent evt) {
 				try {			
-					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password		
-					
-					TableroPantalla.getInstance().getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
-					
+					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
 					frame.dispose();
 				} catch (NegocioException e) {
 					//System.out.println("Error al hacer login");
@@ -80,9 +77,10 @@ public class JFormLogin extends JFormBase {
 			}
 		});
 	}
-	
+
 	@Override
 	public void actualizar() {
 		// TODO Auto-generated method stub
-	}
+		
+	}	
 }
