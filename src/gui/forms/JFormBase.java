@@ -23,6 +23,4 @@ public abstract class JFormBase extends JFrame implements IObservador{
 		return modelo;
 	}
 
-	public abstract void actualizar();
-		
 }

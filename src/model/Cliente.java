@@ -3,8 +3,10 @@ package model;
 import java.util.Date;
 
 import dao.ClienteDAO;
+import dao.DAOhelper;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import view.ClienteView;
 
 public class Cliente {
 	
@@ -22,9 +24,10 @@ public class Cliente {
 		this.mail = mail;
 	}
 	
-	public Cliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail) {		
+	public Cliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail, Date fechaBaja) {		
 		this(nombre, domicilio, telefono, mail);
 		this.idCliente = idCliente;	
+		this.fechaBaja = fechaBaja;
 	}
 	
 	public void setIdCliente(Integer idCliente) {
@@ -82,11 +85,20 @@ public class Cliente {
 		this.guardar();
 	}
 
-	public void guardar() throws ConexionException, AccesoException{		
+	public Integer guardar() throws ConexionException, AccesoException{		
 		if(this.getIdCliente() == null){
-			ClienteDAO.getInstancia().crearCliente(this);
+			this.idCliente = ClienteDAO.getInstancia().crearCliente(this);
 		}else{
 			ClienteDAO.getInstancia().actualizarCliente(this);
-		}		
+		}
+		
+		return this.idCliente;
+	}
+	
+	public ClienteView toView(){
+		
+		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioDateFormat().format(this.fechaBaja);
+		
+		return new ClienteView(this.idCliente, this.nombre, this.domicilio, this.telefono, this.mail, fechaBaja);
 	}
 }

@@ -6,7 +6,7 @@ import model.Cliente;
 
 public class ClienteTest {
 	
-	static Cliente cliente = new Cliente(1000, "ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com");
+	static Cliente cliente = new Cliente(1000, "ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com", null);
 	
 	public static void main(String[] args) {
 		

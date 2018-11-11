@@ -15,6 +15,7 @@ import model.TipoDeReclamo;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
+import view.ClienteView;
 import view.ReclamoView;
 
 public class ReclamosTest {
@@ -75,12 +76,14 @@ public class ReclamosTest {
 	public static void generarReclamoZona(){
 		
 		//Cargo cliente
-		Cliente cliente = null;
+		ClienteView clienteView = null;
 		try {
-			cliente = Sistema.getInstance().obtenerCliente(1);
+			clienteView = Sistema.getInstance().obtenerCliente(1);
 		} catch (NegocioException e1) {
 			e1.printStackTrace();
 		}	
+		
+		Cliente cliente = new Cliente(clienteView.nombre, clienteView.domicilio, clienteView.telefono, clienteView.mail);
 		
 		try {
 			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
@@ -120,7 +123,8 @@ public class ReclamosTest {
 	public static void generarReclamoCompuesto() throws NegocioException, AccesoException, ConexionException{
 		
 		//Cargo cliente
-		Cliente cliente = Sistema.getInstance().obtenerCliente(1);
+		ClienteView clienteView = Sistema.getInstance().obtenerCliente(1);
+		Cliente cliente = new Cliente(clienteView.nombre, clienteView.domicilio, clienteView.telefono, clienteView.mail);
 		
 		//Cargo producto
 		Producto producto = Sistema.getInstance().obtenerProducto(2);//Papel

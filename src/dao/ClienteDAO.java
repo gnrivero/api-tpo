@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -22,8 +24,8 @@ public class ClienteDAO extends DAO {
 		}
 		return instancia;
 	}
-
-	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, AccesoException, NegocioException {  
+	
+	private List<Cliente> obtenerClientes(String SQL) throws AccesoException, ConexionException, NegocioException{
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;
@@ -40,26 +42,44 @@ public class ClienteDAO extends DAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
 		}
-		String SQL = "SELECT * FROM clientes WHERE idcliente = " + idCliente;
+
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de consulta");
 		}
+		
+		List<Cliente> clientes = new ArrayList<>();
 		try {
-			if(rs.next()){
-				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"));
-				return cliente;
-			}
-			else{
-				throw new NegocioException("El cliente id = " + idCliente + " no existe");
-			}
+			while(rs.next()){
+				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"), rs.getDate("fechabaja"));
+				clientes.add(cliente);
+			}			
+			return clientes;
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
 	}
+
+	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, AccesoException, NegocioException {  
+		
+		String SQL = "SELECT * FROM clientes WHERE idcliente = " + idCliente;
+				
+		return obtenerClientes(SQL).get(0);
+	}
 	
-	public void crearCliente(Cliente cliente) throws ConexionException, AccesoException {
+	public List<Cliente> obtenerTodosLosClientes(boolean filtrarDeshabilitados) throws AccesoException, ConexionException, NegocioException{
+		
+		String sql = "SELECT * FROM clientes ";
+		
+		if(filtrarDeshabilitados){
+			sql += " WHERE fechabaja IS NULL";
+		}
+		
+		return obtenerClientes(sql);
+	}
+	
+	public Integer crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
 		String sql = "INSERT INTO clientes (nombre, domicilio, telefono, mail) VALUES "
 					+ "('" + cliente.getNombre() + "', "  
@@ -67,7 +87,7 @@ public class ClienteDAO extends DAO {
 					+ " '" + cliente.getTelefono() +"', " 
 					+ " '" + cliente.getMail() + "')";
 		
-		crear(sql);
+		return crear(sql);
 	}
 	
 	public void actualizarCliente(Cliente cliente) throws ConexionException, AccesoException{
@@ -76,11 +96,16 @@ public class ClienteDAO extends DAO {
 					+ " nombre = '" + cliente.getNombre() + "', "
 					+ " domicilio = '" + cliente.getDomicilio() + "', "
 					+ " telefono = '" + cliente.getTelefono() + "', "
-					+ " mail = '" + cliente.getMail() + "', "
-					+ " fechabaja = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(cliente.getFechaBaja()) +"' "
-					+ " WHERE idcliente = " + cliente.getIdCliente();  
-				
+					+ " mail = '" + cliente.getMail() + "' ";
 		
+					if(cliente.getFechaBaja()!= null){
+						sql += ", fechabaja = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(cliente.getFechaBaja()) +"' ";
+					}else{
+						sql += ", fechabaja = NULL ";
+					}
+						
+					sql += " WHERE idcliente = " + cliente.getIdCliente();  
+					
 		actualizar(sql);
 	}
 	
