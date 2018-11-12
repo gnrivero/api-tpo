@@ -37,9 +37,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private JLabel usuarioLogueado;
 	private JButton btnCargarReclamo, btnCargarVariosReclamos;
 	private JButton btnAdministrarUsuarios, btnAdminClientes;
-	
-	
-	
+		
 	public JLabel getUsuarioLogueado() {
 		return usuarioLogueado;
 	}
@@ -47,8 +45,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	public void setUsuarioLogueado(JLabel usuarioLogueado) {
 		this.usuarioLogueado = usuarioLogueado;
 	}
-	
-	
+		
 	private void configurar(){
 		
 		container = this.getContentPane();
@@ -80,6 +77,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		this.setSize(800, 600);
 		this.setVisible(true);
+		this.setLocationRelativeTo(null);
 	}
 	
 	private void eventos(){
