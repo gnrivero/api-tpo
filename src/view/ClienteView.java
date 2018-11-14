@@ -18,8 +18,15 @@ public class ClienteView {
 		 this.fechaBaja = fechaBaja;
 	}
 	
+	public ClienteView(String nombre){
+		this.nombre = nombre;
+	}
+	
 	@Override
-	public String toString() {		
+	public String toString() {			
+		if (this.idCliente==null)
+			return this.nombre;
+		
 		return "ID: " + this.idCliente + " - " + this.nombre;
 	}
 

@@ -170,7 +170,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 			
 				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
 				
-				if (cliente != null){
+				if (cliente.idCliente  != null && cliente != null){
 					txtIdCliente.setText(cliente.idCliente.toString());
 					txtNombre.setText(cliente.nombre);
 					txtDomicilio.setText(cliente.domicilio);
@@ -178,7 +178,16 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 					txtMail.setText(cliente.mail);
 										
 					chHabilitado.setSelected((cliente.fechaBaja == null));
-				}				
+					
+				} else {
+					
+					txtIdCliente.setText("");
+					txtNombre.setText("");
+					txtDomicilio.setText("");
+					txtTelefono.setText("");
+					txtMail.setText("");										
+					chHabilitado.setSelected(true);					
+				}
 			}
 		});
 		
@@ -193,8 +202,9 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 	
 	private void cargarClientes(){
 		try {
-			List<ClienteView> clientesViews = Sistema.getInstance().obtenerTodosLosClientes(false);			
-			cmbClientes.removeAllItems();
+			List<ClienteView> clientesViews = Sistema.getInstance().obtenerTodosLosClientes(false);
+			cmbClientes.removeAllItems();		
+			cmbClientes.addItem(new ClienteView("Nuevo Cliente"));
 			clientesViews.forEach(c -> cmbClientes.addItem(c));
 		} catch (NegocioException e) {
 			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar clientes. " + e, "Admin. Clientes", JOptionPane.ERROR_MESSAGE);

@@ -18,7 +18,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	//Singleton
 	private static TableroPantalla tableroPantalla = null;
 		
-	private TableroPantalla(){		
+	private TableroPantalla(){
 		Sistema.getInstance().agregarObservador(this);		
 		configurar();
 		eventos();
@@ -91,6 +91,18 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				clientePantalla.setVisible(true);				
 				container.add(clientePantalla);
 			}
+		});
+		
+		btnCargarReclamo.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ReclamoPantalla reclamoPantalla = ReclamoPantalla.getInstance();
+				reclamoPantalla.moveToFront();
+				reclamoPantalla.setVisible(true);
+				container.add(reclamoPantalla);
+			}
+			
 		});
 		
 	}

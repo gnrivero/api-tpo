@@ -7,8 +7,8 @@ public class LoginTest {
 	
 	public static void main(String[] args) {
 			
-		try {			
-			Sistema.getInstance().loguearUsuario("grivero", "grivero");			
+		try {
+			Sistema.getInstance().loguearUsuario("grivero", "123456");			
 			System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
 			Sistema.getInstance().desloguearUsuario();
 		} catch (NegocioException e) {
