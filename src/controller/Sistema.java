@@ -3,7 +3,6 @@ package controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import dao.ClienteDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;

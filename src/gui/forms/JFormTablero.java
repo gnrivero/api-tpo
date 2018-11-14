@@ -14,7 +14,7 @@ import model.Tablero;
 public class JFormTablero extends JFormBase {
 	
 	public JFormTablero(Tablero modelo) {
-		super(modelo);
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setTitle("Tablero");
 		this.setSize(300, 300);
