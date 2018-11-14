@@ -59,7 +59,7 @@ public class JFormTablero extends JFormBase {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void actualizar(String dato) {
+	public void actualizar() {
 		// TODO Auto-generated method stub
 		
 	}

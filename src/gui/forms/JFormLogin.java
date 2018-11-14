@@ -77,9 +77,10 @@ public class JFormLogin extends JFormBase {
 			}
 		});
 	}
-
+	
 	@Override
-	public void actualizar(String dato) {
+	public void actualizar() {
+		// TODO Auto-generated method stub
 		
 	}	
 }
