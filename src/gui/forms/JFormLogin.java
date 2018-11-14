@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import controller.Sistema;
 import excepciones.NegocioException;
+import gui.TableroPantalla;
 
 public class JFormLogin extends JFrame {
 
@@ -13,11 +14,10 @@ public class JFormLogin extends JFrame {
 	//Singleton
 	private static JFormLogin login = null;
 		
-	private JFormLogin() {
+	private JFormLogin(TableroPantalla tablero) {
 		super();
-		//Sistema.getInstance().agregarObservador(this);
 		configurar();
-		eventos();
+		eventos(tablero);
 	}	
 
 	private void configurar() {
@@ -36,9 +36,11 @@ public class JFormLogin extends JFrame {
 		frame.setLocationRelativeTo(null);
 	}
 
-	public static JFormLogin getInstance(){
+	public static JFormLogin getInstance(TableroPantalla tablero){
 		if (login == null)
-			login = new JFormLogin();
+			login = new JFormLogin(tablero);
+		else
+			System.out.println("login ya existe");
 		return login;
 	}
 	//Singleton
@@ -66,7 +68,7 @@ public class JFormLogin extends JFrame {
 		bot.add(btnExit);
 	}
 	
-	private void eventos() {
+	private void eventos(TableroPantalla tablero) {
 		btnLogin.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed (ActionEvent evt) {
@@ -74,9 +76,11 @@ public class JFormLogin extends JFrame {
 					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
 					System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
 					frame.dispose();
+					login = null;
+					tablero.setEnabled(true);
+
 				} catch (NegocioException e) {
-					//System.out.println("Error al hacer login");
-					//e.printStackTrace();
+					e.printStackTrace();
 					frame.setAlwaysOnTop(false);
 					System.out.println("Error de login");
 			        JOptionPane.showMessageDialog(null, "Usuario o password incorrectos", "ERROR: Login", JOptionPane.ERROR_MESSAGE);
@@ -91,4 +95,5 @@ public class JFormLogin extends JFrame {
 			}
 		});
 	}
+
 }
