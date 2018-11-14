@@ -97,6 +97,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 
 	@Override
 	public void actualizar() {
-		this.getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado());	
+		this.getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());	
 	}
 }

@@ -1,5 +1,13 @@
 USE TPO_AI
 
+SELECT * FROM usuarios WHERE username = 'grivero'; --AND password = '123456'
+
+select * from usuarios where idusuario = 1;
+
+update usuarios SET username = 'grivero' where idusuario = 1;
+
+
+
 -- Roles
 INSERT INTO roles (descripcion) VALUES ('Admin');
 INSERT INTO roles (descripcion) VALUES ('Responsable Facturacion');
