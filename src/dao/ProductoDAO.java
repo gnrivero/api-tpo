@@ -25,8 +25,8 @@ public class ProductoDAO extends DAO {
 	
 	public void borrar(Integer idProducto) throws ConexionException, AccesoException{
 	
-		String sql = "DELETE FROM productos where idproducto = " + idProducto;//TODO: continuar aca
-
+		String sql = "DELETE FROM productos where idproducto = " + idProducto;
+	
 		crear(sql);
 	}
 	

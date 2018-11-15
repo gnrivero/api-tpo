@@ -64,6 +64,6 @@ public class Producto {
 	}
 	
 	public void borrar() throws ConexionException, AccesoException {
-		ProductoDAO.getInstancia().borrar(idProducto));
+		ProductoDAO.getInstancia().borrar(idProducto);
 	}
 }
