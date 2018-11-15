@@ -15,6 +15,10 @@ import javax.swing.JTextField;
 import controller.Sistema;
 import excepciones.NegocioException;
 import model.TipoDeReclamo;
+import model.reclamo.ReclamoCompuesto;
+import model.reclamo.ReclamoDistribucion;
+import model.reclamo.ReclamoFacturacion;
+import model.reclamo.ReclamoZona;
 import observer.IObservador;
 import view.ClienteView;
 
@@ -51,7 +55,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					   txtEstado,
 					   txtFechaDeCreacion,
 					   txtFechaDeCierre,
-					   txtNroReclamoCompuesto;
+					   txtNroReclamoCompuesto,
+					   txtZona					   
+					   ;
 	
 	private JComboBox<TipoDeReclamo> cmbTiposDeReclamo;
 	private JComboBox<ClienteView> cmbClientes;
@@ -65,12 +71,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cont.setLayout(null);
 		
 		lblNroReclamo = new JLabel("Nro. Reclamo");
-		lblNroReclamo.setBounds(10, 20, 200, 30);
-		lblNroReclamo.setEnabled(false);
+		lblNroReclamo.setBounds(10, 20, 200, 30);		
 		cont.add(lblNroReclamo);
 		
 		txtNroReclamo = new JTextField();
 		txtNroReclamo.setBounds(215, 20, 200, 30);
+		txtNroReclamo.setEnabled(false);
 		cont.add(txtNroReclamo);
 		
 		lblDescripcion = new JLabel("Descripcion");
@@ -88,6 +94,10 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cmbTiposDeReclamo = new JComboBox<TipoDeReclamo>();
 		cmbTiposDeReclamo.setBounds(215, 90, 200, 30);
 		cont.add(cmbTiposDeReclamo);
+		
+		for(TipoDeReclamo tipo: TipoDeReclamo.values()){
+			cmbTiposDeReclamo.addItem(tipo);
+		}		
 		
 		lblEstado = new JLabel("Estado");
 		lblEstado.setBounds(10, 125, 200, 30);
@@ -138,6 +148,40 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	}
 	
 	public void eventos(){
+		
+		btnGuardar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
+				
+				String descripcion = txtDescripcion.getText();
+				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
+				
+				
+				switch(tipoDeReclamo){
+					
+					case ZONA:
+						
+						String zona = txtZona.getText();
+						
+						Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.idCliente, zona);
+					break;
+					case FACTURACION:																	
+						Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente, facturas);
+					break;
+					case CANTIDADES: 
+					case FALTANTES:
+					case PRODUCTO:
+						Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente, producto, cantidad);
+					break;				
+					default:
+						throw new RuntimeException("El tipo de reclamo indicado no existe");
+						
+				}
+			}
+		});
 		
 		btnCancelar.addActionListener(new ActionListener() {			
 			@Override

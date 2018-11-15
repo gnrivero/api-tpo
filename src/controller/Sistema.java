@@ -217,9 +217,13 @@ public class Sistema extends Observado {
 		}
 	}
 	
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente,String zona) throws NegocioException{
-		Reclamo reclamoAcrear = new ReclamoZona(descripcion, tipoDeReclamo, cliente, zona);
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, String zona) throws NegocioException {
 		try {
+			
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
+			
+			Reclamo reclamoAcrear = new ReclamoZona(descripcion, tipoDeReclamo, cliente, zona);
+			
 			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
