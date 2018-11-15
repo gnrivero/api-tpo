@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import dao.ClienteDAO;
 import dao.ProductoDAO;
@@ -21,10 +22,11 @@ import model.reclamo.ReclamoCompuesto;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
-import view.ProductoView;
+import observer.Observado;
+import view.ClienteView;
 import view.ReclamoView;
 
-public class Sistema {
+public class Sistema extends Observado {
 		
 	//Singleton
 	private static Sistema instance;
@@ -71,6 +73,8 @@ public class Sistema {
 		try {
 			Usuario usuario = UsuarioDAO.getInstancia().buscarUsuarioPorUsernameYpassword(username, password);
 			this.setUsuarioLogueado(usuario);
+			
+			this.notificarObservadores();			
 		} catch (ConexionException | AccesoException e) {			
 			throw new NegocioException("Error de autenticacion. Verifique Username y Contraseña"); 
 		}						
@@ -100,20 +104,26 @@ public class Sistema {
 	//Fin: Roles
 	
 	//Cliente
-	public void agregarCliente(String nombre, String domicilio, String telefono, String mail) throws NegocioException {
-		Cliente nuevoCliente = new Cliente(nombre, domicilio, telefono, mail);		
+	public Integer agregarCliente(String nombre, String domicilio, String telefono, String mail) throws NegocioException {
+		Cliente nuevoCliente = new Cliente(nombre, domicilio, telefono, mail);	
+		
+		Integer idClienteNuevo = null;
 		try {
-			nuevoCliente.guardar();
+			idClienteNuevo = nuevoCliente.guardar();			
+			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
 			e.printStackTrace();
 			throw new NegocioException("No se pudo crear el cliente");
-		}			
+		}
+		
+		return idClienteNuevo;
 	}
 	
-	public void modificarCliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail) throws NegocioException {
-		Cliente cliente = new Cliente(idCliente, nombre, domicilio, telefono, mail);
+	public void modificarCliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail, Date fechaBaja) throws NegocioException {
+		Cliente cliente = new Cliente(idCliente, nombre, domicilio, telefono, mail, fechaBaja);
 		try {
 			cliente.guardar();
+			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
 			e.printStackTrace();
 			throw new NegocioException("No se pudo guardar el cliente");
@@ -131,10 +141,21 @@ public class Sistema {
 		}
 	}
 	
-	//TODO: Esto deberia devolver un ClienteView
-	public Cliente obtenerCliente(Integer idCliente) throws NegocioException{
+	public ClienteView obtenerCliente(Integer idCliente) throws NegocioException{
 		try {
-			return ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
+			return cliente.toView();
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			throw new NegocioException("No se pudo cargar cliente");
+		}
+	}
+	
+	public List<ClienteView> obtenerTodosLosClientes(boolean filtrarDeshabilitados) throws NegocioException{
+		try {			
+			List<Cliente> clientes = ClienteDAO.getInstancia().obtenerTodosLosClientes(filtrarDeshabilitados);			
+			List<ClienteView> clientesViews = new ArrayList<ClienteView>();			
+			clientes.forEach(c -> clientesViews.add(c.toView()));			
+			return clientesViews;
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo cargar cliente");
 		}

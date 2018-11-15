@@ -1,16 +1,49 @@
-package vista.forms;
+package gui.forms;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
-
 import controller.Sistema;
 import excepciones.NegocioException;
-import model.Tablero;
+import gui.TableroPantalla;
 
-public class JFormLogin extends JFormBase {
+public class JFormLogin extends JFrame {
 
 	private static final long serialVersionUID = 1L;
+	
+	//Singleton
+	private static JFormLogin login = null;
+		
+	private JFormLogin(TableroPantalla tablero) {
+		super();
+		configurar();
+		eventos(tablero);
+	}	
+
+	private void configurar() {
+		crearTopPanel();
+		crearBotPanel();
+		
+		frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+		frame.setAlwaysOnTop(true);
+		frame.add(top);
+		frame.add(bot);
+		frame.setTitle("Login");
+		frame.pack();
+		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+	}
+
+	public static JFormLogin getInstance(TableroPantalla tablero){
+		if (login == null)
+			login = new JFormLogin(tablero);
+		else
+			System.out.println("login ya existe");
+		return login;
+	}
+	//Singleton
 	
 	private JPanel top, bot;
 	private JFrame frame;
@@ -35,53 +68,32 @@ public class JFormLogin extends JFormBase {
 		bot.add(btnExit);
 	}
 	
-	public void construyeVentana() {
-		frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-		frame.setAlwaysOnTop(true);
-		frame.add(top);
-		frame.add(bot);
-		frame.setTitle("Login");
-		frame.pack();
-		frame.setVisible(true);
-		frame.setLocationRelativeTo(null);
-	}
-	
-	public JFormLogin(Tablero modelo) {
-		super(modelo);
-		crearTopPanel();
-		crearBotPanel();
-		construyeVentana();
-		
-		this.btnLogin.addActionListener(new ActionListener() {
+	private void eventos(TableroPantalla tablero) {
+		btnLogin.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed (ActionEvent evt) {
 				try {			
-					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password		
+					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
 					System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
-					//Sistema.getInstance().desloguearUsuario();
-					Sistema.fireTablero();
 					frame.dispose();
+					login = null;
+					tablero.setEnabled(true);
+
 				} catch (NegocioException e) {
-					//System.out.println("Error al hacer login");
-					//e.printStackTrace();
+					e.printStackTrace();
 					frame.setAlwaysOnTop(false);
-			        JOptionPane.showMessageDialog(null, "Usuario o password incorrectos", "ERROR: " + "Login", JOptionPane.ERROR_MESSAGE);
+					System.out.println("Error de login");
+			        JOptionPane.showMessageDialog(null, "Usuario o password incorrectos", "ERROR: Login", JOptionPane.ERROR_MESSAGE);
 			        frame.setAlwaysOnTop(true);
 				}
 			}
 		});
 		
-		this.btnExit.addActionListener(new ActionListener() {
+		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e){
 				System.exit(0);
 			}
 		});
 	}
-	
-	@Override
-	public void actualizar() {
-		// TODO Auto-generated method stub
-	}
+
 }
