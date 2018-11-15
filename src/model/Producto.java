@@ -62,4 +62,8 @@ public class Producto {
 	public void guardar() throws ConexionException, AccesoException {
 		ProductoDAO.getInstancia().crearProducto(this);
 	}
+	
+	public void borrar() throws ConexionException, AccesoException {
+		ProductoDAO.getInstancia().borrar(idProducto));
+	}
 }

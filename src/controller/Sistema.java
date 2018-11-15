@@ -163,29 +163,19 @@ public class Sistema {
 			throw new NegocioException("No se pudo actualizar el producto");
 			}	
 		}	
-/***
- * 	public void eliminarMaterial (String cod)
-	{
-		int i;
-		String p = new String ();
-		for (i=0; i<this.MaterialesV.size(); i++)
-		{
-			p = this.MaterialesV.elementAt(i).getCodigo();
-			if (p.equals(cod))
-			{
-				AdmPersistenciaMaterial.getInstancia().delete(this.MaterialesV.elementAt(i));
-				this.MaterialesV.remove(i);
-				i = this.MaterialesV.size();
-			}
+
+
+	public void eliminarProducto(Integer idProducto) throws NegocioException {
+		Producto producto;
+		try {//encuentro el producto
+			producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
+			producto.borrar(); //eliminar		
+		} catch (ConexionException | AccesoException e) {
+			e.printStackTrace();
+			throw new NegocioException("No se pudo eliminar producto");
 		}
 	}
-
- * @param idProducto
- */
-
-	public void eliminarProducto(Integer idProducto) {
-		
-	}
+	
 	
 	public Producto obtenerProducto(Integer idProducto) throws NegocioException{		
 		try {
