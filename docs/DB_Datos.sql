@@ -1,4 +1,7 @@
+use tempdb;
+
 USE TPO_AI
+
 
 
 -- Roles
@@ -11,15 +14,12 @@ INSERT INTO roles (descripcion) VALUES ('Consulta');
 
 select * from roles;
 
--- Usuarios
+DELETE FROM roles where idrol > 6;
 
+-- Usuarios
 INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
 
-SELECT * FROM usuarios WHERE username = 'grivero' AND password = '123456';
-SELECT * FROM usuarios WHERE username = 'grivero' AND password = '123456'
-
-select * from usuarios where idusuario = 1;
-
+select * from usuarios;
 
 -- Tipos de reclamos por roles
 
@@ -55,30 +55,29 @@ SELECT * FROM usuarios;
 select * from productos;
 
 -- Clientes
-INSERT INTO clientes (nombre, domicilio, telefono, mail) 
-VALUES ('ClienteDePrueba',  'Cabrera 5400',  '4700-0000',  'prueba@mock.com')
-
 select * from clientes;
 
-INSERT INTO reclamos (descripcion, idtiporeclamo, idestadoreclamo, fecha, idcliente, idproducto, cantidad) 
-VALUES ('Me piden detergente', 3, 1, '2018-10-30 21:28:58', 1, 1, 2)
-
+INSERT INTO clientes (nombre, cuit, domicilio, telefono, mail)
+VALUES('Fravega S.A.', '20-31912399-2',	'Av. Scalabrini Ortiz 7500', '555-6666', 'fravega@mail.com'),
+('Garbarino Hermanos', '20-33104999-2',	'Av. Del Libertador',	'47779999',	'garbarino@gmail.com');
 
 
 -- Reclamos Hoja/Simples
 select * from reclamos;
-select * from reclamos where nroreclamo = 11;
 
 -- Reclamos Compuestos
 select * from reclamoscompuestos
-
 
 -- Factura
 select * from facturas;
 select * from itemsfacturas;
 
-INSERT INTO facturas (fechafactura) VALUES (CURRENT_TIMESTAMP);
+truncate table facturas;
 
+INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-01 14:04:33', 1);
+INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-05 12:01:33', 1);
+
+truncate table itemsfacturas;
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
 VALUES (2, 78, 2, 2),
 (3, 500, 1, 2);

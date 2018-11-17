@@ -1,3 +1,4 @@
+USE  tempdb;
 -- DROP DATABASE TPO_AI;
 
 CREATE DATABASE TPO_AI;
@@ -8,7 +9,8 @@ CREATE TABLE roles
 (
 	idrol INT IDENTITY,
 	descripcion VARCHAR(25) NOT NULL, 
-	CONSTRAINT rol_pk PRIMARY KEY (idrol)
+	CONSTRAINT rol_pk PRIMARY KEY (idrol),
+	CONSTRAINT uc_desc UNIQUE (descripcion)
 )
 
 
@@ -20,15 +22,17 @@ CREATE TABLE usuarios
 	fechabaja DATETIME NULL,
 	idrol INT,
 	CONSTRAINT username_pk PRIMARY KEY (idusuario),
-	CONSTRAINT rol_fk FOREIGN KEY (idrol) REFERENCES roles
+	CONSTRAINT rol_fk FOREIGN KEY (idrol) REFERENCES roles,
+	CONSTRAINT uc_username 
 )
 
-
+drop table tiposdereclamoporroles;
 CREATE TABLE tiposdereclamoporroles
 (
 	idrol INT NOT NULL,
 	idtipodereclamo INT NOT NULL,	
-	CONSTRAINT rol_fk_tr FOREIGN KEY (idrol) REFERENCES roles
+	CONSTRAINT rol_fk_tr FOREIGN KEY (idrol) REFERENCES roles,
+	CONSTRAINT rr_unique  UNIQUE (idrol, idtipodereclamo)
 )
 
 
@@ -36,11 +40,13 @@ CREATE TABLE clientes
 (
 	idcliente INT IDENTITY,
 	nombre VARCHAR(25) NOT NULL,
+	cuit VARCHAR(25) NOT NULL
 	domicilio VARCHAR(25) NOT NULL,
 	telefono VARCHAR(25) NOT NULL,
 	mail VARCHAR(25) NOT NULL,
 	fechabaja DATETIME NULL,
-	CONSTRAINT idcliente_pk PRIMARY KEY (idcliente)
+	CONSTRAINT idcliente_pk PRIMARY KEY (idcliente),
+	CONSTRAINT cuit_unique UNIQUE (cuit)
 )
 
 CREATE TABLE productos
@@ -53,12 +59,17 @@ CREATE TABLE productos
 	CONSTRAINT codigo_pk PRIMARY KEY (idproducto)
 )
 
+
 CREATE TABLE facturas
 (
 	nrofactura INT IDENTITY,
 	fechafactura DATETIME NOT NULL,
-	CONSTRAINT nroFactura_pk PRIMARY KEY (nrofactura)
+	idcliente INT NOT NULL,
+	CONSTRAINT nroFactura_pk PRIMARY KEY (nrofactura),
+	CONSTRAINT idCliente_fk FOREIGN KEY (idcliente) REFERENCES clientes
 )
+GO
+
 
 CREATE TABLE itemsfacturas
 (

@@ -2,6 +2,7 @@ package dao;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class DAOhelper {
 	
@@ -21,5 +22,25 @@ public class DAOhelper {
 		
 		return day_month_year_time; 
 	}
-
+	
+	public static <E> String escribirSentenciaIn(List<E> listaDeObjetos){
+		
+		StringBuilder sentenciaIn = new StringBuilder(" IN (");
+		
+		if (listaDeObjetos.get(0) instanceof String){
+			for (Object elemento : listaDeObjetos){
+				sentenciaIn.append("'").append(elemento).append("'").append(",");					
+			}
+		}else if (listaDeObjetos.get(0) instanceof Integer){
+			for (Object elemento : listaDeObjetos){
+				sentenciaIn.append(elemento).append(",");			
+			}
+		}else{
+			throw new RuntimeException("Unsupported Type");
+		}
+		sentenciaIn.replace(sentenciaIn.toString().length() - 1 , sentenciaIn.toString().length(), "");
+		sentenciaIn.append(")");
+		
+		return sentenciaIn.toString();
+	}	
 }

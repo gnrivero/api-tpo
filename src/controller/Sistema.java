@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import dao.ClienteDAO;
+import dao.FacturaDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
 import dao.UsuarioDAO;
@@ -24,6 +25,7 @@ import model.reclamo.ReclamoFacturacion;
 import model.reclamo.ReclamoZona;
 import observer.Observado;
 import view.ClienteView;
+import view.FacturaView;
 import view.ReclamoView;
 
 public class Sistema extends Observado {
@@ -208,9 +210,13 @@ public class Sistema extends Observado {
 	//Fin: Producto
 	
 	//Reclamos
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, Producto producto, int cantidad) throws NegocioException{
-		Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, Integer idProducto, int cantidad) throws NegocioException{
+		
 		try {
+			Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
+			
+			Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
 			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
@@ -230,10 +236,16 @@ public class Sistema extends Observado {
 		}
 	}
 	
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) throws NegocioException{
-		Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas) throws NegocioException{
 		try {
+			
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
+			
+			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorNro(nrosFacturas);
+			
+			Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
 			reclamoAcrear.guardar();
+			
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);			
 		}
@@ -299,4 +311,20 @@ public class Sistema extends Observado {
 		}				
 	}
 	//Fin: Reclamos
+	
+	public List<FacturaView> obenerFacturasPorCliente(Integer idCliente) throws NegocioException {
+		
+		try {
+			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorCliente(idCliente);
+			List<FacturaView> facturasViews = new ArrayList<>();
+			facturas.forEach(f -> facturasViews.add(f.toView()));
+			
+			return facturasViews;
+			
+		} catch (ConexionException | AccesoException  ae) {
+			throw new NegocioException("No se puede cargar las facturas para el cliente: " + idCliente);
+		} catch (NegocioException e){
+			throw e;
+		}		
+	}
 }

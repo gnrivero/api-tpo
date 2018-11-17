@@ -4,32 +4,40 @@ package model;
 import java.util.Date;
 import java.util.List;
 
+import dao.DAOhelper;
+import view.FacturaView;
+
 
 public class Factura {
 	
 	private Integer nroFactura;
 	private Date fechaFactura;
+	private Cliente cliente;
 	private static float IVA = 21;
 	private List<ItemFactura> itemFactura;
 	
-	
-	public Factura(List<ItemFactura> itemFactura){
-		this.fechaFactura = new Date();
-		this.itemFactura = itemFactura;
+	public Factura(Integer nroFactura, Date fechaFactura, Cliente cliente){
+		this.nroFactura = nroFactura;
+		this.fechaFactura = fechaFactura;
 	}
 	
-	public Factura(Integer nroFactura, Date fechaFactura, List<ItemFactura> itemFactura){
+	public Factura(Integer nroFactura, Date fechaFactura, Cliente cliente, List<ItemFactura> itemFactura){
 		this.nroFactura = nroFactura;
 		this.fechaFactura = fechaFactura;
 		this.itemFactura = itemFactura;
 	}
-	
 	
 	public Integer getNroFactura() {
 		return nroFactura;
 	}
 	public void setNroFactura(Integer nroFactura) {
 		this.nroFactura = nroFactura;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	public Date getFechaFactura() {
 		return fechaFactura;
@@ -66,6 +74,16 @@ public class Factura {
 		} else {
 			
 		}		
+	}
+	
+	public FacturaView toView(){
+		
+		FacturaView view = new FacturaView();
+		view.setNroFactura(this.nroFactura);
+		view.setCliente(this.cliente.getNombre());
+		view.setFecha(DAOhelper.getDiaMesAnioDateFormat().format(this.fechaFactura));
+		
+		return view;
 	}
 
 }
