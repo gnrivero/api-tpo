@@ -106,23 +106,22 @@ public class Sistema extends Observado {
 	//Fin: Roles
 	
 	//Cliente
-	public Integer agregarCliente(String nombre, String domicilio, String telefono, String mail) throws NegocioException {
-		Cliente nuevoCliente = new Cliente(nombre, domicilio, telefono, mail);	
+	public Integer agregarCliente(String nombre, String cuit, String domicilio, String telefono, String mail) throws NegocioException {
+		Cliente nuevoCliente = new Cliente(nombre, cuit, domicilio, telefono, mail);	
 		
 		Integer idClienteNuevo = null;
 		try {
 			idClienteNuevo = nuevoCliente.guardar();			
 			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
-			e.printStackTrace();
 			throw new NegocioException("No se pudo crear el cliente");
 		}
 		
 		return idClienteNuevo;
 	}
 	
-	public void modificarCliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail, Date fechaBaja) throws NegocioException {
-		Cliente cliente = new Cliente(idCliente, nombre, domicilio, telefono, mail, fechaBaja);
+	public void modificarCliente(Integer idCliente, String nombre, String cuit, String domicilio, String telefono, String mail, Date fechaBaja) throws NegocioException {
+		Cliente cliente = new Cliente(idCliente, nombre, cuit, domicilio, telefono, mail, fechaBaja);
 		try {
 			cliente.guardar();
 			this.notificarObservadores();

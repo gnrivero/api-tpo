@@ -1,6 +1,4 @@
-USE  tempdb;
 -- DROP DATABASE TPO_AI;
-
 CREATE DATABASE TPO_AI;
 
 USE TPO_AI;
@@ -23,10 +21,10 @@ CREATE TABLE usuarios
 	idrol INT,
 	CONSTRAINT username_pk PRIMARY KEY (idusuario),
 	CONSTRAINT rol_fk FOREIGN KEY (idrol) REFERENCES roles,
-	CONSTRAINT uc_username 
+	CONSTRAINT uc_username UNIQUE (username)
 )
 
-drop table tiposdereclamoporroles;
+
 CREATE TABLE tiposdereclamoporroles
 (
 	idrol INT NOT NULL,
@@ -35,12 +33,11 @@ CREATE TABLE tiposdereclamoporroles
 	CONSTRAINT rr_unique  UNIQUE (idrol, idtipodereclamo)
 )
 
-
 CREATE TABLE clientes
 (
 	idcliente INT IDENTITY,
 	nombre VARCHAR(25) NOT NULL,
-	cuit VARCHAR(25) NOT NULL
+	cuit VARCHAR(25) NOT NULL,
 	domicilio VARCHAR(25) NOT NULL,
 	telefono VARCHAR(25) NOT NULL,
 	mail VARCHAR(25) NOT NULL,
@@ -56,7 +53,8 @@ CREATE TABLE productos
 	titulo VARCHAR(50) NOT NULL,
 	descripcion VARCHAR(100) NOT NULL,
 	precio FLOAT NOT NULL,
-	CONSTRAINT codigo_pk PRIMARY KEY (idproducto)
+	CONSTRAINT codigo_pk PRIMARY KEY (idproducto),
+	CONSTRAINT uc_codigo UNIQUE (codigo)
 )
 
 
@@ -69,7 +67,6 @@ CREATE TABLE facturas
 	CONSTRAINT idCliente_fk FOREIGN KEY (idcliente) REFERENCES clientes
 )
 GO
-
 
 CREATE TABLE itemsfacturas
 (

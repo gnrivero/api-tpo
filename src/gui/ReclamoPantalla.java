@@ -30,16 +30,16 @@ import view.ProductoView;
 
 public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	
-	private static ReclamoPantalla instance;
-	
-	public static ReclamoPantalla getInstance(){
-		if(instance==null)
-			instance = new ReclamoPantalla();
-			
-		return instance;
-	}
-	
-	private ReclamoPantalla(){
+//	private static ReclamoPantalla instance;
+//	
+//	public static ReclamoPantalla getInstance(){
+//		if(instance==null)
+//			instance = new ReclamoPantalla();
+//			
+//		return instance;
+//	}
+//	
+	public ReclamoPantalla(){
 		configurar();
 		eventos();
 		Sistema.getInstance().agregarObservador(this);
@@ -203,7 +203,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cont.add(btnCancelar);
 		
 		this.pack();
-		this.setSize(600, 500);
+		this.setSize(800, 600);
 		this.setClosable(true);	
 		
 	}
@@ -219,13 +219,14 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				
 				List<FacturaView> facturas;
 				try {
-					facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.idCliente);
+					facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.getIdCliente());
 					DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();				
 					facturas.forEach(f -> facturaListModel.addElement(f));
 					
 					lstFacturas.setModel(facturaListModel);
 				} catch (NegocioException e1) {
 					//TODO: mostrar un error
+					e1.printStackTrace();
 				}				
 			}			
 		});
@@ -247,7 +248,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 						case ZONA:
 							
 							String zona = txtZona.getText();							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.idCliente, zona);
+							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), zona);
 							
 						break;
 						case FACTURACION:
@@ -256,7 +257,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							List<Integer> nrosFacturas = new ArrayList<>();
 							selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
 							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.idCliente, nrosFacturas);
+							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
 							
 						break;
 						case CANTIDADES:
@@ -266,7 +267,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							ProductoView producto = (ProductoView) cmbProductos.getSelectedItem();
 							Integer cantidad = Integer.valueOf(txtCantidad.getText());
 							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.idCliente, producto.idProducto, cantidad);
+							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), producto.idProducto, cantidad);
 							
 						break;				
 						default:

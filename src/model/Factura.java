@@ -19,11 +19,13 @@ public class Factura {
 	public Factura(Integer nroFactura, Date fechaFactura, Cliente cliente){
 		this.nroFactura = nroFactura;
 		this.fechaFactura = fechaFactura;
+		this.cliente = cliente;
 	}
 	
 	public Factura(Integer nroFactura, Date fechaFactura, Cliente cliente, List<ItemFactura> itemFactura){
 		this.nroFactura = nroFactura;
 		this.fechaFactura = fechaFactura;
+		this.cliente = cliente;
 		this.itemFactura = itemFactura;
 	}
 	

@@ -1,8 +1,6 @@
-use tempdb;
+USE TPO_AI;
 
-USE TPO_AI
-
-
+-- SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
 
 -- Roles
 INSERT INTO roles (descripcion) VALUES ('Admin');
@@ -12,9 +10,7 @@ INSERT INTO roles (descripcion) VALUES ('Responsable Zona Entrega');
 INSERT INTO roles (descripcion) VALUES ('Call Center');
 INSERT INTO roles (descripcion) VALUES ('Consulta');
 
-select * from roles;
-
-DELETE FROM roles where idrol > 6;
+select * from roles order by idrol;
 
 -- Usuarios
 INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
@@ -39,18 +35,6 @@ INSERT INTO tiposdereclamoporroles VALUES
 
 select * from tiposdereclamoporroles;
 
-
-
--- SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
-
-SELECT * FROM roles;
-
-
--- Usuarios
-INSERT INTO usuarios (username, password, idrol) VALUES ('gerentedistribucion', '123456', 3); 
-
-SELECT * FROM usuarios;
-
 -- Productos
 select * from productos;
 
@@ -62,6 +46,8 @@ VALUES('Fravega S.A.', '20-31912399-2',	'Av. Scalabrini Ortiz 7500', '555-6666',
 ('Garbarino Hermanos', '20-33104999-2',	'Av. Del Libertador',	'47779999',	'garbarino@gmail.com');
 
 
+SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];
+
 -- Reclamos Hoja/Simples
 select * from reclamos;
 
@@ -72,21 +58,19 @@ select * from reclamoscompuestos
 select * from facturas;
 select * from itemsfacturas;
 
-truncate table facturas;
-
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-01 14:04:33', 1);
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-05 12:01:33', 1);
 
-truncate table itemsfacturas;
+
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
-VALUES (2, 78, 2, 2),
+VALUES (2, 34, 2, 2),
 (3, 500, 1, 2);
+
+select * from itemsfacturas; 
 
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
 VALUES (3, 500, 1, 3);
 
+-- Productos
 
-select * from roles;
-
-
-
+select * from productos;

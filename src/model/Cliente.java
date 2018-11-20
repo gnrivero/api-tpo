@@ -12,20 +12,22 @@ public class Cliente {
 	
 	private Integer idCliente;
 	private String nombre;
+	private String cuit;
 	private String domicilio;
 	private String telefono;
 	private String mail;
 	private Date fechaBaja;
 	
-	public Cliente(String nombre, String domicilio, String telefono, String mail) {		
+	public Cliente(String nombre, String cuit, String domicilio, String telefono, String mail) {		
 		this.nombre = nombre;
+		this.cuit = cuit;
 		this.domicilio = domicilio;
 		this.telefono = telefono;
 		this.mail = mail;
 	}
 	
-	public Cliente(Integer idCliente, String nombre, String domicilio, String telefono, String mail, Date fechaBaja) {		
-		this(nombre, domicilio, telefono, mail);
+	public Cliente(Integer idCliente, String nombre, String cuit, String domicilio, String telefono, String mail, Date fechaBaja) {		
+		this(nombre, cuit, domicilio, telefono, mail);
 		this.idCliente = idCliente;	
 		this.fechaBaja = fechaBaja;
 	}
@@ -36,6 +38,14 @@ public class Cliente {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public String getCuit() {
+		return cuit;
+	}
+
+	public void setCuit(String cuit) {
+		this.cuit = cuit;
 	}
 
 	public void setDomicilio(String domicilio) {
@@ -99,6 +109,6 @@ public class Cliente {
 		
 		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioDateFormat().format(this.fechaBaja);
 		
-		return new ClienteView(this.idCliente, this.nombre, this.domicilio, this.telefono, this.mail, fechaBaja);
+		return new ClienteView(this.idCliente, this.nombre, this.cuit, this.domicilio, this.telefono, this.mail, fechaBaja);
 	}
 }

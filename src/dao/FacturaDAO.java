@@ -77,7 +77,7 @@ public class FacturaDAO extends DAO {
 				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				
-				Factura factura = new Factura(rs.getInt("nrofactura"), rs.getDate("fecha"), cliente);				
+				Factura factura = new Factura(rs.getInt("nrofactura"), rs.getDate("fechafactura"), cliente);				
 				facturas.add(factura);
 			}
 			

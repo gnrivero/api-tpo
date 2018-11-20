@@ -115,7 +115,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ReclamoPantalla reclamoPantalla = ReclamoPantalla.getInstance();
+				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();//ReclamoPantalla.getInstance();
 				reclamoPantalla.moveToFront();
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla);	

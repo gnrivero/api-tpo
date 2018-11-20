@@ -33,8 +33,8 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 	
 	private static final long serialVersionUID = 7954763123247437968L;
 	
-	JLabel lblClientes, lblIdCliente, lblNombre, lblDomicilio, lblTelefono, lblMail, lblHabilitado;
-	JTextField txtIdCliente, txtNombre, txtDomicilio, txtTelefono, txtMail;
+	JLabel lblClientes, lblIdCliente, lblNombre, lblCuit, lblDomicilio, lblTelefono, lblMail, lblHabilitado;
+	JTextField txtIdCliente, txtNombre, txtCuit, txtDomicilio, txtTelefono, txtMail;
 	JCheckBox chHabilitado;
 	JButton btnGuardar, btnCancelar, btnSeleccionarCliente;
 	JComboBox<ClienteView> cmbClientes;
@@ -62,7 +62,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		
 		this.cargarClientes();
 		
-		btnSeleccionarCliente = new JButton("Cargar");
+		btnSeleccionarCliente = new JButton("Seleccionar");
 		btnSeleccionarCliente.setBounds(420, 20, 100, 30);
 		cont.add(btnSeleccionarCliente);
 		
@@ -83,44 +83,52 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		txtNombre.setBounds(215, 90, 200, 30);
 		cont.add(txtNombre);
 		
+		lblCuit = new JLabel("Cuit");
+		lblCuit.setBounds(10, 125, 200, 30);
+		cont.add(lblCuit);
+		
+		txtCuit = new JTextField();
+		txtCuit.setBounds(215, 125, 200, 30);
+		cont.add(txtCuit);
+		
 		lblDomicilio = new JLabel("Domicilio");
-		lblDomicilio.setBounds(10, 125, 200, 30);
+		lblDomicilio.setBounds(10, 160, 200, 30);
 		cont.add(lblDomicilio);
 		
 		txtDomicilio = new JTextField();
-		txtDomicilio.setBounds(215, 125, 200, 30);
+		txtDomicilio.setBounds(215, 160, 200, 30);
 		cont.add(txtDomicilio);
 		
 		lblTelefono = new JLabel("Telefono");
-		lblTelefono.setBounds(10, 160, 200, 30);
+		lblTelefono.setBounds(10, 195, 200, 30);
 		cont.add(lblTelefono);
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setBounds(215, 160, 200, 30);
+		txtTelefono.setBounds(215, 195, 200, 30);
 		cont.add(txtTelefono);
 		
 		lblMail = new JLabel("E-Mail");
-		lblMail.setBounds(10, 195, 200, 30);
+		lblMail.setBounds(10, 230, 230, 30);
 		cont.add(lblMail);
 		
 		txtMail = new JTextField();
-		txtMail.setBounds(215, 195, 200, 30);
+		txtMail.setBounds(215, 230, 200, 30);
 		cont.add(txtMail);
 		
 		lblHabilitado = new JLabel("Habilitado");
-		lblHabilitado.setBounds(10, 230, 200, 30);
+		lblHabilitado.setBounds(10, 265, 200, 30);
 		cont.add(lblHabilitado);
 		
 		chHabilitado = new JCheckBox();
-		chHabilitado.setBounds(215, 230, 200, 30);
+		chHabilitado.setBounds(215, 265, 200, 30);
 		cont.add(chHabilitado);
 				
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(10, 285, 200, 30);
+		btnGuardar.setBounds(10, 300, 200, 30);
 		cont.add(btnGuardar);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(215, 285, 200, 30);
+		btnCancelar.setBounds(215, 300, 200, 30);
 		cont.add(btnCancelar);
 		
 		this.pack();
@@ -141,6 +149,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 					idCliente = Integer.valueOf(txtIdCliente.getText());
 				
 				String nombre = txtNombre.getText();
+				String cuit = txtCuit.getText();
 				String domicilio = txtDomicilio.getText();
 				String telefono = txtTelefono.getText();
 				String mail = txtMail.getText();
@@ -152,13 +161,13 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 				
 				try {
 					if (idCliente == null){
-						Integer idNuevoCliente = Sistema.getInstance().agregarCliente(nombre, domicilio, telefono, mail);
+						Integer idNuevoCliente = Sistema.getInstance().agregarCliente(nombre, cuit, domicilio, telefono, mail);
 						txtIdCliente.setText(idNuevoCliente.toString());
 					}else{
-						Sistema.getInstance().modificarCliente(idCliente, nombre, domicilio, telefono, mail, fechaBaja);
+						Sistema.getInstance().modificarCliente(idCliente, nombre, cuit, domicilio, telefono, mail, fechaBaja);
 					}
 				} catch (NegocioException e1) { 
-					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Clientes", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Admin. Clientes", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -170,19 +179,21 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 			
 				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
 				
-				if (cliente.idCliente  != null && cliente != null){
-					txtIdCliente.setText(cliente.idCliente.toString());
-					txtNombre.setText(cliente.nombre);
-					txtDomicilio.setText(cliente.domicilio);
-					txtTelefono.setText(cliente.telefono);
-					txtMail.setText(cliente.mail);
-										
-					chHabilitado.setSelected((cliente.fechaBaja == null));
+				if (cliente.getIdCliente() != null && cliente != null){
+					txtIdCliente.setText(cliente.getIdCliente().toString());
+					txtNombre.setText(cliente.getNombre());
+					txtCuit.setText(cliente.getCuit());
+					txtDomicilio.setText(cliente.getDomicilio());
+					txtTelefono.setText(cliente.getTelefono());
+					txtMail.setText(cliente.getMail());
+					
+					chHabilitado.setSelected((cliente.getFechaBaja() == null));
 					
 				} else {
 					
 					txtIdCliente.setText("");
 					txtNombre.setText("");
+					txtCuit.setText("");
 					txtDomicilio.setText("");
 					txtTelefono.setText("");
 					txtMail.setText("");										

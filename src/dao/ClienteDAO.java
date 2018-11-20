@@ -52,7 +52,7 @@ public class ClienteDAO extends DAO {
 		List<Cliente> clientes = new ArrayList<>();
 		try {
 			while(rs.next()){
-				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"), rs.getDate("fechabaja"));
+				Cliente cliente = new Cliente(rs.getInt("idcliente"), rs.getString("nombre"), rs.getString("cuit"), rs.getString("domicilio"), rs.getString("telefono"), rs.getString("mail"), rs.getDate("fechabaja"));
 				clientes.add(cliente);
 			}			
 			return clientes;
@@ -81,9 +81,10 @@ public class ClienteDAO extends DAO {
 	
 	public Integer crearCliente(Cliente cliente) throws ConexionException, AccesoException {
 		
-		String sql = "INSERT INTO clientes (nombre, domicilio, telefono, mail) VALUES "
+		String sql = "INSERT INTO clientes (nombre, cuit, domicilio, telefono, mail) VALUES "
 					+ "('" + cliente.getNombre() + "', "  
-					+ " '" + cliente.getDomicilio() + "', " 
+					+ " '" + cliente.getCuit() + "', "
+					+ " '" + cliente.getDomicilio() + "', "
 					+ " '" + cliente.getTelefono() +"', " 
 					+ " '" + cliente.getMail() + "')";
 		
@@ -94,6 +95,7 @@ public class ClienteDAO extends DAO {
 		
 		String sql = "UPDATE clientes SET "
 					+ " nombre = '" + cliente.getNombre() + "', "
+					+ " cuit = '" + cliente.getCuit() + "', "
 					+ " domicilio = '" + cliente.getDomicilio() + "', "
 					+ " telefono = '" + cliente.getTelefono() + "', "
 					+ " mail = '" + cliente.getMail() + "' ";
