@@ -3,7 +3,6 @@ package model;
 import dao.ProductoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
-import view.ProductoView;
 
 /**
  * @author Maria
@@ -67,9 +66,4 @@ public class Producto {
 	public void borrar() throws ConexionException, AccesoException {
 		ProductoDAO.getInstancia().borrar(idProducto);
 	}
-	
-	public ProductoView toView(){
-		return new ProductoView(this.idProducto, this.codigo, this.titulo, this.descripcion, this.precio);
-	}
-	
 }

@@ -1,10 +1,8 @@
-
 package controller;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import dao.ClienteDAO;
 import dao.FacturaDAO;
 import dao.ProductoDAO;
@@ -14,7 +12,6 @@ import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
-import model.EstadoDeReclamo;
 import model.Factura;
 import model.Producto;
 import model.Rol;
@@ -29,7 +26,6 @@ import model.reclamo.ReclamoZona;
 import observer.Observado;
 import view.ClienteView;
 import view.FacturaView;
-import view.ProductoView;
 import view.ReclamoView;
 
 public class Sistema extends Observado {
@@ -168,7 +164,7 @@ public class Sistema extends Observado {
 	//Fin: Cliente
 	
 	//Producto
-	public void agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {
+	public void agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {		
 		Producto producto = new Producto(codigo, titulo, descripcion, precio);
 		try {
 			producto.guardar();
@@ -201,7 +197,8 @@ public class Sistema extends Observado {
 			throw new NegocioException("No se pudo eliminar producto");
 		}
 	}
-		
+	
+	
 	public Producto obtenerProducto(Integer idProducto) throws NegocioException{		
 		try {
 			return ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
@@ -209,57 +206,35 @@ public class Sistema extends Observado {
 			throw new NegocioException("No se pudo cargar producto");
 		}		
 	}
-	
-	public List<ProductoView> obtenerProductos() throws NegocioException{		
-		try {
-			List<Producto> productos = ProductoDAO.getInstancia().obtenerTodosLosProductos();
-			
-			List<ProductoView> productosViews = new ArrayList<ProductoView>();			
-			productos.forEach(p -> productosViews.add(p.toView()));
-			
-			return productosViews; 
-		} catch (ConexionException | AccesoException e) {
-			throw new NegocioException("No se pudo cargar producto");
-		}		
-	}
 	//Fin: Producto
 	
 	//Reclamos
-	
-	
-	//Creacion y actualizacion de reclamos
-	
-	//Distribucion
-	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado,Integer idCliente, Integer idProducto, Integer cantidad) throws NegocioException{
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, Integer idProducto, int cantidad) throws NegocioException{
 		
 		try {
 			Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
-			Reclamo reclamo = new ReclamoDistribucion(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, producto, cantidad);
-			
-			return reclamo.guardar();
-			
+			Reclamo reclamoAcrear = new ReclamoDistribucion(descripcion, tipoDeReclamo, cliente, producto, cantidad);
+			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
 		}
 	}
 	
-	//Zona
-	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente, String zona) throws NegocioException {
+	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, String zona) throws NegocioException {
 		try {
 			
-			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
-			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
-			return reclamo.guardar();
+			Reclamo reclamoAcrear = new ReclamoZona(descripcion, tipoDeReclamo, cliente, zona);
 			
+			reclamoAcrear.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
 		}
 	}
 	
-	//Facturacion
 	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas) throws NegocioException{
 		try {
 			
@@ -275,85 +250,16 @@ public class Sistema extends Observado {
 		}
 	}
 	
-	//Compuesto
-	public Integer registrarReclamoCompuesto(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente) throws NegocioException { 
+	public void registrarReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) throws NegocioException { 
 		
+		Reclamo reclamoCompuesto = new ReclamoCompuesto(descripcion, tipoDeReclamo, cliente, reclamos);		
 		try {
-			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
-			
-			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);
-			
-			return reclamoCompuesto.guardar();
-			
+			reclamoCompuesto.guardar();
 		} catch (ConexionException | AccesoException | NegocioException e) {			
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
 		}		
 	}
 	
-	
-	
-	//Obtencion de Reclamos
-	
-	
-	/**
-	 * Obtiene un reclamo del tipo Zona
-	 * 
-	 * @param nroReclamo
-	 * @return
-	 * @throws NegocioException
-	 */
-	public ReclamoView obtenerReclamoZona(Integer nroReclamo) throws NegocioException {
-		
-		try {
-			ReclamoZona reclamo = ReclamoDAO.getInstancia().obtenerReclamoZona(nroReclamo);			
-			return reclamo.toView();
-		} catch (AccesoException | ConexionException | NegocioException e) {
-			throw new NegocioException ("No se pudo obtener reclamo de Zona Nro.: " +  nroReclamo);
-		}		
-	}
-	
-	/**
-	 * Obtiene un reclamo del tipo Distribucion
-	 * 
-	 * @param nroReclamo
-	 * @return
-	 * @throws NegocioException
-	 */
-	public ReclamoView obtenerReclamoDistribucion(Integer nroReclamo) throws NegocioException {
-		
-		try {
-			ReclamoDistribucion reclamo = ReclamoDAO.getInstancia().obtenerReclamoDistribucion(nroReclamo);			
-			return reclamo.toView();
-		} catch (AccesoException | ConexionException | NegocioException e) {
-			throw new NegocioException ("No se pudo obtener Reclamo Nro.: " +  nroReclamo);
-		}		
-	}
-	
-	/**
-	 * Obtiene un reclamo del tipo Facturacion
-	 * 
-	 * @param nroReclamo
-	 * @return
-	 * @throws NegocioException
-	 */
-	public ReclamoView obtenerReclamoFacturacion(Integer nroReclamo) throws NegocioException {
-		
-		try {
-			ReclamoFacturacion reclamo = ReclamoDAO.getInstancia().obtenerReclamoFacturacion(nroReclamo);			
-			return reclamo.toView();
-		} catch (AccesoException | ConexionException | NegocioException e) {
-			throw new NegocioException ("No se pudo obtener Reclamo Nro.: " +  nroReclamo);
-		}		
-	}
-	
-	/**
-	 * Obtiene reclamos segun el tipo indicado. <br>
-	 * Util para los listados donde se debe mostrar el titulo del reclamo sin importar el detalle.
-	 * 
-	 * @param tipo
-	 * @return
-	 * @throws NegocioException
-	 */
 	public List<ReclamoView> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws NegocioException {
 		try {
 			
@@ -368,25 +274,7 @@ public class Sistema extends Observado {
 		}		
 	}
 	
-	public ReclamoView obtenerReclamosPorNumeroYTipo(Integer nroReclamo, TipoDeReclamo tipo) throws NegocioException {
-		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipo);						
-			return reclamo.toView();
-		} catch (ConexionException | AccesoException | NegocioException e) {			
-			throw new NegocioException("No se pudo cargar reclamos " + tipo.getDenominacion());
-		}		
-	}
 	
-	
-	//Tratamiento de reclamos 
-	
-	
-	/**
-	 * Inicia el tratamiento del reclamo indicado
-	 * 
-	 * @param nroReclamo
-	 * @throws NegocioException
-	 */
 	public void comenzarTratamientoReclamo(Integer nroReclamo) throws NegocioException {
 		try {
 			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
@@ -398,13 +286,6 @@ public class Sistema extends Observado {
 		}	
 	}
 	
-	
-	/**
-	 * Cierra el reclamo indicado
-	 * 
-	 * @param nroReclamo
-	 * @throws NegocioException
-	 */
 	public void cerrarReclamo(Integer nroReclamo) throws NegocioException {
 		
 		try {
@@ -417,8 +298,6 @@ public class Sistema extends Observado {
 		}				
 	}
 	
-	
-	//TODO: ver si vale la pena
 	public void cerrarReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
 		
 		try {
@@ -430,7 +309,6 @@ public class Sistema extends Observado {
 			throw e;
 		}				
 	}
-	
 	//Fin: Reclamos
 	
 	public List<FacturaView> obenerFacturasPorCliente(Integer idCliente) throws NegocioException {

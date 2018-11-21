@@ -6,7 +6,7 @@ import model.Cliente;
 
 public class ClienteTest {
 	
-	static Cliente cliente = new Cliente(1000, "ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com", null);
+	static Cliente cliente = new Cliente(1000, "ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com", null, null);
 	
 	public static void main(String[] args) {
 		
@@ -18,7 +18,7 @@ public class ClienteTest {
 	public static void crearCliente(){		
 		
 		try {
-			Sistema.getInstance().agregarCliente("ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com");
+			Sistema.getInstance().agregarCliente("ClienteDePrueba", "Cabrera 5400", "4700-0000", "prueba@mock.com", null);
 		} catch (NegocioException e) {
 			e.printStackTrace();
 		}

@@ -107,7 +107,7 @@ public abstract class Reclamo {
 	}	
 	
 	
-	abstract public Integer guardar() throws ConexionException, AccesoException, NegocioException;
+	abstract public void guardar() throws ConexionException, AccesoException, NegocioException;
 	
 	abstract public ReclamoView toView();
 	
