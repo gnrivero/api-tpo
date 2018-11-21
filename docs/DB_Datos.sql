@@ -74,3 +74,8 @@ VALUES (3, 500, 1, 3);
 -- Productos
 
 select * from productos;
+
+
+-- Reclamos
+
+select * from reclamos;

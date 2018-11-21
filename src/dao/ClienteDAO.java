@@ -68,7 +68,7 @@ public class ClienteDAO extends DAO {
 		return obtenerClientes(SQL).get(0);
 	}
 	
-	public List<Cliente> obtenerTodosLosClientes(boolean filtrarDeshabilitados) throws AccesoException, ConexionException, NegocioException{
+	public List<Cliente> obtenerTodosLosClientes(boolean filtrarDeshabilitados) throws AccesoException, ConexionException, NegocioException {
 		
 		String sql = "SELECT * FROM clientes ";
 		
