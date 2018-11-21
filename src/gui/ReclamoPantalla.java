@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,31 +17,48 @@ import javax.swing.JTextField;
 
 import controller.Sistema;
 import excepciones.NegocioException;
+import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
-import model.reclamo.ReclamoCompuesto;
-import model.reclamo.ReclamoDistribucion;
-import model.reclamo.ReclamoFacturacion;
-import model.reclamo.ReclamoZona;
 import observer.IObservador;
 import view.ClienteView;
 import view.FacturaView;
 import view.ProductoView;
+import view.ReclamoView;
 
 public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	
-//	private static ReclamoPantalla instance;
-//	
-//	public static ReclamoPantalla getInstance(){
-//		if(instance==null)
-//			instance = new ReclamoPantalla();
-//			
-//		return instance;
-//	}
-//	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -710535408957575880L;
+
+
 	public ReclamoPantalla(){
 		configurar();
 		eventos();
 		Sistema.getInstance().agregarObservador(this);
+	}
+	
+	public ReclamoPantalla(Integer nroReclamo){		
+		
+		this();
+		
+		if(nroReclamo != null){
+			this.txtNroReclamo.setText(nroReclamo.toString());
+			completarFormulario(false);
+		}			
+	}
+	
+	public ReclamoPantalla(TipoDeReclamo tipoDeReclamo, Integer nroReclamoCompuesto){
+		
+		this();
+		
+		this.cmbTiposDeReclamo.setSelectedItem(tipoDeReclamo);
+		
+		if(nroReclamoCompuesto != null)
+			this.txtNroReclamoCompuesto.setText(nroReclamoCompuesto.toString());
+		
+		this.setVisible(true);
 	}
 	
 	private Container cont;
@@ -58,12 +74,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				   lblZona,
 				   lblFactura,
 				   lblProducto,
-				   lblCantidad
+				   lblCantidad,
+				   lblTiposReclamosHijos
 				   ;
 	
 	private JTextField txtNroReclamo,
-					   txtDescripcion,
-					   txtEstado,
+					   txtDescripcion,					   
 					   txtFechaDeCreacion,
 					   txtFechaDeCierre,
 					   txtNroReclamoCompuesto,
@@ -71,10 +87,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					   txtCantidad
 					   ;
 	
+	private JComboBox<EstadoDeReclamo> cmbEstadoActual;
 	private JComboBox<TipoDeReclamo> cmbTiposDeReclamo;
 	private JComboBox<ClienteView> cmbClientes;
 	private JComboBox<ProductoView> cmbProductos;
 	private JList<FacturaView> lstFacturas;
+	private JList<TipoDeReclamo> lstTiposReclamosHijos;
 	
 	private JButton btnGuardar, btnCancelar;
 	
@@ -92,6 +110,16 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		txtNroReclamo.setBounds(215, 20, 200, 30);
 		txtNroReclamo.setEnabled(false);
 		cont.add(txtNroReclamo);
+		
+		lblTiposReclamosHijos = new JLabel("Reclamos derivados");
+		lblTiposReclamosHijos.setBounds(450, 20, 200, 30);
+		lblTiposReclamosHijos.setVisible(false);				
+		cont.add(lblTiposReclamosHijos);				
+		
+		lstTiposReclamosHijos = new JList<TipoDeReclamo>();
+		lstTiposReclamosHijos.setBounds(450, 55, 200, 150);
+		lstTiposReclamosHijos.setVisible(false);
+		cont.add(lstTiposReclamosHijos);
 		
 		lblDescripcion = new JLabel("Descripcion");
 		lblDescripcion.setBounds(10, 55, 200, 30);
@@ -111,15 +139,19 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		for(TipoDeReclamo tipo: TipoDeReclamo.values()){
 			cmbTiposDeReclamo.addItem(tipo);
-		}		
+		}
 		
 		lblEstado = new JLabel("Estado");
 		lblEstado.setBounds(10, 125, 200, 30);
 		cont.add(lblEstado);
 		
-		txtEstado = new JTextField();
-		txtEstado.setBounds(215, 125, 200, 30);
-		cont.add(txtEstado);
+		cmbEstadoActual = new JComboBox<>();
+		cmbEstadoActual.setBounds(215, 125, 200, 30);
+		cont.add(cmbEstadoActual);				
+		
+		for (EstadoDeReclamo estado : EstadoDeReclamo.values()){
+			cmbEstadoActual.addItem(estado);
+		}
 		
 		lblFechaDeCreacion = new JLabel("Fecha de Creacion");
 		lblFechaDeCreacion.setBounds(10, 160, 200, 30);
@@ -127,10 +159,11 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		txtFechaDeCreacion = new JTextField();
 		txtFechaDeCreacion.setBounds(215, 160, 200, 30);
+		txtFechaDeCreacion.setEnabled(false);
 		cont.add(txtFechaDeCreacion);
 		
 		lblFechaDeCierre = new JLabel("Fecha de Cierre");
-		lblFechaDeCierre.setBounds(10, 195, 200, 30);
+		lblFechaDeCierre.setBounds(10, 195, 200, 30);		
 		cont.add(lblFechaDeCierre);
 		
 		txtFechaDeCierre = new JTextField();
@@ -149,14 +182,15 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cargarClientes();
 		
 		lblNroReclamoCompuesto = new JLabel("Nro. Reclamo Compuesto");
-		lblNroReclamoCompuesto.setBounds(10, 265, 200, 30);
+		lblNroReclamoCompuesto.setBounds(10, 265, 200, 30);		
 		cont.add(lblNroReclamoCompuesto);
 		
 		txtNroReclamoCompuesto = new JTextField();
 		txtNroReclamoCompuesto.setBounds(215, 265, 200, 30);
+		txtNroReclamoCompuesto.setEnabled(false);
 		cont.add(txtNroReclamoCompuesto);
 		
-		//---------- Propios de cada Reclamo -----------
+		//---- Propios de cada Reclamo ----
 		
 		lblZona = new JLabel("Zona");
 		lblZona.setBounds(10, 300, 200, 30);
@@ -183,8 +217,8 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cont.add(cmbProductos);
 		
 		lblCantidad = new JLabel("Cantidad");
-		lblProducto.setBounds(10,  405, 200, 30);
-		cont.add(lblProducto);
+		lblCantidad.setBounds(10,  405, 200, 30);
+		cont.add(lblCantidad);
 		
 		txtCantidad = new JTextField();
 		txtCantidad.setBounds(215, 405, 200, 30);
@@ -203,80 +237,123 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cont.add(btnCancelar);
 		
 		this.pack();
+		this.setLocation(10, 100);
 		this.setSize(800, 600);
-		this.setClosable(true);	
-		
+		this.setClosable(true);
 	}
 	
 	public void eventos(){
+		
+		cmbEstadoActual.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				
+				
+			}
+		});
+		
+		cmbTiposDeReclamo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					
+					lblZona.setEnabled(false);
+					txtZona.setEnabled(false);
+					
+					lblFactura.setEnabled(false);
+					lstFacturas.setEnabled(false);
+					
+					lblProducto.setEnabled(false);
+					cmbProductos.setEnabled(false);
+					
+					lblCantidad.setEnabled(false);
+					txtCantidad.setEnabled(false);
+					
+					lblNroReclamoCompuesto.setEnabled(true);
+					lblTiposReclamosHijos.setVisible(false);
+					lstTiposReclamosHijos.setVisible(false);
+					
+					TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();							
+									
+					switch(tipoDeReclamo){
+						
+						case ZONA:
+							lblZona.setEnabled(true);
+							txtZona.setEnabled(true);
+							
+						break;
+						case FACTURACION:
+							
+							lblFactura.setEnabled(true);
+							lstFacturas.setEnabled(true);
+							
+						break;
+						case CANTIDADES:
+						case FALTANTES:
+						case PRODUCTO:
+							lblProducto.setEnabled(true);
+							cmbProductos.setEnabled(true);
+							lblCantidad.setEnabled(true);
+							txtCantidad.setEnabled(true);
+							
+							cargarProductos();
+							
+						break;
+						case COMPUESTO:
+							lblNroReclamoCompuesto.setEnabled(false);
+														
+							DefaultListModel<TipoDeReclamo> tipoDeReclamoListModel = new DefaultListModel<TipoDeReclamo>();							
+							for (TipoDeReclamo tipo : TipoDeReclamo.values()){
+								if(!TipoDeReclamo.COMPUESTO.equals(tipo))
+									tipoDeReclamoListModel.addElement(tipo);
+							}
+							lstTiposReclamosHijos.setModel(tipoDeReclamoListModel);
+							
+							lblTiposReclamosHijos.setVisible(true);
+							lstTiposReclamosHijos.setVisible(true);
+							
+						break;
+						default:
+							throw new RuntimeException("El tipo de reclamo indicado no existe");							
+					}
+					
+				}catch(Exception ex){
+					ex.printStackTrace();
+				}							
+			}
+		});
 		
 		cmbClientes.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
+				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();				
+				TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
 				
-				List<FacturaView> facturas;
-				try {
-					facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.getIdCliente());
-					DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();				
-					facturas.forEach(f -> facturaListModel.addElement(f));
-					
-					lstFacturas.setModel(facturaListModel);
-				} catch (NegocioException e1) {
-					//TODO: mostrar un error
-					e1.printStackTrace();
-				}				
+				if(TipoDeReclamo.FACTURACION.equals(tipoDeReclamo)){
+					List<FacturaView> facturas;
+					try {
+						facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.getIdCliente());
+						DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();				
+						facturas.forEach(f -> facturaListModel.addElement(f));
+						
+						lstFacturas.setModel(facturaListModel);
+					} catch (NegocioException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}			
 		});
 		
-		
 		btnGuardar.addActionListener(new ActionListener() {
-			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				try{ 
-					TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
-					
-					String descripcion = txtDescripcion.getText();
-					ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
-									
-					switch(tipoDeReclamo){
-						
-						case ZONA:
-							
-							String zona = txtZona.getText();							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), zona);
-							
-						break;
-						case FACTURACION:
-							
-							List<FacturaView> selectedFacturas = lstFacturas.getSelectedValuesList();
-							List<Integer> nrosFacturas = new ArrayList<>();
-							selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
-							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
-							
-						break;
-						case CANTIDADES:
-						case FALTANTES:
-						case PRODUCTO:
-							
-							ProductoView producto = (ProductoView) cmbProductos.getSelectedItem();
-							Integer cantidad = Integer.valueOf(txtCantidad.getText());
-							
-							Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), producto.idProducto, cantidad);
-							
-						break;				
-						default:
-							throw new RuntimeException("El tipo de reclamo indicado no existe");
-							
-					}
-				}catch(NegocioException ne){
-					//TODO: hacer algo
-				}
+			public void actionPerformed(ActionEvent e) {				
+				completarFormulario(true);				
 			}
 		});
 		
@@ -286,7 +363,104 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				dispose();
 			}
 		});		
-	}	
+	}
+	
+	
+	private void completarFormulario(boolean estoyGuardando){
+		
+		try{
+			
+			TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
+			
+			Integer nroReclamo = (txtNroReclamo.getText().isEmpty()) ?  null : Integer.valueOf(txtNroReclamo.getText());
+			String descripcion = txtDescripcion.getText();
+			ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
+			EstadoDeReclamo estado = (EstadoDeReclamo) cmbEstadoActual.getSelectedItem();
+			
+			ReclamoView reclamoView = null;
+			
+			switch(tipoDeReclamo){
+				
+				case ZONA:				
+					
+					String zona = txtZona.getText();
+					
+					if(estoyGuardando)
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), zona);														
+					
+					reclamoView = Sistema.getInstance().obtenerReclamoZona(nroReclamo);							
+					txtZona.setText(reclamoView.getZona());
+					
+				break;
+				case FACTURACION:
+					
+					List<FacturaView> selectedFacturas = lstFacturas.getSelectedValuesList();
+					List<Integer> nrosFacturas = new ArrayList<>();
+					selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
+					
+					Sistema.getInstance().registrarReclamo(descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
+					
+				break;
+				case CANTIDADES:
+				case FALTANTES:
+				case PRODUCTO:
+					
+					ProductoView producto = (ProductoView) cmbProductos.getSelectedItem();
+					Integer cantidad = Integer.valueOf(txtCantidad.getText());
+					
+					if(estoyGuardando)
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), producto.getIdProducto(), cantidad);
+					
+					reclamoView = Sistema.getInstance().obtenerReclamoDistribucion(nroReclamo);
+					
+					cmbProductos.setSelectedItem(reclamoView.getProducto());
+					txtCantidad.setText(reclamoView.getCantidad());
+					
+				break;
+				case COMPUESTO:
+					
+					if(estoyGuardando)
+						nroReclamo = Sistema.getInstance().registrarReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente());
+					
+					reclamoView = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(nroReclamo, tipoDeReclamo);
+					
+					List<TipoDeReclamo> tiposDeReclamosSeleccionados = lstTiposReclamosHijos.getSelectedValuesList();
+					
+					for(TipoDeReclamo tipoSeleccionado : tiposDeReclamosSeleccionados){
+						TableroPantalla.getInstance().getFrameContainer().add(new ReclamoPantalla(tipoSeleccionado, nroReclamo));
+					}	
+									
+				break;
+				default:
+					throw new RuntimeException("El tipo de reclamo indicado no existe");
+					
+			}
+			
+			txtNroReclamo.setText(reclamoView.getNroReclamo().toString());
+			txtDescripcion.setText(reclamoView.getDescripcion());
+			cmbTiposDeReclamo.setSelectedItem(reclamoView.getTipoDeReclamo());
+			cmbEstadoActual.setSelectedItem(reclamoView.getEstadoDeReclamo());
+			cmbClientes.setSelectedItem(reclamoView.getCliente());
+			txtFechaDeCreacion.setText(reclamoView.getFechaDeReclamo());
+			txtFechaDeCierre.setText(reclamoView.getFechaDeCierre());
+			
+			if(reclamoView.getNroReclamoCompuesto() != null)
+				txtNroReclamoCompuesto.setText(reclamoView.getNroReclamoCompuesto().toString());
+								
+		}catch(NegocioException ne){
+			ne.printStackTrace();
+		}
+	}
+	
+	private void cargarProductos(){
+		try {
+			List<ProductoView> productos = Sistema.getInstance().obtenerProductos();			
+			productos.forEach(p -> cmbProductos.addItem(p));
+			
+		} catch (NegocioException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	private void cargarClientes(){
 		try {
