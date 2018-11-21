@@ -5,6 +5,7 @@ import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import model.Cliente;
+import model.EstadoDeReclamo;
 import model.Producto;
 import model.TipoDeReclamo;
 import view.ReclamoView;
@@ -20,6 +21,12 @@ public class ReclamoDistribucion extends Reclamo {
 		super(descripcion, tipoDeReclamo, cliente);
 		this.producto = producto;
 		this.cantidad = cantidad;	
+	}
+	
+	public ReclamoDistribucion(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Cliente cliente, Producto producto, Integer cantidad) {
+		this(descripcion, tipoDeReclamo, cliente, producto, cantidad);
+		this.nroReclamo = nroReclamo;
+		this.estado = estado;
 	}
 	
 	public Producto getProducto() {
@@ -52,26 +59,36 @@ public class ReclamoDistribucion extends Reclamo {
 	}
 	
 	@Override
-	public void guardar() throws ConexionException, AccesoException {			
+	public Integer guardar() throws ConexionException, AccesoException {			
 		if (this.nroReclamo == null){
-			ReclamoDAO.getInstancia().crearReclamoDistribucion(this);
+			this.nroReclamo = ReclamoDAO.getInstancia().crearReclamoDistribucion(this);
 		} else {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
-		}									
+		}	
+		
+		return this.nroReclamo;
 	}
 	
 	@Override
 	public ReclamoView toView() {
 		
 		ReclamoView view = new ReclamoView();
-		view.nroReclamo = this.nroReclamo;
-		view.descripcion = this.descripcion;
-		view.tipoDeReclamo = this.tipoDeReclamo.getDenominacion();
-		view.estadoDeReclamo = this.estado.getDenominacion();
-		view.fechaDeReclamo = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha);
+		
+		view.setNroReclamo(this.nroReclamo);
+		view.setDescripcion(this.descripcion);
+		view.setTipoDeReclamo(this.tipoDeReclamo);
+		view.setEstadoDeReclamo(this.estado.getDenominacion());
+		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
+		
 		if(this.fechaCierre != null)
-			view.fechaDeCierre = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre);
-		view.cliente = this.cliente.getNombre();
+			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
+		
+		if(this.nroReclamoCompuesto != null)
+			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
+		
+		view.setCliente(this.cliente.toView());		
+		view.setProducto(this.producto.toView());
+		view.setCantidad(this.cantidad.toString());
 		
 		return view;	
 	}
