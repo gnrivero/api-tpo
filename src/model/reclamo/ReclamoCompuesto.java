@@ -9,6 +9,7 @@ import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
+import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
 import view.ReclamoView;
 
@@ -16,8 +17,18 @@ public class ReclamoCompuesto extends Reclamo {
 	
 	public ReclamoCompuesto(){}
 	
-	public ReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Reclamo> reclamos) {
+	public ReclamoCompuesto(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente) {
 		super(descripcion, tipoDeReclamo, cliente);
+	}
+	
+	public ReclamoCompuesto(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Cliente cliente) {
+		super(descripcion, tipoDeReclamo, cliente);
+		this.nroReclamo = nroReclamo;
+		this.estado = estado;		
+	}
+	
+	public ReclamoCompuesto(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Cliente cliente, List<Reclamo> reclamos) {
+		this(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);
 		this.reclamosHijos.addAll(reclamos);
 	}
 
@@ -51,33 +62,36 @@ public class ReclamoCompuesto extends Reclamo {
 	}
 
 	@Override
-	public void guardar() throws ConexionException, AccesoException, NegocioException {
+	public Integer guardar() throws ConexionException, AccesoException, NegocioException {
 		
-		Integer nroReclamoCompuesto = null;
 		if (this.nroReclamo == null) {
-			nroReclamoCompuesto = ReclamoDAO.getInstancia().crearReclamoCompuesto(this);
+			this.nroReclamo = ReclamoDAO.getInstancia().crearReclamoCompuesto(this);
 		}else{
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}			
 		
 		for(Reclamo reclamoHijo : reclamosHijos){
-			reclamoHijo.nroReclamoCompuesto = nroReclamoCompuesto;
+			reclamoHijo.setNroReclamo(this.nroReclamoCompuesto);
 			reclamoHijo.guardar();
 		}
+		
+		return this.nroReclamo;
 	}
 
 	@Override
 	public ReclamoView toView() {
 		
 		ReclamoView view = new ReclamoView();
-		view.nroReclamo = this.nroReclamo;
-		view.descripcion = this.descripcion;
-		view.tipoDeReclamo = this.tipoDeReclamo.getDenominacion();
-		view.estadoDeReclamo = this.estado.getDenominacion();
-		view.fechaDeReclamo = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha);
+		view.setNroReclamo(this.nroReclamo);
+		view.setDescripcion(this.descripcion);
+		view.setTipoDeReclamo(this.tipoDeReclamo);
+		view.setEstadoDeReclamo(this.estado.getDenominacion());
+		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
+		
 		if(this.fechaCierre != null)
-			view.fechaDeCierre = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre);
-		view.cliente = this.cliente.getNombre();
+			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
+		
+		view.setCliente(this.cliente.toView());
 		
 		return view;
 	}

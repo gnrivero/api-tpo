@@ -83,7 +83,7 @@ public class ReclamosTest {
 			e1.printStackTrace();
 		}	
 		
-		Cliente cliente = new Cliente(clienteView.nombre, clienteView.domicilio, clienteView.telefono, clienteView.mail);
+		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.domicilio, clienteView.telefono, clienteView.mail);
 		
 		try {
 			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");

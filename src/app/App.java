@@ -1,5 +1,7 @@
 package app;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 
@@ -14,7 +16,10 @@ public class App {
 		TableroPantalla tablero = TableroPantalla.getInstance();
 		tablero.setTitle("Tablero de Gestion de Reclamos");
 		tablero.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		JFormLogin.getInstance(tablero);
-		
+		tablero.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		tablero.setMinimumSize(new Dimension(600, 600));
+		tablero.isResizable();
+		tablero.setVisible(true);
+		JFormLogin.getInstance(tablero);		
 	}
 }

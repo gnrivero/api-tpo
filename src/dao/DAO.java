@@ -48,12 +48,12 @@ public abstract class DAO {
 		
 		try {
 			
-			sql +=";SELECT MAX(idcliente) idcliente FROM clientes;";
+			sql +="; SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];";
 			
 			rs = stm.executeQuery(sql);
 			
 			while(rs.next()){						
-				return rs.getInt("idcliente");			
+				return rs.getInt("SCOPE_IDENTITY");			
 			}
 			throw new AccesoException("No se pudo recuperar la clave primaria");
 			
