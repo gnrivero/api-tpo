@@ -72,7 +72,7 @@ public class ReclamoZona extends Reclamo {
 		view.setNroReclamo(this.nroReclamo);
 		view.setDescripcion(this.descripcion);
 		view.setTipoDeReclamo(this.tipoDeReclamo);
-		view.setEstadoDeReclamo(this.estado.getDenominacion());
+		view.setEstadoDeReclamo(this.estado);
 		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
 		
 		if(this.fechaCierre != null)

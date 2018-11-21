@@ -1,5 +1,6 @@
 package view;
 
+import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
 
 public class ReclamoView {
@@ -7,7 +8,7 @@ public class ReclamoView {
 	private Integer nroReclamo;
 	private String descripcion;
 	private TipoDeReclamo tipoDeReclamo;
-	private String estadoDeReclamo;
+	private EstadoDeReclamo estadoDeReclamo;
 	private String fechaDeReclamo;
 	private String fechaDeCierre;
 	private ClienteView cliente;
@@ -46,11 +47,11 @@ public class ReclamoView {
 		this.tipoDeReclamo = tipoDeReclamo;
 	}
 
-	public String getEstadoDeReclamo() {
+	public EstadoDeReclamo getEstadoDeReclamo() {
 		return estadoDeReclamo;
 	}
 
-	public void setEstadoDeReclamo(String estadoDeReclamo) {
+	public void setEstadoDeReclamo(EstadoDeReclamo estadoDeReclamo) {
 		this.estadoDeReclamo = estadoDeReclamo;
 	}
 

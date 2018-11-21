@@ -3,18 +3,24 @@ package gui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import controller.Sistema;
+import excepciones.NegocioException;
 import gui.forms.JFormLogin;
+import model.Usuario;
 import observer.IObservador;
+import view.ReclamoView;
 
 public class TableroPantalla extends JFrame implements IObservador  {
 	
@@ -39,9 +45,17 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private Container container;
 	
-	private JLabel usuarioLogueado;
+	private JLabel usuarioLogueado, lblReclamosIngresados, lblReclamosEnTratamiento, lblReclamosCerrados;
 	private JButton btnCargarReclamo;
 	private JButton btnAdministrarUsuarios, btnAdminClientes;
+	
+	private JList<ReclamoView> lstReclamosIngresados;
+	private JList<ReclamoView> lstReclamosEnTratamiento;
+	private JList<ReclamoView> lstReclamosCerrados;
+	
+	private DefaultListModel<ReclamoView> reclamosIngresadosModel = new DefaultListModel<ReclamoView>();
+	private DefaultListModel<ReclamoView> reclamosEnTratamientoModel = new DefaultListModel<ReclamoView>();
+	private DefaultListModel<ReclamoView> reclamosCerradosModel = new DefaultListModel<ReclamoView>();
 	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu inicio = new JMenu("Inicio");
@@ -85,6 +99,36 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnAdminClientes.setBounds(360, 40, 150, 30);
 		container.add(btnAdminClientes);
 		
+		// ---
+		
+		lblReclamosIngresados = new JLabel("Ingresados");
+		lblReclamosIngresados.setBounds(30, 165, 200, 30);
+		container.add(lblReclamosIngresados);
+		
+		lstReclamosIngresados = new JList<ReclamoView>();
+		lstReclamosIngresados.setBounds(30, 200, 300, 400);
+		lstReclamosIngresados.setModel(reclamosIngresadosModel);
+		container.add(lstReclamosIngresados);
+		
+		lblReclamosEnTratamiento = new JLabel("En Tratamiento");
+		lblReclamosEnTratamiento.setBounds(380, 165, 200, 30);
+		container.add(lblReclamosEnTratamiento);
+		
+		lstReclamosEnTratamiento = new JList<ReclamoView>();
+		lstReclamosEnTratamiento.setBounds(380, 200, 300, 400);
+		lstReclamosEnTratamiento.setModel(reclamosEnTratamientoModel);
+		container.add(lstReclamosEnTratamiento);
+		
+		lblReclamosCerrados = new JLabel("Cerrados");
+		lblReclamosCerrados.setBounds(730, 165, 200, 30);		
+		container.add(lblReclamosCerrados);
+		
+		lstReclamosCerrados = new JList<ReclamoView>();
+		lstReclamosCerrados.setBounds(730, 200, 300, 400);		
+		lstReclamosCerrados.setModel(reclamosCerradosModel);
+		container.add(lstReclamosCerrados);
+		
+		// ---
 		
 		clientePantalla = ClientePantalla.getInstance();
 		container.add(clientePantalla);
@@ -151,6 +195,37 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	@Override
 	public void actualizar() {
-		this.getUsuarioLogueado().setText("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+		
+		Usuario usuarioLogueado = Sistema.getInstance().getUsuarioLogueado();
+		
+		this.getUsuarioLogueado().setText("Hola " + usuarioLogueado.getUsername());
+				
+		try {
+			
+			List<ReclamoView> reclamos = Sistema.getInstance().obtenerReclamosPorTipo(usuarioLogueado.getRol().getTiposDeReclamo());
+			
+			for (ReclamoView reclamo : reclamos){								
+				
+				switch(reclamo.getEstadoDeReclamo()){
+					
+					case INGRESADO:
+						reclamosIngresadosModel.addElement(reclamo);
+					break;
+					case EN_TRATAMIENTO:
+						reclamosEnTratamientoModel.addElement(reclamo);
+					break;
+					case CERRADO:
+						reclamosCerradosModel.addElement(reclamo);
+					break;
+					default:
+						System.out.println("No hay estados");
+					break;
+				}								
+			}
+			
+		} catch (NegocioException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -2,10 +2,10 @@ package model;
 
 public enum TipoDeReclamo {
 	
-	CANTIDADES(1, "Reclamo de Cantidad"), 
-	FALTANTES(2, "Reclamo de Faltantes"), 
-	PRODUCTO(3, "Reclamo de Producto"), 
-	ZONA(4, "Reclamo de Zona"), 
+	ZONA(1, "Reclamo de Zona"),
+	CANTIDADES(2, "Reclamo de Cantidad"), 
+	FALTANTES(3, "Reclamo de Faltantes"), 
+	PRODUCTO(4, "Reclamo de Producto"), 
 	FACTURACION(5, "Reclamo de Facturacion"), 
 	COMPUESTO(6, "Reclamo Compuesto");
 	

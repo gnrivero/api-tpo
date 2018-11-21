@@ -460,14 +460,12 @@ public class ReclamoDAO extends DAO {
 	 * @throws AccesoException
 	 * @throws NegocioException
 	 */
-	public List<Reclamo> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws ConexionException, AccesoException, NegocioException{
+	public List<Reclamo> obtenerReclamosPorTipo(List<TipoDeReclamo> tipo) throws ConexionException, AccesoException, NegocioException{
 		
-		String tabla = "reclamos";
-		
-		if(tipo.equals(TipoDeReclamo.COMPUESTO))
-			tabla = "reclamoscompuestos";
-		
-		String sql = "SELECT * FROM " + tabla +" WHERE idtiporeclamo = " + tipo.getId();
+		List<Integer> idsTiposDeReclamo = new ArrayList<Integer>();
+		tipo.forEach(t -> idsTiposDeReclamo.add(t.getId()));
+	
+		String sql = "SELECT * FROM reclamos WHERE idtiporeclamo " + DAOhelper.escribirSentenciaIn(idsTiposDeReclamo);
 		
 		return obtenerReclamos(sql);
 	}

@@ -354,7 +354,7 @@ public class Sistema extends Observado {
 	 * @return
 	 * @throws NegocioException
 	 */
-	public List<ReclamoView> obtenerReclamosPorTipo(TipoDeReclamo tipo) throws NegocioException {
+	public List<ReclamoView> obtenerReclamosPorTipo(List<TipoDeReclamo> tipo) throws NegocioException {
 		try {
 			
 			List<Reclamo> reclamos = ReclamoDAO.getInstancia().obtenerReclamosPorTipo(tipo);							
@@ -364,7 +364,7 @@ public class Sistema extends Observado {
 						
 			return reclamosViews;
 		} catch (ConexionException | AccesoException | NegocioException e) {			
-			throw new NegocioException("No se pudo cargar reclamos " + tipo.getDenominacion());
+			throw new NegocioException("No se pudo cargar reclamos");
 		}		
 	}
 	

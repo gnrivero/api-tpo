@@ -77,7 +77,7 @@ public class ReclamoDistribucion extends Reclamo {
 		view.setNroReclamo(this.nroReclamo);
 		view.setDescripcion(this.descripcion);
 		view.setTipoDeReclamo(this.tipoDeReclamo);
-		view.setEstadoDeReclamo(this.estado.getDenominacion());
+		view.setEstadoDeReclamo(this.estado);
 		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
 		
 		if(this.fechaCierre != null)
@@ -86,9 +86,13 @@ public class ReclamoDistribucion extends Reclamo {
 		if(this.nroReclamoCompuesto != null)
 			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
 		
-		view.setCliente(this.cliente.toView());		
-		view.setProducto(this.producto.toView());
-		view.setCantidad(this.cantidad.toString());
+		view.setCliente(this.cliente.toView());
+		
+		if(this.producto != null)
+			view.setProducto(this.producto.toView());
+		
+		if(this.cantidad != null)
+			view.setCantidad(this.cantidad.toString());
 		
 		return view;	
 	}

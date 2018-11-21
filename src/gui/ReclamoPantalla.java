@@ -299,8 +299,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							cmbProductos.setEnabled(true);
 							lblCantidad.setEnabled(true);
 							txtCantidad.setEnabled(true);
-							
-							cargarProductos();
+														
+							if (cmbProductos.getItemCount() == 0)
+								cargarProductos();
 							
 						break;
 						case COMPUESTO:
@@ -455,6 +456,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	private void cargarProductos(){
 		try {
 			List<ProductoView> productos = Sistema.getInstance().obtenerProductos();			
+			cmbProductos.removeAllItems();
 			productos.forEach(p -> cmbProductos.addItem(p));
 			
 		} catch (NegocioException e) {

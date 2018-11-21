@@ -131,7 +131,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(215, 300, 200, 30);
 		cont.add(btnCancelar);
-				
+		
 		this.setLocation(10, 100);
 		this.setSize(600, 400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
