@@ -124,7 +124,7 @@ public class ReclamosTest {
 		
 		//Cargo cliente
 		ClienteView clienteView = Sistema.getInstance().obtenerCliente(1);
-		Cliente cliente = new Cliente(clienteView.nombre, clienteView.domicilio, clienteView.telefono, clienteView.mail);
+		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
 		
 		//Cargo producto
 		Producto producto = Sistema.getInstance().obtenerProducto(2);//Papel
