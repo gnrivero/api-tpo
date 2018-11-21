@@ -41,7 +41,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private JLabel usuarioLogueado;
 	private JButton btnCargarReclamo;
-	private JButton btnAdministrarUsuarios, btnAdminClientes;
+	private JButton btnAdministrarUsuarios, btnAdminClientes, btnAdminProducto;
 	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu inicio = new JMenu("Inicio");
@@ -78,13 +78,16 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		container.add(btnCargarReclamo);
 		
 		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
-		btnAdministrarUsuarios.setBounds(170, 40, 180, 30);
+		btnAdministrarUsuarios.setBounds(180, 40, 180, 30);
 		container.add(btnAdministrarUsuarios);
 		
 		btnAdminClientes = new JButton("Admin. Clientes");
-		btnAdminClientes.setBounds(360, 40, 150, 30);
+		btnAdminClientes.setBounds(400, 40, 150, 30);
 		container.add(btnAdminClientes);
 		
+		btnAdminProducto = new JButton("Admin. Producto");
+		btnAdminProducto.setBounds(600, 40, 150, 30);
+		container.add(btnAdminProducto);
 		
 		clientePantalla = ClientePantalla.getInstance();
 		container.add(clientePantalla);
