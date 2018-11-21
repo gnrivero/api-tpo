@@ -9,7 +9,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -64,7 +63,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		this.cargarClientes();
 		
 		btnSeleccionarCliente = new JButton("Seleccionar");
-		btnSeleccionarCliente.setBounds(420, 20, 150, 30);
+		btnSeleccionarCliente.setBounds(420, 20, 100, 30);
 		cont.add(btnSeleccionarCliente);
 		
 		lblIdCliente = new JLabel("ID. de Cliente");
@@ -131,10 +130,10 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(215, 300, 200, 30);
 		cont.add(btnCancelar);
-				
-		this.setLocation(10, 100);
-		this.setSize(600, 400);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		this.pack();
+		this.setSize(600, 500);
+		this.setClosable(true);		
 	}
 	
 	private void eventos(){

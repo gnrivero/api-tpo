@@ -50,32 +50,26 @@ public class ReclamoFacturacion extends Reclamo {
 	}
 
 	@Override
-	public Integer guardar() throws ConexionException, AccesoException {
+	public void guardar() throws ConexionException, AccesoException {
 		if (this.nroReclamo == null){
-			this.nroReclamo  = ReclamoDAO.getInstancia().crearReclamoFacturacion(this);
+			ReclamoDAO.getInstancia().crearReclamoFacturacion(this);
 		} else {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}	
-		
-		return this.nroReclamo;
 	}
 
 	@Override
 	public ReclamoView toView() {
 		
 		ReclamoView view = new ReclamoView();
-		
-		view.setNroReclamo(this.nroReclamo);
-		view.setDescripcion(this.descripcion);
-		view.setTipoDeReclamo(this.tipoDeReclamo);
-		view.setEstadoDeReclamo(this.estado.getDenominacion());
-		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
-		
+		view.nroReclamo = this.nroReclamo;
+		view.descripcion = this.descripcion;
+		view.tipoDeReclamo = this.tipoDeReclamo.getDenominacion();
+		view.estadoDeReclamo = this.estado.getDenominacion();
+		view.fechaDeReclamo = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha);
 		if(this.fechaCierre != null)
-			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
-		
-		if(this.nroReclamoCompuesto != null)
-			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
+			view.fechaDeCierre = DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre);
+		view.cliente = this.cliente.getNombre();
 		
 		return view;	
 	}

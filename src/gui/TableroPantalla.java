@@ -3,7 +3,6 @@ package gui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,7 +10,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-
 import controller.Sistema;
 import gui.forms.JFormLogin;
 import observer.IObservador;
@@ -19,14 +17,14 @@ import observer.IObservador;
 public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private static final long serialVersionUID = -1088336668792687527L;
-
+	
 	//Singleton
 	private static TableroPantalla tableroPantalla = null;
 		
 	private TableroPantalla(){
 		Sistema.getInstance().agregarObservador(this);		
 		configurar();
-		eventos();		
+		eventos();
 	}
 	
 	public static TableroPantalla getInstance(){
@@ -40,10 +38,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private Container container;
 	
 	private JLabel usuarioLogueado;
-
 	private JButton btnCargarReclamo, btnCargarVariosReclamos;
 	private JButton btnAdministrarUsuarios, btnAdminClientes, btnAdminProducto;
-
 	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu inicio = new JMenu("Inicio");
@@ -51,13 +47,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private JMenuItem opcLogout = new JMenuItem("Logout");
 	private JMenu ayuda = new JMenu("Ayuda");
 	private JMenuItem acercaDe = new JMenuItem("Acerca de...");
-	
-	private ClientePantalla clientePantalla;
-	
-	public Container getFrameContainer(){
-		return container;
-	}
 
+	
 	public JLabel getUsuarioLogueado() {
 		return usuarioLogueado;
 	}
@@ -68,9 +59,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 	private void configurar(){
 		
-		container = getLayeredPane();
+		container = this.getContentPane();
 		container.setLayout(null);
-
+		
 		usuarioLogueado = new JLabel();
 		usuarioLogueado.setBounds(10, 10, 200, 30);
 		container.add(usuarioLogueado);
@@ -79,7 +70,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnCargarReclamo.setBounds(10, 40, 150, 30);
 		container.add(btnCargarReclamo);
 		
-
 		btnCargarVariosReclamos = new JButton("Cargar Varios Reclamos");
 		btnCargarVariosReclamos.setBounds(165, 40, 180, 30);
 		container.add(btnCargarVariosReclamos);
@@ -95,19 +85,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnAdminProducto = new JButton("Admin. Producto");
 		btnAdminProducto.setBounds(660, 40, 150, 30);
 		container.add(btnAdminProducto);
-
-		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
-		btnAdministrarUsuarios.setBounds(170, 40, 180, 30);
-		container.add(btnAdministrarUsuarios);
-		
-		btnAdminClientes = new JButton("Admin. Clientes");
-		btnAdminClientes.setBounds(360, 40, 150, 30);
-		container.add(btnAdminClientes);
-		
-		
-		clientePantalla = ClientePantalla.getInstance();
-		container.add(clientePantalla);
-
 //		if(Sistema.getInstance().getUsuarioLogueado() == null){
 //			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
 //		}
@@ -118,6 +95,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		ayuda.add(acercaDe);
 		this.setJMenuBar(menu);
 		
+		this.setSize(800, 600);
 		this.setVisible(true);
 		this.setEnabled(false);
 		this.setLocationRelativeTo(null);
@@ -129,7 +107,10 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				clientePantalla.setVisible(true);
+				ClientePantalla clientePantalla = ClientePantalla.getInstance();
+				clientePantalla.moveToFront();
+				clientePantalla.setVisible(true);				
+				container.add(clientePantalla);
 			}
 		});
 		
@@ -137,7 +118,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();			
+				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();//ReclamoPantalla.getInstance();
+				reclamoPantalla.moveToFront();
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla);	
 			}

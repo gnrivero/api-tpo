@@ -24,9 +24,4 @@ public enum TipoDeReclamo {
 	public String getDenominacion(){
 		return this.denominacion;
 	}
-	
-	@Override
-	public String toString() {		
-		return this.denominacion;
-	}
 }

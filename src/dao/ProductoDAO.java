@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -25,77 +23,15 @@ public class ProductoDAO extends DAO {
 		return instancia;
 	}
 	
-	
-	/**
-	 * 
-	 * @param producto
-	 * @throws ConexionException
-	 * @throws AccesoException
-	 */
-	public void crearProducto(Producto producto) throws ConexionException, AccesoException{
-		
-		String sql = "INSERT INTO productos (codigo, titulo, descripcion, precio) VALUES "
-				+ "('" + producto.getCodigo() + "', "
-				+ "'" + producto.getTitulo() + "', "
-				+ "'" + producto.getDescripcion() + "', "				
-				+ producto.getPrecio() + ")";
-		
-		crear(sql);
-	}	
-	
-	/**
-	 * Elimina fisicamente el producto de la base de datos
-	 * 
-	 * @param idProducto
-	 * @throws ConexionException
-	 * @throws AccesoException
-	 */
 	public void borrar(Integer idProducto) throws ConexionException, AccesoException{
-		
+	
 		String sql = "DELETE FROM productos where idproducto = " + idProducto;
 	
-		actualizar(sql);
+		crear(sql);
 	}
 	
-	/**
-	 * Obtiene el producto por su Id
-	 * 
-	 * @param idProducto
-	 * @return
-	 * @throws NegocioException
-	 * @throws ConexionException
-	 * @throws AccesoException
-	 */
+	
 	public Producto obtenerProductoPorId(Integer idProducto) throws NegocioException, ConexionException, AccesoException {
-		
-		String sql = "SELECT * FROM productos WHERE idproducto = " + idProducto;
-		
-		return obtenerProductos(sql).get(0);
-	}
-	
-	/**
-	 * Obtiene todos los productos existentes
-	 * 
-	 * @return
-	 * @throws ConexionException
-	 * @throws AccesoException
-	 */
-	public List<Producto> obtenerTodosLosProductos() throws ConexionException, AccesoException{
-		
-		String sql = "SELECT * FROM productos";
-		
-		return obtenerProductos(sql);
-	}
-	
-	/**
-	 * Metodo general para la obtencion de productos. 
-	 * 
-	 * @param sql
-	 * @return
-	 * @throws ConexionException
-	 * @throws AccesoException
-	 */
-	private List<Producto> obtenerProductos(String sql) throws ConexionException, AccesoException{
 		
 		Connection con = null;
 		Statement stmt = null;
@@ -112,7 +48,9 @@ public class ProductoDAO extends DAO {
 			stmt = con.createStatement();
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de acceso");
-		}		
+		}
+		
+		String sql = "SELECT * FROM productos WHERE idproducto = " + idProducto;
 		
 		try {
 			rs = stmt.executeQuery(sql);
@@ -120,20 +58,27 @@ public class ProductoDAO extends DAO {
 			throw new AccesoException("Error de consulta");
 		}
 		
-		
-		List<Producto> productos = new ArrayList<Producto>();
-		try {
-			while(rs.next()){
-				Producto producto = new Producto(rs.getInt("idproducto"), rs.getString("codigo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getFloat("precio"));				
-				productos.add(producto);
-			}						
+		try {	
+			if(rs.next()){
+				return new Producto(rs.getInt("idproducto"), rs.getString("codigo"), rs.getString("titulo"), rs.getString("descripcion"), rs.getFloat("precio"));
+			}
+			else{
+				throw new NegocioException("El producto id: " + idProducto + " no existe");
+			}			
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}
-		
-		return productos;
 	}
 	
-	
+	public void crearProducto(Producto producto) throws ConexionException, AccesoException{
+		
+		String sql = "INSERT INTO productos (codigo, titulo, descripcion, precio) VALUES "
+				+ "('" + producto.getCodigo() + "', "
+				+ "'" + producto.getTitulo() + "', "
+				+ "'" + producto.getDescripcion() + "', "				
+				+ producto.getPrecio() + ")";
+		
+		crear(sql);
+	}
 
 }

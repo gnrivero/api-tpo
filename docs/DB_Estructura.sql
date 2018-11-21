@@ -1,5 +1,4 @@
 -- DROP DATABASE TPO_AI;
--- select * from TPO_AI.INFORMATION_SCHEMA.TABLES
 CREATE DATABASE TPO_AI;
 
 USE TPO_AI;
@@ -67,7 +66,7 @@ CREATE TABLE facturas
 	CONSTRAINT nroFactura_pk PRIMARY KEY (nrofactura),
 	CONSTRAINT idCliente_fk FOREIGN KEY (idcliente) REFERENCES clientes
 )
-
+GO
 
 CREATE TABLE itemsfacturas
 (
