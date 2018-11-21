@@ -39,7 +39,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private JLabel usuarioLogueado;
 	private JButton btnCargarReclamo, btnCargarVariosReclamos;
-	private JButton btnAdministrarUsuarios, btnAdminClientes, btnAdminProducto;
+	private JButton btnAdministrarUsuarios, btnAdminClientes;
 	
 	private JMenuBar menu = new JMenuBar();
 	private JMenu inicio = new JMenu("Inicio");
@@ -71,20 +71,17 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		container.add(btnCargarReclamo);
 		
 		btnCargarVariosReclamos = new JButton("Cargar Varios Reclamos");
-		btnCargarVariosReclamos.setBounds(165, 40, 180, 30);
+		btnCargarVariosReclamos.setBounds(170, 40, 180, 30);
 		container.add(btnCargarVariosReclamos);
 		
 		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
-		btnAdministrarUsuarios.setBounds(350, 40, 150, 30);
+		btnAdministrarUsuarios.setBounds(360, 40, 150, 30);
 		container.add(btnAdministrarUsuarios);
 		
 		btnAdminClientes = new JButton("Admin. Clientes");
-		btnAdminClientes.setBounds(505, 40, 150, 30);
+		btnAdminClientes.setBounds(515, 40, 150, 30);
 		container.add(btnAdminClientes);
 		
-		btnAdminProducto = new JButton("Admin. Producto");
-		btnAdminProducto.setBounds(660, 40, 150, 30);
-		container.add(btnAdminProducto);
 //		if(Sistema.getInstance().getUsuarioLogueado() == null){
 //			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
 //		}
