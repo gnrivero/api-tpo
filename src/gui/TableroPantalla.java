@@ -65,6 +65,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private JMenuItem acercaDe = new JMenuItem("Acerca de...");
 	
 	private ClientePantalla clientePantalla;
+	private UsuarioPantalla usuarioPantalla;
+	
 	
 	public Container getFrameContainer(){
 		return container;
@@ -138,6 +140,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		clientePantalla = ClientePantalla.getInstance();
 		container.add(clientePantalla);
 		
+		usuarioPantalla = UsuarioPantalla.getInstance();
+		container.add(usuarioPantalla);
+		
 //		if(Sistema.getInstance().getUsuarioLogueado() == null){
 //			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
 //		}
@@ -170,6 +175,16 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();			
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla);	
+			}
+		});
+		
+		btnAdministrarUsuarios.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//UsuarioPantalla usuarioPantalla = new UsuarioPantalla();			
+				usuarioPantalla.setVisible(true);
+				//container.add(usuarioPantalla);
 			}
 		});
 		

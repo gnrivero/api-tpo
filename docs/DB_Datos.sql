@@ -14,7 +14,7 @@ select * from roles order by idrol;
 
 -- Usuarios
 INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
-
+INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1);
 select * from usuarios;
 
 -- Tipos de reclamos por roles
@@ -36,6 +36,11 @@ INSERT INTO tiposdereclamoporroles VALUES
 select * from tiposdereclamoporroles;
 
 -- Productos
+INSERT INTO productos (codigo, titulo, descripcion, precio)
+VALUES ('1', 'Plumero', 'Pluma de pavo', 78),
+('2', 'Escoba', 'De paja', 34),
+('3', 'Tacho', 'De aluminio 50L', 500);
+
 select * from productos;
 
 -- Clientes
@@ -60,6 +65,7 @@ select * from itemsfacturas;
 
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-01 14:04:33', 1);
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-05 12:01:33', 1);
+INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-07 13:01:33', 1);
 
 
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 

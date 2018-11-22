@@ -2,10 +2,12 @@ package model;
 
 import java.util.Date;
 
+import dao.DAOhelper;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import view.UsuarioView;
 
 public class Usuario {
 	
@@ -21,7 +23,7 @@ public class Usuario {
 		this.rol = rol;
 	}
 	
-	public Usuario(Integer idUsuario, String username, String password, Rol rol, Date fechaBaja) {
+	public Usuario(Integer idUsuario, String username, String password, Date fechaBaja, Rol rol) {
 		this(username, password, rol);
 		this.setIdUsuario(idUsuario);
 		this.setFechaBaja(fechaBaja);
@@ -58,12 +60,21 @@ public class Usuario {
 		this.rol = rol;
 	}
 	
-	public void guardar() throws ConexionException, AccesoException, NegocioException {
+	public Integer guardar() throws ConexionException, AccesoException, NegocioException {
 		if (this.getIdUsuario() == null){
 			UsuarioDAO.getInstancia().crearUsuario(this);
 		}else{
 			UsuarioDAO.getInstancia().actualizarUsuario(this);
 		}
+		
+		return this.idUsuario;
+	}
+	
+	public UsuarioView toView(){
+		
+		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioDateFormat().format(this.fechaBaja);
+		
+		return new UsuarioView(this.idUsuario, this.username, this.password, fechaBaja, this.rol);
 	}
 	
 }

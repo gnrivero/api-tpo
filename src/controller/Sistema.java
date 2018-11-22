@@ -9,6 +9,7 @@ import dao.ClienteDAO;
 import dao.FacturaDAO;
 import dao.ProductoDAO;
 import dao.ReclamoDAO;
+import dao.RolDAO;
 import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -31,6 +32,8 @@ import view.ClienteView;
 import view.FacturaView;
 import view.ProductoView;
 import view.ReclamoView;
+import view.RolView;
+import view.UsuarioView;
 
 public class Sistema extends Observado {
 		
@@ -90,21 +93,57 @@ public class Sistema extends Observado {
 		this.setUsuarioLogueado(null);		
 	}
 	
-	public void crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
+	public Integer crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
 		
 		Usuario nuevoUsuario = new Usuario(username, password, rol);
+		Integer idUsuario = null;
 		try {
-			nuevoUsuario.guardar();
+			idUsuario = nuevoUsuario.guardar();
 		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo crear usuario");
 		}
 		
+		return idUsuario;
 	}
+	
+	public List<UsuarioView> obtenerTodosLosUsuarios(boolean filtrarDeshabilitados) throws NegocioException{
+		try {			
+			List<Usuario> usuarios = UsuarioDAO.getInstancia().obtenerTodosLosUsuarios(filtrarDeshabilitados);			
+			List<UsuarioView> usuariosViews = new ArrayList<UsuarioView>();
+			usuarios.forEach(u -> usuariosViews.add(u.toView()));			
+			return usuariosViews;
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			throw new NegocioException("No se pudo cargar usuario");
+		}
+	}
+	
+	public void modificarUsuario(Integer idUsuario, String username, String password, Date fechaBaja, Rol rol) throws NegocioException {
+		Usuario usuario = new Usuario(idUsuario, username, password, fechaBaja, rol);
+		try {
+			usuario.guardar();
+			this.notificarObservadores();
+		} catch (ConexionException | AccesoException e) {
+			e.printStackTrace();
+			throw new NegocioException("No se pudo guardar el usuario");
+		}
+	}
+
 	/*Fin: Usuario*/
 	
 	//Roles
 	public void crearNuevoRol(String nombre, List<Integer> idsTiposReclamo) {
 		
+	}
+	
+	public List<RolView> obtenerRoles() throws NegocioException{
+		try {
+			List<Rol> roles = (List<Rol>) RolDAO.getInstancia().obtenerTodosLosRoles();
+			List<RolView> rolesViews = new ArrayList<RolView>();
+			roles.forEach(r -> rolesViews.add(r.toView()));	
+			return rolesViews;
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			throw new NegocioException("No se pudo cargar rol");
+		}
 	}
 	
 	//Fin: Roles
