@@ -141,7 +141,6 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 				
 				String username = txtUserName.getText();
 				String password = txtPassword.getText();
-				//Rol rol = Rol.class.cast(cmbRoles.getSelectedIndex());
 				RolView rol = (RolView) cmbRoles.getSelectedItem();
 				
 				Date fechaBaja = null;
