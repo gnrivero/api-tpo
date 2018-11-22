@@ -238,7 +238,11 @@ public class Sistema extends Observado {
 			
 			Reclamo reclamo = new ReclamoDistribucion(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, producto, cantidad);
 			
-			return reclamo.guardar();
+			nroReclamo = reclamo.guardar();
+			
+			this.notificarObservadores();
+			
+			return nroReclamo;
 			
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
@@ -252,7 +256,11 @@ public class Sistema extends Observado {
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
 			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
 			
-			return reclamo.guardar();
+			nroReclamo = reclamo.guardar();
+			
+			this.notificarObservadores();
+			
+			return nroReclamo;
 			
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
@@ -260,7 +268,7 @@ public class Sistema extends Observado {
 	}
 	
 	//Facturacion
-	public void registrarReclamo(String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas) throws NegocioException{
+	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas) throws NegocioException{
 		try {
 			
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
@@ -268,7 +276,12 @@ public class Sistema extends Observado {
 			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorNro(nrosFacturas);
 			
 			Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
-			reclamoAcrear.guardar();
+			
+			nroReclamo = reclamoAcrear.guardar();
+			
+			this.notificarObservadores();
+			
+			return nroReclamo;
 			
 		} catch (ConexionException | AccesoException | NegocioException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);			
@@ -288,6 +301,21 @@ public class Sistema extends Observado {
 		} catch (ConexionException | AccesoException | NegocioException e) {			
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
 		}		
+	}
+	
+	public void agregarReclamoHoja(Integer nroReclamoHoja, Integer nroReclamoCompuesto) throws NegocioException{
+		
+		try {
+			
+			Reclamo hoja = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamoHoja);			
+			Reclamo reclamoCompuesto = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamoCompuesto, TipoDeReclamo.COMPUESTO);			
+			reclamoCompuesto.addHoja(hoja);
+			
+			reclamoCompuesto.guardar();
+			
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	
@@ -354,18 +382,20 @@ public class Sistema extends Observado {
 	 * @return
 	 * @throws NegocioException
 	 */
-	public List<ReclamoView> obtenerReclamosPorTipo(List<TipoDeReclamo> tipo) throws NegocioException {
+	public List<ReclamoView> obtenerReclamosPorTipo(List<TipoDeReclamo> tipos) throws NegocioException {
 		try {
 			
-			List<Reclamo> reclamos = ReclamoDAO.getInstancia().obtenerReclamosPorTipo(tipo);							
+			List<Reclamo> reclamos = ReclamoDAO.getInstancia().obtenerReclamosPorTipo(tipos);							
 			List<ReclamoView> reclamosViews = new ArrayList<ReclamoView>();
 			
 			reclamos.forEach(r -> reclamosViews.add(r.toView()));
 						
 			return reclamosViews;
-		} catch (ConexionException | AccesoException | NegocioException e) {			
-			throw new NegocioException("No se pudo cargar reclamos");
-		}		
+		} catch (ConexionException | AccesoException e) {			
+			throw new NegocioException("No se pudieron cargar los reclamos");
+		} catch (NegocioException e1){
+			throw new NegocioException(e1.getMessage());
+		}
 	}
 	
 	public ReclamoView obtenerReclamosPorNumeroYTipo(Integer nroReclamo, TipoDeReclamo tipo) throws NegocioException {
@@ -379,23 +409,40 @@ public class Sistema extends Observado {
 	
 	
 	//Tratamiento de reclamos 
-	
-	
+		
 	/**
 	 * Inicia el tratamiento del reclamo indicado
 	 * 
 	 * @param nroReclamo
 	 * @throws NegocioException
 	 */
-	public void comenzarTratamientoReclamo(Integer nroReclamo) throws NegocioException {
+	public void comenzarTratamientoReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
 		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
-			reclamo.comenzarTratamiento();
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
+			reclamo.pasarEstadoEnTratamiento();
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo pasar reclamo a Tratamiento " + nroReclamo);
 		} catch (NegocioException e){
 			throw e;
 		}	
+	}
+	
+	/**
+	 * Marca el reclamo como solucionado.
+	 * 
+	 * @param nroReclamo
+	 * @param tipoDeReclamo
+	 * @throws NegocioException
+	 */
+	public void marcarReclamoComoSolucionado(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException{
+		try {
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);			
+			reclamo.pasarEstadoSolucionado();						
+		} catch (ConexionException | AccesoException ae) {
+			throw new NegocioException("No se pudo pasar reclamo a Solucionado " + nroReclamo);
+		} catch (NegocioException e){
+			throw e;
+		}
 	}
 	
 	
@@ -409,7 +456,7 @@ public class Sistema extends Observado {
 		
 		try {
 			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
-			reclamo.cerrar();
+			reclamo.pasarEstadoCerrado();
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
 		} catch (NegocioException e){
@@ -423,7 +470,7 @@ public class Sistema extends Observado {
 		
 		try {
 			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
-			reclamo.cerrar();
+			reclamo.pasarEstadoCerrado();
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
 		} catch (NegocioException e){

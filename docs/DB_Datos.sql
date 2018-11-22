@@ -19,6 +19,17 @@ select * from usuarios;
 
 -- Tipos de reclamos por roles
 
+
+-- Permisos Call Center
+INSERT INTO tiposdereclamoporroles VALUES (5, 6);
+
+-- Permisos Distribucion
+INSERT INTO tiposdereclamoporroles 
+VALUES (3, 2),
+(3, 3),
+(3, 4);
+
+
 INSERT INTO tiposdereclamoporroles VALUES 
 (2, 5),
 (3, 1),
@@ -30,8 +41,8 @@ INSERT INTO tiposdereclamoporroles VALUES
 (6, 3),
 (6, 4),
 (6, 5),
-(6, 6)
-;
+(6, 6);
+
 
 select * from tiposdereclamoporroles;
 
@@ -77,5 +88,12 @@ select * from productos;
 
 
 -- Reclamos
-
+SELECT * 
+FROM reclamos rs
+	
+WHERE idtiporeclamo  IN (1,2,3,4,5,6)
 select * from reclamos;
+
+
+SELECT * FROM reclamos;
+

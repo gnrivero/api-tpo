@@ -117,15 +117,20 @@ public class ReclamoDAO extends DAO {
 	
 	public void actualizarReclamo(Reclamo reclamo) throws AccesoException, ConexionException {
 		
-		String sql = "UPDATE reclamos SET "
+		String tabla = "reclamos";
+		
+		String sentenciaSet = " SET "
 				   + " descripcion = '" + reclamo.getDescripcion() + "', "
 				   + " idtiporeclamo = " + reclamo.getTipoDeReclamo().getId() + ", " 
 			 	   + " idestadoreclamo = " + reclamo.getEstado().getId() + ", ";
+				
+				if(reclamo.getNroReclamoCompuesto() != null)
+					sentenciaSet +=" nroreclamocompuesto = " +  reclamo.getNroReclamoCompuesto() + ", ";
 		
 				if(reclamo.getFechaCierre() != null)
-					sql += " fechacierre = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFechaCierre()) + "', ";
+					sentenciaSet += " fechacierre = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(reclamo.getFechaCierre()) + "', ";
 				
-			   sql += " idcliente = " + reclamo.getCliente().getIdCliente();
+				sentenciaSet += " idcliente = " + reclamo.getCliente().getIdCliente();
 				
 				
 				switch(reclamo.getTipoDeReclamo()){
@@ -133,7 +138,9 @@ public class ReclamoDAO extends DAO {
 					case ZONA:				
 						
 						ReclamoZona rzona = (ReclamoZona) reclamo;
-						sql += ", zona = '" + rzona.getZona() + "' ";
+						
+						if(rzona.getZona() != null)
+							sentenciaSet += ", zona = '" + rzona.getZona() + "' ";
 						
 					break;
 					case CANTIDADES:
@@ -141,23 +148,27 @@ public class ReclamoDAO extends DAO {
 					case PRODUCTO:
 						
 						ReclamoDistribucion rdist = (ReclamoDistribucion) reclamo;
-						sql += ", idproducto = " + rdist.getProducto().getIdProducto() 
-							+ " , cantidad = " + rdist.getCantidad();  
+						if(rdist.getProducto() != null)
+							sentenciaSet += ", idproducto = " + rdist.getProducto().getIdProducto(); 
+						
+						if(rdist.getCantidad() != null)
+							sentenciaSet	+= " , cantidad = " + rdist.getCantidad();  
 						
 					break;
 					case FACTURACION:
 						
 					break;
 					case COMPUESTO:
-						
+						tabla = "reclamoscompuestos";
 					break;
 					default:
 						throw new RuntimeException("El tipo de reclamo indicado no existe");
 						
 				}
-											
+												
+				String sentenciaWhere = " WHERE nroreclamo = " + reclamo.getNroReclamo();
 				
-				sql	+= " WHERE nroreclamo = " + reclamo.getNroReclamo();
+				String sql = "UPDATE " + tabla + sentenciaSet + sentenciaWhere;
 		
 		actualizar(sql);		
 	}
@@ -431,8 +442,8 @@ public class ReclamoDAO extends DAO {
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				
-				Reclamo reclamo = ReclamoFactory.getReclamo(tipoDeReclamo);							
-											
+				Reclamo reclamo = ReclamoFactory.getReclamo(tipoDeReclamo);
+				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
 				reclamo.setEstado(estado);
@@ -440,7 +451,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setCliente(cliente);
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
-				
+											
 				reclamos.add(reclamo);
 			}
 			
@@ -460,14 +471,34 @@ public class ReclamoDAO extends DAO {
 	 * @throws AccesoException
 	 * @throws NegocioException
 	 */
-	public List<Reclamo> obtenerReclamosPorTipo(List<TipoDeReclamo> tipo) throws ConexionException, AccesoException, NegocioException{
+	public List<Reclamo> obtenerReclamosPorTipo(List<TipoDeReclamo> tipos) throws ConexionException, AccesoException, NegocioException{
 		
+		if(tipos.isEmpty())
+			throw new NegocioException("Falta indicar los tipos de reclamos que se desean ver");
+		
+		List<Reclamo> resultado;
+		
+		Integer idReclamoCompuesto = null;
 		List<Integer> idsTiposDeReclamo = new ArrayList<Integer>();
-		tipo.forEach(t -> idsTiposDeReclamo.add(t.getId()));
-	
+		
+		for (TipoDeReclamo tipo : tipos){
+			if(TipoDeReclamo.COMPUESTO.equals(tipo)){
+				idReclamoCompuesto = tipo.getId();
+			}else{
+				idsTiposDeReclamo.add(tipo.getId());
+			}			
+		}
+		
 		String sql = "SELECT * FROM reclamos WHERE idtiporeclamo " + DAOhelper.escribirSentenciaIn(idsTiposDeReclamo);
 		
-		return obtenerReclamos(sql);
+		resultado = obtenerReclamos(sql);
+		
+		if (idReclamoCompuesto != null){
+			sql = "SELECT * FROM reclamoscompuestos";			
+			resultado.addAll(obtenerReclamos(sql));
+		}					
+		
+		return resultado;
 	}
 	
 	

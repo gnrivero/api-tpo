@@ -48,17 +48,27 @@ public class ReclamoCompuesto extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub		
 	}
+	
+	@Override
+	public void pasarEstadoSolucionado() throws ConexionException, AccesoException, NegocioException {
+		for(Reclamo reclamoHijo : reclamosHijos){
+			if(!reclamoHijo.estaSolucionado()){
+				throw new NegocioException("No se puede pasar el reclamo a " + EstadoDeReclamo.SOLUCIONADO.getDenominacion() + ", existen reclamos dependientes abiertos");
+			}
+		}
+		super.pasarEstadoSolucionado();
+	}
 
 	@Override
-	public void cerrar() throws NegocioException, ConexionException, AccesoException  {
+	public void pasarEstadoCerrado() throws NegocioException, ConexionException, AccesoException  {
 		
 		for(Reclamo reclamoHijo : reclamosHijos){
 			if(!reclamoHijo.estaCerrado()){
-				throw new NegocioException("No se puede cerrar el reclamo, existen reclamos dependientes abiertos");
+				throw new NegocioException("No se puede pasar el reclamo a " + EstadoDeReclamo.CERRADO.getDenominacion() + ", existen reclamos dependientes abiertos");
 			}
 		}
 		
-		super.cerrar();
+		super.pasarEstadoCerrado();
 	}
 
 	@Override
@@ -68,10 +78,10 @@ public class ReclamoCompuesto extends Reclamo {
 			this.nroReclamo = ReclamoDAO.getInstancia().crearReclamoCompuesto(this);
 		}else{
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
-		}			
+		}
 		
 		for(Reclamo reclamoHijo : reclamosHijos){
-			reclamoHijo.setNroReclamo(this.nroReclamoCompuesto);
+			reclamoHijo.setNroReclamoCompuesto(this.nroReclamo);
 			reclamoHijo.guardar();
 		}
 		

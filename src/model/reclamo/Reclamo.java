@@ -79,27 +79,45 @@ public abstract class Reclamo {
 	public Integer getNroReclamoCompuesto() {
 		return nroReclamoCompuesto;
 	}
+	public void setNroReclamoCompuesto(Integer nroReclamoCompuesto) {
+		this.nroReclamoCompuesto = nroReclamoCompuesto;
+	}
 	
 	//Métodos
 	public boolean soy(Integer nroReclamo){		
 		return (this.nroReclamo.equals(nroReclamo));
 	}
 	
+	
+	public boolean estaSolucionado(){
+		return EstadoDeReclamo.SOLUCIONADO.equals(this.estado);
+	}
+	
 	public boolean estaCerrado(){
 		return EstadoDeReclamo.CERRADO.equals(this.estado);
 	}
 	
-	public void comenzarTratamiento() throws ConexionException, AccesoException, NegocioException {
+	public void pasarEstadoEnTratamiento() throws ConexionException, AccesoException, NegocioException {
+		
 		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
 		
 		this.guardar();
 	}
 	
-	public void cerrar() throws NegocioException, ConexionException, AccesoException {
+	public void pasarEstadoSolucionado() throws ConexionException, AccesoException, NegocioException {
+		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
+			this.setEstado(EstadoDeReclamo.SOLUCIONADO);
+			this.setFechaCierre(new Date());
+			this.guardar();
+		}else{
+			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.SOLUCIONADO.getDenominacion());
+		}		
+	}
+	
+	public void pasarEstadoCerrado() throws NegocioException, ConexionException, AccesoException {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.CERRADO);
-			this.setFechaCierre(new Date());
-			
+			this.setFechaCierre(new Date());			
 			this.guardar();
 		}else{
 			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.CERRADO.getDenominacion());

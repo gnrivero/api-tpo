@@ -1,5 +1,7 @@
 package view;
 
+import java.util.List;
+
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
 
@@ -13,6 +15,8 @@ public class ReclamoView {
 	private String fechaDeCierre;
 	private ClienteView cliente;
 	private Integer nroReclamoCompuesto;
+	
+	private List<ReclamoView> reclamosHijos;//TODO: ver si sirve
 	
 	//Zona
 	private String zona;
@@ -113,14 +117,10 @@ public class ReclamoView {
 
 	@Override
 	public String toString() {
-		return "[Nro. Reclamo: " + this.nroReclamo + 
-				" Descripcion: " + this.descripcion +
-				" Tipo: " + this.tipoDeReclamo +
-				" Estado: " +  this.estadoDeReclamo +
-				" Fecha: " +  this.fechaDeReclamo + 
-				" Fecha de Cierre: " + this.fechaDeCierre +
-				" Cliente: " +  this.cliente +
-				"]";
+		return "Nro: " + this.nroReclamo +
+				" - " + this.descripcion +
+				" - " + this.tipoDeReclamo +
+				" - " +  this.fechaDeReclamo;				
 	}
 		
 }
