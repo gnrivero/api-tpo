@@ -62,7 +62,7 @@ public class Usuario {
 	
 	public Integer guardar() throws ConexionException, AccesoException, NegocioException {
 		if (this.getIdUsuario() == null){
-			UsuarioDAO.getInstancia().crearUsuario(this);
+			this.idUsuario = UsuarioDAO.getInstancia().crearUsuario(this);
 		}else{
 			UsuarioDAO.getInstancia().actualizarUsuario(this);
 		}

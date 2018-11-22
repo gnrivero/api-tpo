@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -12,9 +13,9 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
 import controller.Sistema;
 import excepciones.NegocioException;
-import model.Rol;
 import observer.IObservador;
 import view.RolView;
 import view.UsuarioView;
@@ -141,7 +142,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 				String username = txtUserName.getText();
 				String password = txtPassword.getText();
 				//Rol rol = Rol.class.cast(cmbRoles.getSelectedIndex());
-				Rol rol = null; // obtener del combo, el objeto rol...
+				RolView rol = (RolView) cmbRoles.getSelectedItem();
 				
 				Date fechaBaja = null;
 				if (!chHabilitado.isSelected()){
@@ -150,10 +151,10 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 				
 				try {
 					if (idUsuario == null){
-						Integer idNuevoUsuario = Sistema.getInstance().crearNuevoUsuario(username, password, rol);
+						Integer idNuevoUsuario = Sistema.getInstance().crearNuevoUsuario(username, password, rol.getIdRol());
 						txtIdUsuario.setText(idNuevoUsuario.toString());
 					}else{
-						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol);
+						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol.getIdRol());
 					}
 				} catch (NegocioException e1) { 
 					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
@@ -168,12 +169,17 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 			
 				UsuarioView usuario = (UsuarioView) cmbUsuarios.getSelectedItem();
 				
-				if (usuario != null){
+				if (usuario.getIdUsuario() != null){
 					txtIdUsuario.setText(usuario.idUsuario.toString());
 					txtUserName.setText(usuario.username);
 					txtPassword.setText(usuario.password);
 					chHabilitado.setSelected((usuario.fechaBaja == null));
-				}				
+				} else {
+					txtIdUsuario.setText("");
+					txtUserName.setText("");
+					txtPassword.setText("");
+					chHabilitado.setSelected(true);
+				}
 			}
 		});
 		

@@ -93,17 +93,15 @@ public class Sistema extends Observado {
 		this.setUsuarioLogueado(null);		
 	}
 	
-	public Integer crearNuevoUsuario(String username, String password, Rol rol) throws NegocioException {
+	public Integer crearNuevoUsuario(String username, String password, Integer idRol) throws NegocioException {
 		
-		Usuario nuevoUsuario = new Usuario(username, password, rol);
-		Integer idUsuario = null;
-		try {
-			idUsuario = nuevoUsuario.guardar();
+		try {		
+			Rol rol = RolDAO.getInstancia().obtenerRolPorId(idRol);			
+			Usuario nuevoUsuario = new Usuario(username, password, rol);
+			return nuevoUsuario.guardar();			
 		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo crear usuario");
-		}
-		
-		return idUsuario;
+		}		
 	}
 	
 	public List<UsuarioView> obtenerTodosLosUsuarios(boolean filtrarDeshabilitados) throws NegocioException{
@@ -117,9 +115,10 @@ public class Sistema extends Observado {
 		}
 	}
 	
-	public void modificarUsuario(Integer idUsuario, String username, String password, Date fechaBaja, Rol rol) throws NegocioException {
-		Usuario usuario = new Usuario(idUsuario, username, password, fechaBaja, rol);
-		try {
+	public void modificarUsuario(Integer idUsuario, String username, String password, Date fechaBaja, Integer idRol) throws NegocioException {
+		try {			
+			Rol rol = RolDAO.getInstancia().obtenerRolPorId(idRol);						
+			Usuario usuario = new Usuario(idUsuario, username, password, fechaBaja, rol);
 			usuario.guardar();
 			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
@@ -335,7 +334,11 @@ public class Sistema extends Observado {
 			
 			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);
 			
-			return reclamoCompuesto.guardar();
+			nroReclamo = reclamoCompuesto.guardar();
+			
+			this.notificarObservadores();
+			
+			return nroReclamo;
 			
 		} catch (ConexionException | AccesoException | NegocioException e) {			
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);

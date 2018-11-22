@@ -2,8 +2,8 @@ package view;
 
 public class RolView {
 	
-	public Integer idRol;
-	public String descripcion;
+	private Integer idRol;
+	private String descripcion;
 	
 	public RolView(Integer idRol, String descripcion){
 		 this.idRol = idRol;
@@ -16,5 +16,21 @@ public class RolView {
 			return this.descripcion;
 		
 		return "ID: " + this.idRol+ " - " + this.descripcion;
+	}
+
+	public Integer getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(Integer idRol) {
+		this.idRol = idRol;
+	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 }

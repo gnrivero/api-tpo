@@ -108,14 +108,14 @@ public class UsuarioDAO extends DAO {
 		}
 	}
 
-	public void crearUsuario(Usuario usuario) throws ConexionException, AccesoException {
+	public Integer crearUsuario(Usuario usuario) throws ConexionException, AccesoException {
 		
 		String sql = "INSERT INTO usuarios (username, password, idrol) VALUES ("
 				   + "'" + usuario.getUsername() + "', "
 				   + "'" + usuario.getPassword() + "', "
 				   + "'" + usuario.getRol().getIdRol() + "')";
 		
-		crear(sql);
+		return crear(sql);
 	}
 	
 	public void actualizarUsuario(Usuario usuario) throws NegocioException {

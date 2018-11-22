@@ -477,13 +477,14 @@ public class ReclamoDAO extends DAO {
 			throw new NegocioException("Falta indicar los tipos de reclamos que se desean ver");
 		
 		List<Reclamo> resultado;
-		
-		Integer idReclamoCompuesto = null;
+				
 		List<Integer> idsTiposDeReclamo = new ArrayList<Integer>();
 		
+		boolean esCompuesto = false;
 		for (TipoDeReclamo tipo : tipos){
-			if(TipoDeReclamo.COMPUESTO.equals(tipo)){
-				idReclamoCompuesto = tipo.getId();
+			if(TipoDeReclamo.COMPUESTO.equals(tipo)){				
+				idsTiposDeReclamo.add(tipo.getId());
+				esCompuesto = true;
 			}else{
 				idsTiposDeReclamo.add(tipo.getId());
 			}			
@@ -493,7 +494,7 @@ public class ReclamoDAO extends DAO {
 		
 		resultado = obtenerReclamos(sql);
 		
-		if (idReclamoCompuesto != null){
+		if (esCompuesto){
 			sql = "SELECT * FROM reclamoscompuestos";			
 			resultado.addAll(obtenerReclamos(sql));
 		}					

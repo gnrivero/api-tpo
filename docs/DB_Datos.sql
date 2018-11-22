@@ -29,6 +29,7 @@ VALUES (3, 2),
 (3, 3),
 (3, 4);
 
+TRUNCATE table tiposdereclamoporroles;
 
 INSERT INTO tiposdereclamoporroles VALUES 
 (2, 5),
