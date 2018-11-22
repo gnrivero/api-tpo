@@ -2,6 +2,8 @@ package model;
 
 import java.util.List;
 
+import view.RolView;
+
 public class Rol {
 	
 	private Integer idRol;
@@ -53,6 +55,11 @@ public class Rol {
 	
 	public void guardar(){
 		
+	}
+	
+	public RolView toView(){
+		
+		return new RolView(this.idRol, this.descripcion);
 	}
 
 } 

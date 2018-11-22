@@ -4,11 +4,13 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.Cliente;
 import model.Rol;
 import model.TipoDeReclamo;
 
@@ -82,6 +84,47 @@ public class RolDAO extends DAO {
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}		
+	}
+	
+	public List<Rol> obtenerRoles(String sql) throws ConexionException, AccesoException, NegocioException {
+		Connection con = null;  
+		Statement stmt = null;  
+		ResultSet rs = null;
+		
+		try {    
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+
+		try {
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}
+		
+		List<Rol> roles = new ArrayList<>();
+		try {
+			while(rs.next()){
+				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));
+				roles.add(rol);
+			}			
+			return roles;
+		} catch (SQLException e) {
+			throw new ConexionException("No es posible acceder a los datos");
+		}
+	}
+	
+	public List<Rol> obtenerTodosLosRoles() throws AccesoException, ConexionException, NegocioException{
+		String sql = "SELECT * FROM roles ";
+		return obtenerRoles(sql);
 	}
 
 }
