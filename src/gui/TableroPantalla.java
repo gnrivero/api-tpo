@@ -88,7 +88,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		container.setLayout(null);
 
 		usuarioLogueado = new JLabel();
-		usuarioLogueado.setBounds(10, 10, 200, 30);
+		usuarioLogueado.setBounds(10, 15, 200, 30);
 		container.add(usuarioLogueado);
 		
 		btnCargarReclamo = new JButton("Cargar Reclamo");

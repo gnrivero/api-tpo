@@ -15,6 +15,7 @@ select * from roles order by idrol;
 -- Usuarios
 INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1);
+INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
 select * from usuarios;
 
 -- Tipos de reclamos por roles

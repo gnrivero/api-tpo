@@ -67,7 +67,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 		this.cargarUsuarios();
 		
 		btnSeleccionarUsuario = new JButton("Seleccionar");
-		btnSeleccionarUsuario.setBounds(420, 20, 100, 30);
+		btnSeleccionarUsuario.setBounds(420, 20, 150, 30);
 		cont.add(btnSeleccionarUsuario);
 		
 		lblIdUsuario= new JLabel("ID. de Usuario");
@@ -172,6 +172,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 					txtIdUsuario.setText(usuario.idUsuario.toString());
 					txtUserName.setText(usuario.username);
 					txtPassword.setText(usuario.password);
+					cmbRoles.setSelectedIndex(usuario.rol.getIdRol()-1);
 					chHabilitado.setSelected((usuario.fechaBaja == null));
 				} else {
 					txtIdUsuario.setText("");
@@ -185,10 +186,19 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 		btnCancelar.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				limpiarForm();
 				dispose();
 			}
 		});
-		
+	}
+	
+	private void limpiarForm() {
+		cmbUsuarios.setSelectedIndex(0);
+		txtIdUsuario.setText("");
+		txtUserName.setText("");
+		txtPassword.setText("");
+		cmbRoles.setSelectedIndex(0);
+		chHabilitado.setSelected(true);
 	}
 	
 	private void cargarUsuarios(){

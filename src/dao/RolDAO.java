@@ -6,11 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
-import model.Cliente;
 import model.Rol;
 import model.TipoDeReclamo;
 
@@ -62,7 +60,7 @@ public class RolDAO extends DAO {
 			throw new AccesoException("Error de acceso");
 		}					
 		
-		String SQL = "SELECT * FROM roles WHERE idrol = " + idRol;
+		String SQL = "SELECT * FROM roles WHERE idrol = " + idRol + " order by idrol";
 		try {
 			rs = stmt.executeQuery(SQL);
 		} catch (SQLException e1) {
@@ -123,7 +121,7 @@ public class RolDAO extends DAO {
 	}
 	
 	public List<Rol> obtenerTodosLosRoles() throws AccesoException, ConexionException, NegocioException{
-		String sql = "SELECT * FROM roles ";
+		String sql = "SELECT * FROM roles order by idrol";
 		return obtenerRoles(sql);
 	}
 

@@ -51,19 +51,16 @@ public class UsuarioDAO extends DAO {
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de consulta");
 		}
+		
 		try {
 			if(rs.next()){
-				
 				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
-				
 				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechabaja"), rol);
-				
 				return usuario;
 			}
 			else {
 				throw new NegocioException("El usuario " + username + " no existe");
 			}
-			
 		} catch (SQLException e) {
 			throw new ConexionException("No es posible acceder a los datos");
 		}								
@@ -94,9 +91,7 @@ public class UsuarioDAO extends DAO {
 		}
 		try {
 			if(rs.next()){
-				
 				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
-				
 				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechabaja"), rol);
 				return usuario;
 			}
@@ -114,7 +109,6 @@ public class UsuarioDAO extends DAO {
 				   + "'" + usuario.getUsername() + "', "
 				   + "'" + usuario.getPassword() + "', "
 				   + "'" + usuario.getRol().getIdRol() + "')";
-		
 		return crear(sql);
 	}
 	
@@ -149,9 +143,7 @@ public class UsuarioDAO extends DAO {
 		List<Usuario> usuarios = new ArrayList<>();
 		try {
 			while(rs.next()){
-				
 				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));
-				
 				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechabaja"), rol);
 				usuarios.add(usuario);
 			}			
@@ -162,13 +154,10 @@ public class UsuarioDAO extends DAO {
 	}
 	
 	public List<Usuario> obtenerTodosLosUsuarios(boolean filtrarDeshabilitados) throws AccesoException, ConexionException, NegocioException{
-		
 		String sql = "SELECT * FROM usuarios ";
-		
 		if(filtrarDeshabilitados){
 			sql += " WHERE fechabaja IS NULL";
 		}
-		
 		return obtenerUsuarios(sql);
 	}
 	
