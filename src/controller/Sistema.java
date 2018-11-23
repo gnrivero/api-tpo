@@ -313,7 +313,7 @@ public class Sistema extends Observado {
 			
 			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorNro(nrosFacturas);
 			
-			Reclamo reclamoAcrear = new ReclamoFacturacion(descripcion, tipoDeReclamo, cliente, facturas);
+			Reclamo reclamoAcrear = new ReclamoFacturacion(nroReclamo, descripcion, tipoDeReclamo, cliente, facturas);
 			
 			nroReclamo = reclamoAcrear.guardar();
 			
@@ -345,7 +345,23 @@ public class Sistema extends Observado {
 		}		
 	}
 	
+	
+	//TODO: sacar esta bosta usar la "cache de reclamos"
 	public void agregarReclamoHoja(Integer nroReclamoHoja, Integer nroReclamoCompuesto) throws NegocioException{
+		
+		/*
+		 * Map<Integer, List<Reclamo>> cacheDeReclamos = new HashMap<Integer, List<Reclamo>>;
+		 * 
+		 * Esto debería hacerse en cada metodo Registrar Reclamo
+		 * si tiene nroReclamoCompuesto hacer un cacheDeReclamos.put(nroReclamoCompuesto, new Reclamo());
+		 * 
+		 * No se debe guardar el reclamo Simple, se mete en la cache y se guarda despues.
+		 * 
+		 * Cuando vas a cerrar el reclamo compuesto te obliga a hacer un SAVE.
+		 * 
+		 * borrar la caché una vez cerrado
+		 * 
+		 * */
 		
 		try {
 			

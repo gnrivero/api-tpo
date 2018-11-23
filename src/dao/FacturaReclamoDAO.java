@@ -17,13 +17,11 @@ public class FacturaReclamoDAO extends DAO {
 		return instancia;
 	}
 	
-	public void crear(FacturaReclamo facturaReclamo) throws ConexionException, AccesoException {
-		
-		String sql = "INSERT INTO facturasreclamos VALUES (" 
-					 + facturaReclamo.getNroFactura() +", " 
-					 + facturaReclamo.getNroReclamo() + ")";  
-		
-		crear(sql);		
+	public void crear(FacturaReclamo facturaReclamo) throws ConexionException, AccesoException {						
+		crear("INSERT INTO facturasreclamos VALUES (" + facturaReclamo.getFactura().getNroFactura() +", " + facturaReclamo.getReclamo().getNroReclamo() + ")");		
 	}
-
+	
+	public void borrar(FacturaReclamo facturaReclamo) throws ConexionException, AccesoException{				
+		actualizar("DELETE FROM facturasreclamos WHERE nroreclamo = " + facturaReclamo.getReclamo().getNroReclamo());
+	}
 }

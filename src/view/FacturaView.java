@@ -34,7 +34,7 @@ public class FacturaView {
 	
 	@Override
 	public String toString() {
-		return "Nro.Factura: " +  this.nroFactura + "Cliente : " + this.cliente;
+		return "(Nro: " +  this.nroFactura + ") Cliente : " + this.cliente;
 	}
 	
 }

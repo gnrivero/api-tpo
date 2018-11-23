@@ -24,11 +24,11 @@ public class UsuarioTest {
 	
 	public static void crearNuevoUsuario(){
 		
-		try {
-			Sistema.getInstance().crearNuevoUsuario("grivero", "grivero", rolAdmin);
-		} catch (NegocioException e) {			
-			e.printStackTrace();
-		}
+//		try {
+//			Sistema.getInstance().crearNuevoUsuario("grivero", "grivero", rolAdmin);
+//		} catch (NegocioException e) {			
+//			e.printStackTrace();
+//		}
 		
 	}
 	

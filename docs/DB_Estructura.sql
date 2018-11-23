@@ -1,6 +1,6 @@
 -- DROP DATABASE TPO_AI;
 -- select * from TPO_AI.INFORMATION_SCHEMA.TABLES
-CREATE DATABASE TPO_AI;
+-- CREATE DATABASE TPO_AI;
 
 USE TPO_AI;
 
@@ -114,5 +114,6 @@ CREATE TABLE facturasreclamos
 	nrofactura INT NOT NULL,
 	nroreclamo INT NOT NULL,
 	CONSTRAINT nroFactura_fr_fk FOREIGN KEY (nrofactura) REFERENCES facturas (nrofactura),
-	CONSTRAINT nroReclamo_fr_fk FOREIGN KEY (nroreclamo) REFERENCES reclamos (nroreclamo)
+	CONSTRAINT nroReclamo_fr_fk FOREIGN KEY (nroreclamo) REFERENCES reclamos (nroreclamo),
+	CONSTRAINT uc_factura_reclamo UNIQUE(nrofactura,nroreclamo)
 )

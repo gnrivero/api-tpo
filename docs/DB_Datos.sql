@@ -20,6 +20,8 @@ select * from usuarios;
 
 -- Tipos de reclamos por roles
 
+-- Permisos Admin
+INSERT INTO tiposdereclamoporroles VALUES (1, 6);
 
 -- Permisos Call Center
 INSERT INTO tiposdereclamoporroles VALUES (5, 6);
@@ -30,20 +32,11 @@ VALUES (3, 2),
 (3, 3),
 (3, 4);
 
-TRUNCATE table tiposdereclamoporroles;
+-- Permisos Facturacion
+INSERT INTO tiposdereclamoporroles VALUES (3, 5);
 
-INSERT INTO tiposdereclamoporroles VALUES 
-(2, 5),
-(3, 1),
-(3, 2),
-(3, 3),
-(4, 4),
-(6, 1),
-(6, 2),
-(6, 3),
-(6, 4),
-(6, 5),
-(6, 6);
+-- Permisos Zona
+INSERT INTO tiposdereclamoporroles (idrol, idtipodereclamo) VALUES (4, 1);
 
 
 select * from tiposdereclamoporroles;
@@ -85,10 +78,10 @@ INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura)
 VALUES (2, 34, 2, 2),
 (3, 500, 1, 2);
 
-select * from itemsfacturas; 
-
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
 VALUES (3, 500, 1, 3);
+
+select * from itemsfacturas; 
 
 -- Productos
 
@@ -105,3 +98,6 @@ select * from reclamos;
 
 SELECT * FROM reclamos;
 
+
+-- Facturas por Reclamo
+select * from facturasreclamos;

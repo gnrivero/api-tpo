@@ -15,7 +15,9 @@ public class ReclamoView {
 	private String fechaDeCierre;
 	private ClienteView cliente;
 	private Integer nroReclamoCompuesto;
+
 	
+	//Compuesto
 	private List<ReclamoView> reclamosHijos;//TODO: ver si sirve
 	
 	//Zona
@@ -25,7 +27,15 @@ public class ReclamoView {
 	private ProductoView producto;
 	private String cantidad;
 	
+	//Facturacion
+	private List<FacturaView> facturasReclamadas;
+	
 	public ReclamoView(){ }
+	
+	@Override
+	public String toString() {
+		return "Nro: " + this.nroReclamo + " (" + this.tipoDeReclamo + ") " + " - " + this.descripcion + " " + this.fechaDeReclamo;				
+	}
 	
 	public Integer getNroReclamo() {
 		return nroReclamo;
@@ -115,12 +125,12 @@ public class ReclamoView {
 		this.cantidad = cantidad;
 	}
 
-	@Override
-	public String toString() {
-		return "Nro: " + this.nroReclamo +
-				" - " + this.descripcion +
-				" - " + this.tipoDeReclamo +
-				" - " +  this.fechaDeReclamo;				
+	public List<FacturaView> getFacturasReclamadas() {
+		return facturasReclamadas;
 	}
-		
+
+	public void setFacturasReclamadas(List<FacturaView> facturasReclamadas) {
+		this.facturasReclamadas = facturasReclamadas;
+	}
+	
 }

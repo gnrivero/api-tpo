@@ -93,6 +93,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	private JComboBox<ProductoView> cmbProductos;
 	private JList<FacturaView> lstFacturas;
 	private JList<TipoDeReclamo> lstTiposReclamosHijos;
+	private DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();	
 	
 	private JButton btnGuardar, btnCancelar;
 	
@@ -205,23 +206,23 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cont.add(lblFactura);
 		
 		lstFacturas = new JList<>();
-		lstFacturas.setBounds(215, 335, 200, 30);
+		lstFacturas.setBounds(215, 335, 200, 60);
 		cont.add(lstFacturas);
 		
 		lblProducto = new JLabel("Producto");
-		lblProducto.setBounds(10,  370, 200, 30);
+		lblProducto.setBounds(10,  400, 200, 30);
 		cont.add(lblProducto);
 		
 		cmbProductos = new JComboBox<>();
-		cmbProductos.setBounds(215, 370, 200, 30);
+		cmbProductos.setBounds(215, 400, 200, 30);
 		cont.add(cmbProductos);
 		
 		lblCantidad = new JLabel("Cantidad");
-		lblCantidad.setBounds(10,  405, 200, 30);
+		lblCantidad.setBounds(10,  435, 200, 30);
 		cont.add(lblCantidad);
 		
 		txtCantidad = new JTextField();
-		txtCantidad.setBounds(215, 405, 200, 30);
+		txtCantidad.setBounds(215, 435, 200, 30);
 		cont.add(txtCantidad);
 		
 		//FIN: ----Propios de cada Reclamo ----
@@ -229,11 +230,11 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		//------ Botones --------
 		
 		btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(10, 440, 200, 30);
+		btnGuardar.setBounds(10, 480, 200, 30);
 		cont.add(btnGuardar);
 		
 		btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(215, 440, 200, 30);
+		btnCancelar.setBounds(215, 480, 200, 30);
 		cont.add(btnCancelar);
 		
 		this.pack();
@@ -247,9 +248,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cmbEstadoActual.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				
+			public void actionPerformed(ActionEvent e) {			
 				
 			}
 		});
@@ -306,7 +305,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 						break;
 						case COMPUESTO:
 							lblNroReclamoCompuesto.setEnabled(false);
-														
+							
 							DefaultListModel<TipoDeReclamo> tipoDeReclamoListModel = new DefaultListModel<TipoDeReclamo>();							
 							for (TipoDeReclamo tipo : TipoDeReclamo.values()){
 								if(!TipoDeReclamo.COMPUESTO.equals(tipo))
@@ -336,13 +335,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();				
 				TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
 				
-				if(TipoDeReclamo.FACTURACION.equals(tipoDeReclamo)){
+				if(TipoDeReclamo.FACTURACION.equals(tipoDeReclamo) && cliente != null){
 					List<FacturaView> facturas;
 					try {
-						facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.getIdCliente());
-						DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();				
+						facturas = Sistema.getInstance().obenerFacturasPorCliente(cliente.getIdCliente());								
+						facturaListModel.removeAllElements();
 						facturas.forEach(f -> facturaListModel.addElement(f));
-						
 						lstFacturas.setModel(facturaListModel);
 					} catch (NegocioException e1) {
 						e1.printStackTrace();
@@ -401,7 +399,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				case FACTURACION:
 					
 					List<FacturaView> selectedFacturas = lstFacturas.getSelectedValuesList();
-					List<Integer> nrosFacturas = new ArrayList<>();
+					List<Integer> nrosFacturas = new ArrayList<Integer>();
 					selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
 					
 					if (estoyGuardando){
@@ -411,8 +409,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
 					}
 					
-					reclamoView = Sistema.getInstance().obtenerReclamoFacturacion(nroReclamo);							
-					//TODO: completar facturas seleccionadas
+					reclamoView = Sistema.getInstance().obtenerReclamoFacturacion(nroReclamo);
+					
+					reclamoView.getFacturasReclamadas().forEach(fr -> lstFacturas.setSelectedValue(fr, false));
 					
 				break;
 				case CANTIDADES:
@@ -428,8 +427,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 						if (nroReclamoCompuesto != null)
 							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
 					}
-					
-					
+										
 					reclamoView = Sistema.getInstance().obtenerReclamoDistribucion(nroReclamo);
 					
 					cmbProductos.setSelectedItem(reclamoView.getProducto());
@@ -486,6 +484,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		try {
 			List<ClienteView> clientesViews = Sistema.getInstance().obtenerTodosLosClientes(false);
 			cmbClientes.removeAllItems();
+			cmbClientes.addItem(new ClienteView("Seleccionar"));
 			clientesViews.forEach(c -> cmbClientes.addItem(c));
 		} catch (NegocioException e) {
 			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar clientes. " + e, "Admin. Clientes", JOptionPane.ERROR_MESSAGE);

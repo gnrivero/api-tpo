@@ -61,35 +61,35 @@ public class ReclamosTest {
 	public static void obtencionDeReclamos(){
 				
 		//Obtener reclamos zona
-		try {
-			List<ReclamoView> reclamosViews = Sistema.getInstance().obtenerReclamosPorTipo(TipoDeReclamo.COMPUESTO);
-			
-			reclamosViews.forEach(rv -> System.out.println(rv));
-			
-		} catch (NegocioException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			List<ReclamoView> reclamosViews = Sistema.getInstance().obtenerReclamosPorTipo(TipoDeReclamo.COMPUESTO);
+//			
+//			reclamosViews.forEach(rv -> System.out.println(rv));
+//			
+//		} catch (NegocioException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 	}
 	
 	public static void generarReclamoZona(){
 		
-		//Cargo cliente
-		ClienteView clienteView = null;
-		try {
-			clienteView = Sistema.getInstance().obtenerCliente(1);
-		} catch (NegocioException e1) {
-			e1.printStackTrace();
-		}	
-		
-		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
-		
-		try {
-			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
-		} catch (NegocioException e) {
-			e.printStackTrace();
-		}
+//		//Cargo cliente
+//		ClienteView clienteView = null;
+//		try {
+//			clienteView = Sistema.getInstance().obtenerCliente(1);
+//		} catch (NegocioException e1) {
+//			e1.printStackTrace();
+//		}	
+//		
+//		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
+//		
+//		try {
+//			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
+//		} catch (NegocioException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static void generarReclamoDistribucion(){
@@ -122,38 +122,38 @@ public class ReclamosTest {
 	
 	public static void generarReclamoCompuesto() throws NegocioException, AccesoException, ConexionException{
 		
-		//Cargo cliente
-		ClienteView clienteView = Sistema.getInstance().obtenerCliente(1);
-		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
-		
-		//Cargo producto
-		Producto producto = Sistema.getInstance().obtenerProducto(2);//Papel
-		
-		//Reclamos Hoja
-		Reclamo rFaltantes = new ReclamoDistribucion("Falta Papel", TipoDeReclamo.FALTANTES, cliente, producto, 12);
-		Reclamo rProducto = new ReclamoDistribucion("Me piden Papel", TipoDeReclamo.PRODUCTO, cliente, producto, 1);
-		
-		
-		Factura fact_2 = FacturaDAO.getInstancia().obtenerFactura(2);
-		Factura fact_3 = FacturaDAO.getInstancia().obtenerFactura(3);
-				
-		List<Factura> facturas = new ArrayList<Factura>();
-		facturas.add(fact_2);
-		facturas.add(fact_3);
-		
-		Reclamo rFacturacion = new ReclamoFacturacion("Refacturar", TipoDeReclamo.FACTURACION, cliente, facturas);			
-		
-		List<Reclamo> reclamos = new ArrayList<Reclamo>();		
-		reclamos.add(rFaltantes);
-		reclamos.add(rProducto);
-		reclamos.add(rFacturacion);
-		
-		//Creo reclamo compuesto		
-		try {
-			Sistema.getInstance().registrarReclamoCompuesto("Reclamo Compuesto", TipoDeReclamo.COMPUESTO, cliente, reclamos);
-		} catch (NegocioException e) {
-			e.printStackTrace();
-		}		
+//		//Cargo cliente
+//		ClienteView clienteView = Sistema.getInstance().obtenerCliente(1);
+//		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
+//		
+//		//Cargo producto
+//		Producto producto = Sistema.getInstance().obtenerProducto(2);//Papel
+//		
+//		//Reclamos Hoja
+//		Reclamo rFaltantes = new ReclamoDistribucion("Falta Papel", TipoDeReclamo.FALTANTES, cliente, producto, 12);
+//		Reclamo rProducto = new ReclamoDistribucion("Me piden Papel", TipoDeReclamo.PRODUCTO, cliente, producto, 1);
+//		
+//		
+//		Factura fact_2 = FacturaDAO.getInstancia().obtenerFactura(2);
+//		Factura fact_3 = FacturaDAO.getInstancia().obtenerFactura(3);
+//				
+//		List<Factura> facturas = new ArrayList<Factura>();
+//		facturas.add(fact_2);
+//		facturas.add(fact_3);
+//		
+//		Reclamo rFacturacion = new ReclamoFacturacion("Refacturar", TipoDeReclamo.FACTURACION, cliente, facturas);			
+//		
+//		List<Reclamo> reclamos = new ArrayList<Reclamo>();		
+//		reclamos.add(rFaltantes);
+//		reclamos.add(rProducto);
+//		reclamos.add(rFacturacion);
+//		
+//		//Creo reclamo compuesto		
+//		try {
+//			Sistema.getInstance().registrarReclamoCompuesto("Reclamo Compuesto", TipoDeReclamo.COMPUESTO, cliente, reclamos);
+//		} catch (NegocioException e) {
+//			e.printStackTrace();
+//		}		
 	}
 	
 	public static void generarReclamoFacturacion(){
@@ -173,11 +173,11 @@ public class ReclamosTest {
 	}
 	
 	public static void comenzarTratamientoReclamo(Integer nroReclamo){
-		try {
-			Sistema.getInstance().comenzarTratamientoReclamo(nroReclamo);
-		} catch (NegocioException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Sistema.getInstance().comenzarTratamientoReclamo(nroReclamo);
+//		} catch (NegocioException e) {
+//			e.printStackTrace();
+//		}
 	}	
 	
 	public static void cerrarReclamo(Integer nroReclamo){

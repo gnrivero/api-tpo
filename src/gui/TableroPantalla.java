@@ -14,6 +14,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 
 import controller.Sistema;
 import excepciones.NegocioException;
@@ -115,6 +116,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		lstReclamosIngresados = new JList<ReclamoView>();
 		lstReclamosIngresados.setBounds(30, 200, 300, 400);
+		lstReclamosIngresados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstReclamosIngresados.setModel(reclamosIngresadosModel);
 		container.add(lstReclamosIngresados);
 		
@@ -132,6 +134,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		lstReclamosEnTratamiento = new JList<ReclamoView>();
 		lstReclamosEnTratamiento.setBounds(380, 200, 300, 400);
+		lstReclamosEnTratamiento.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstReclamosEnTratamiento.setModel(reclamosEnTratamientoModel);
 		container.add(lstReclamosEnTratamiento);
 		
@@ -141,6 +144,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		lstReclamosSolucionados = new JList<ReclamoView>();
 		lstReclamosSolucionados.setBounds(730, 200, 300, 400);		
+		lstReclamosSolucionados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstReclamosSolucionados.setModel(reclamosSolucionadosModel);
 		container.add(lstReclamosSolucionados);
 		

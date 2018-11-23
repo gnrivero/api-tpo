@@ -104,8 +104,10 @@ public class ReclamoDAO extends DAO {
 		
 		Integer nroReclamoFacturacion = crear(sql);
 		
+		reclamo.setNroReclamo(nroReclamoFacturacion);
+		
 		for (Factura factura : reclamo.getFacturas()){
-			FacturaReclamo fr = new FacturaReclamo(factura.getNroFactura(), nroReclamoFacturacion);
+			FacturaReclamo fr = new FacturaReclamo(factura, reclamo);
 			fr.guardar();			
 		}
 		
@@ -156,6 +158,13 @@ public class ReclamoDAO extends DAO {
 						
 					break;
 					case FACTURACION:
+						
+						ReclamoFacturacion rFact = (ReclamoFacturacion) reclamo;										
+						
+						for (Factura factura : rFact.getFacturas()){
+							FacturaReclamo fr = new FacturaReclamo(factura, reclamo);
+							fr.guardar();			
+						}
 						
 					break;
 					case COMPUESTO:

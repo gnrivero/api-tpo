@@ -17,10 +17,11 @@ public class ReclamoFacturacion extends Reclamo {
 	
 	public ReclamoFacturacion(){}
 	
-	public ReclamoFacturacion(String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) {
+	public ReclamoFacturacion(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, Cliente cliente, List<Factura> facturas) {
 		super(descripcion, tipoDeReclamo, cliente);
 		
 		this.facturasReclamadas = facturas;
+		this.nroReclamo = nroReclamo;
 	}
 
 	public List<Factura> getFacturas() {
@@ -76,6 +77,8 @@ public class ReclamoFacturacion extends Reclamo {
 		
 		if(this.nroReclamoCompuesto != null)
 			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
+		
+		this.facturasReclamadas.forEach(fr -> view.getFacturasReclamadas().add(fr.toView()));		
 		
 		return view;	
 	}
