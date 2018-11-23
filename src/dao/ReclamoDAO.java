@@ -393,7 +393,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
 				
-				//TODO: cargar facturas
+				reclamo.setFacturas(FacturaReclamoDAO.getInstancia().obtenerFacturasPorNroReclamo(nroReclamo));
 				
 				return reclamo;
 			}

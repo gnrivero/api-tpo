@@ -399,11 +399,13 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				case FACTURACION:
 					
 					List<FacturaView> selectedFacturas = lstFacturas.getSelectedValuesList();
+					int[] selectedIndices = lstFacturas.getSelectedIndices();
+					
 					List<Integer> nrosFacturas = new ArrayList<Integer>();
 					selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
 					
 					if (estoyGuardando){
-						Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
 						
 						if (nroReclamoCompuesto != null)
 							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
@@ -411,7 +413,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					
 					reclamoView = Sistema.getInstance().obtenerReclamoFacturacion(nroReclamo);
 					
-					reclamoView.getFacturasReclamadas().forEach(fr -> lstFacturas.setSelectedValue(fr, false));
+					cmbClientes.setSelectedItem(reclamoView.getCliente());
+					
+					lstFacturas.setSelectedIndices(selectedIndices);
 					
 				break;
 				case CANTIDADES:
@@ -457,7 +461,10 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			txtDescripcion.setText(reclamoView.getDescripcion());
 			cmbTiposDeReclamo.setSelectedItem(reclamoView.getTipoDeReclamo());
 			cmbEstadoActual.setSelectedItem(reclamoView.getEstadoDeReclamo());
-			cmbClientes.setSelectedItem(reclamoView.getCliente());
+			
+			if(!TipoDeReclamo.FACTURACION.equals(tipoDeReclamo))
+				cmbClientes.setSelectedItem(reclamoView.getCliente());
+			
 			txtFechaDeCreacion.setText(reclamoView.getFechaDeReclamo());
 			txtFechaDeCierre.setText(reclamoView.getFechaDeCierre());
 			
@@ -492,7 +499,8 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	}
 
 	@Override
-	public void actualizar() {		
-		cargarClientes();		
+	public void actualizar() {
+		cargarClientes();
+		cargarProductos();
 	}
 }

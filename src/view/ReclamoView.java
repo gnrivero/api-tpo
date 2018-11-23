@@ -1,5 +1,6 @@
 package view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.EstadoDeReclamo;
@@ -30,7 +31,9 @@ public class ReclamoView {
 	//Facturacion
 	private List<FacturaView> facturasReclamadas;
 	
-	public ReclamoView(){ }
+	public ReclamoView(){ 
+		facturasReclamadas = new ArrayList<FacturaView>();
+	}
 	
 	@Override
 	public String toString() {

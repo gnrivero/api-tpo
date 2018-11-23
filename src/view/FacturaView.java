@@ -37,4 +37,17 @@ public class FacturaView {
 		return "(Nro: " +  this.nroFactura + ") Cliente : " + this.cliente;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+	        return true;
+	    }
+	    if (obj instanceof FacturaView) {
+	    	FacturaView obj2 = (FacturaView) obj;    	    	
+	        return this.getNroFactura() == obj2.getNroFactura();
+	    }
+	    return false;
+	}
+	
 }

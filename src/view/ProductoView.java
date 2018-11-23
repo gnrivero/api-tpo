@@ -72,4 +72,17 @@ public class ProductoView {
 		return "ID: " + this.idProducto + " - "+ this.titulo;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+	        return true;
+	    }
+	    if (obj instanceof ProductoView) {
+	    	ProductoView obj2 = (ProductoView) obj;    	    	
+	        return this.getIdProducto() == obj2.getIdProducto();
+	    }
+	    return false;
+	}
+	
 }

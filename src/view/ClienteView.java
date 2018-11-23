@@ -89,4 +89,17 @@ public class ClienteView {
 		
 		return "ID: " + this.idCliente + " - " + this.nombre;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if (this == obj) {
+	        return true;
+	    }
+	    if (obj instanceof ClienteView) {
+	    	ClienteView obj2 = (ClienteView) obj;    	    	
+	        return this.getIdCliente() == obj2.getIdCliente();
+	    }
+	    return false;
+	}
 }

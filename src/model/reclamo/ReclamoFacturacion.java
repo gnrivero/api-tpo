@@ -71,6 +71,7 @@ public class ReclamoFacturacion extends Reclamo {
 		view.setTipoDeReclamo(this.tipoDeReclamo);
 		view.setEstadoDeReclamo(this.estado);
 		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
+		view.setCliente(this.cliente.toView());
 		
 		if(this.fechaCierre != null)
 			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
