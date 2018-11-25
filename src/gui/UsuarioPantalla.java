@@ -156,7 +156,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 						actualizar();
 					}else{
 						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol.getIdRol());
-						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuario", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
 						actualizar();
 					}
 				} catch (NegocioException e1) { 

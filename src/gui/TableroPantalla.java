@@ -70,6 +70,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
+	private ProductoPantalla productoPantalla;
 	
 	public Container getFrameContainer(){
 		return container;
@@ -160,6 +161,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		usuarioPantalla = UsuarioPantalla.getInstance();
 		container.add(usuarioPantalla);
 		
+		productoPantalla = ProductoPantalla.getInstance();
+		container.add(productoPantalla);
+		
 //		if(Sistema.getInstance().getUsuarioLogueado() == null){
 //			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
 //		}
@@ -185,14 +189,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private void eventos(){
 		
-		btnAdminClientes.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clientePantalla.setVisible(true);
-			}
-		});
-		
 		btnCargarReclamo.addActionListener(new ActionListener(){
 
 			@Override
@@ -200,6 +196,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();			
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla, 1);	
+			}
+		});
+
+		btnAdminClientes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clientePantalla.setVisible(true);
 			}
 		});
 		
@@ -210,6 +214,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				//UsuarioPantalla usuarioPantalla = new UsuarioPantalla();			
 				usuarioPantalla.setVisible(true);
 				//container.add(usuarioPantalla);
+			}
+		});
+
+		btnAdminProducto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				productoPantalla.setVisible(true);
 			}
 		});
 		

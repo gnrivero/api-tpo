@@ -12,7 +12,7 @@ public class ProductoView {
 	public ProductoView(){ }
 	
 	public ProductoView(Integer idProducto, String codigo, String titulo, String descripcion, float precio){
-		this.idProducto=idProducto;
+		this.idProducto = idProducto;
 		this.codigo = codigo;
 		this.titulo = titulo;
 		this.descripcion = descripcion;

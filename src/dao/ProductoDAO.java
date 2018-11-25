@@ -32,7 +32,7 @@ public class ProductoDAO extends DAO {
 	 * @throws ConexionException
 	 * @throws AccesoException
 	 */
-	public void crearProducto(Producto producto) throws ConexionException, AccesoException{
+	public Integer crearProducto(Producto producto) throws ConexionException, AccesoException{
 		
 		String sql = "INSERT INTO productos (codigo, titulo, descripcion, precio) VALUES "
 				+ "('" + producto.getCodigo() + "', "
@@ -40,8 +40,21 @@ public class ProductoDAO extends DAO {
 				+ "'" + producto.getDescripcion() + "', "				
 				+ producto.getPrecio() + ")";
 		
-		crear(sql);
-	}	
+		return crear(sql);
+	}
+	
+	public void actualizarProducto(Producto producto) throws ConexionException, AccesoException{
+		
+		String sql = "UPDATE productos SET "
+					+ " codigo = '" + producto.getCodigo() + "', "
+					+ " titulo = '" + producto.getTitulo() + "', "
+					+ " descripcion = '" + producto.getDescripcion() + "', "
+					+ " precio = '" + producto.getPrecio() + "' ";
+						
+					sql += " WHERE idproducto = " + producto.getIdProducto();  
+					
+		actualizar(sql);
+	}
 	
 	/**
 	 * Elimina fisicamente el producto de la base de datos

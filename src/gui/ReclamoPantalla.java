@@ -505,7 +505,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	
 	private void cargarProductos(){
 		try {
-			List<ProductoView> productos = Sistema.getInstance().obtenerProductos();			
+			List<ProductoView> productos = Sistema.getInstance().obtenerTodosLosProductos();			
 			cmbProductos.removeAllItems();
 			cmbProductos.addItem(new ProductoView("Seleccionar"));
 			productos.forEach(p -> cmbProductos.addItem(p));
