@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import controller.Sistema;
+import dao.ClienteDAO;
 import dao.FacturaDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
@@ -15,6 +16,7 @@ import model.TipoDeReclamo;
 import model.reclamo.Reclamo;
 import model.reclamo.ReclamoDistribucion;
 import model.reclamo.ReclamoFacturacion;
+import model.reclamo.ReclamoZona;
 import view.ClienteView;
 import view.ReclamoView;
 
@@ -22,19 +24,7 @@ public class ReclamosTest {
 		
 	public static void main(String[] args) {
 		
-		//generacionDeReclamos();
-		
-		obtencionDeReclamos();
-		
-		try {
-			Sistema.getInstance().cerrarReclamo(9, TipoDeReclamo.COMPUESTO);
-		} catch (NegocioException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-//		comenzarTratamientoReclamo(11);
-//		cerrarReclamo(11);
+		generarReclamoZona();
 		
 		System.exit(0);	
 	}
@@ -75,18 +65,31 @@ public class ReclamosTest {
 	
 	public static void generarReclamoZona(){
 		
-//		//Cargo cliente
+		//Cargo cliente
 //		ClienteView clienteView = null;
 //		try {
 //			clienteView = Sistema.getInstance().obtenerCliente(1);
 //		} catch (NegocioException e1) {
 //			e1.printStackTrace();
 //		}	
-//		
-//		Cliente cliente = new Cliente(clienteView.getNombre(), clienteView.getCuit(), clienteView.getDomicilio(), clienteView.getTelefono(), clienteView.getMail());
-//		
+		
+		Cliente cliente = null;
+		try {
+			cliente = ClienteDAO.getInstancia().obtenerClientePorId(1);
+		} catch (ConexionException | AccesoException | NegocioException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		Reclamo reclamo_1 = new ReclamoZona("Zonal", TipoDeReclamo.ZONA, cliente, "Almagro");
+		Reclamo reclamo_2 = new ReclamoZona("Zonal", TipoDeReclamo.ZONA, cliente, "Almagro");
+				
+		System.out.println("Reclamo 1: " + reclamo_1.hashCode());
+		System.out.println("Reclamo 2: " + reclamo_2.hashCode());
+		
 //		try {
-//			Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
+//			//Sistema.getInstance().registrarReclamo("Hay alguien vendiendo en mi zona", TipoDeReclamo.ZONA, cliente, "Villa Urquiza");
 //		} catch (NegocioException e) {
 //			e.printStackTrace();
 //		}

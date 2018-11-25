@@ -101,6 +101,8 @@ public class ReclamoCompuesto extends Reclamo {
 		if(this.fechaCierre != null)
 			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
 		
+		this.reclamosHijos.forEach(rh -> view.getReclamosHijos().add(rh.toView()));
+		
 		view.setCliente(this.cliente.toView());
 		
 		return view;

@@ -16,10 +16,9 @@ public class ReclamoView {
 	private String fechaDeCierre;
 	private ClienteView cliente;
 	private Integer nroReclamoCompuesto;
-
 	
 	//Compuesto
-	private List<ReclamoView> reclamosHijos;//TODO: ver si sirve
+	private List<ReclamoView> reclamosHijos;
 	
 	//Zona
 	private String zona;
@@ -33,6 +32,7 @@ public class ReclamoView {
 	
 	public ReclamoView(){ 
 		facturasReclamadas = new ArrayList<FacturaView>();
+		reclamosHijos = new ArrayList<ReclamoView>();
 	}
 	
 	@Override
@@ -134,6 +134,14 @@ public class ReclamoView {
 
 	public void setFacturasReclamadas(List<FacturaView> facturasReclamadas) {
 		this.facturasReclamadas = facturasReclamadas;
+	}
+
+	public List<ReclamoView> getReclamosHijos() {
+		return reclamosHijos;
+	}
+
+	public void setReclamosHijos(List<ReclamoView> reclamosHijos) {
+		this.reclamosHijos = reclamosHijos;
 	}
 	
 }

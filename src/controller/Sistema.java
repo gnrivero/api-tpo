@@ -7,6 +7,7 @@ import java.util.List;
 import dao.ClienteDAO;
 import dao.FacturaDAO;
 import dao.ProductoDAO;
+import dao.ReclamoCompuestoCache;
 import dao.ReclamoDAO;
 import dao.RolDAO;
 import dao.UsuarioDAO;
@@ -41,7 +42,8 @@ public class Sistema extends Observado {
 
 	private Sistema(){
 		this.usuarioLogueado = null;
-		this.tablero = new Tablero();		
+		this.tablero = new Tablero();
+		this.reclamosCompuestosCache = new ReclamoCompuestoCache();
 	}
 	
 	public static Sistema getInstance(){
@@ -57,6 +59,8 @@ public class Sistema extends Observado {
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;
 	private Tablero tablero;
+	
+	private ReclamoCompuestoCache reclamosCompuestosCache; 
 	
 	public Usuario getUsuarioLogueado() {
 		return usuarioLogueado;
@@ -267,7 +271,7 @@ public class Sistema extends Observado {
 	//Creacion y actualizacion de reclamos
 	
 	//Distribucion
-	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado,Integer idCliente, Integer idProducto, Integer cantidad) throws NegocioException{
+	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado,Integer idCliente, Integer idProducto, Integer cantidad, Integer nroReclamoCompuesto) throws NegocioException{
 		
 		try {
 			Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
@@ -275,9 +279,12 @@ public class Sistema extends Observado {
 			
 			Reclamo reclamo = new ReclamoDistribucion(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, producto, cantidad);
 			
-			nroReclamo = reclamo.guardar();
-			
-			this.notificarObservadores();
+			if (nroReclamoCompuesto != null){
+				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
+			} else {
+				nroReclamo = reclamo.guardar();
+				this.notificarObservadores();
+			}
 			
 			return nroReclamo;
 			
@@ -287,15 +294,18 @@ public class Sistema extends Observado {
 	}
 	
 	//Zona
-	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente, String zona) throws NegocioException {
+	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente, String zona, Integer nroReclamoCompuesto) throws NegocioException {
 		try {
 			
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
 			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
 			
-			nroReclamo = reclamo.guardar();
-			
-			this.notificarObservadores();
+			if (nroReclamoCompuesto != null){
+				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);												
+			} else {			
+				nroReclamo = reclamo.guardar();
+				this.notificarObservadores();
+			}
 			
 			return nroReclamo;
 			
@@ -305,18 +315,20 @@ public class Sistema extends Observado {
 	}
 	
 	//Facturacion
-	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas) throws NegocioException{
+	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, Integer idCliente, List<Integer> nrosFacturas, Integer nroReclamoCompuesto) throws NegocioException{
 		try {
 			
-			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
-			
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
 			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorNro(nrosFacturas);
 			
-			Reclamo reclamoAcrear = new ReclamoFacturacion(nroReclamo, descripcion, tipoDeReclamo, cliente, facturas);
+			Reclamo reclamo = new ReclamoFacturacion(nroReclamo, descripcion, tipoDeReclamo, cliente, facturas);
 			
-			nroReclamo = reclamoAcrear.guardar();
-			
-			this.notificarObservadores();
+			if (nroReclamoCompuesto != null){
+				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
+			} else {			
+				nroReclamo = reclamo.guardar();
+				this.notificarObservadores();
+			}			
 			
 			return nroReclamo;
 			
@@ -331,9 +343,16 @@ public class Sistema extends Observado {
 		try {
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
-			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);
+			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);			
+			
+			if (reclamosCompuestosCache.existeReclamoCompuesto(nroReclamo))
+				reclamosCompuestosCache.
+					obtenerReclamosSimplesPorReclamoCompuesto(nroReclamo)
+						.forEach(rs -> reclamoCompuesto.addHoja(rs));
 			
 			nroReclamo = reclamoCompuesto.guardar();
+			
+			reclamosCompuestosCache.agregarReclamoCompuestoKey(nroReclamo);			
 			
 			this.notificarObservadores();
 			
@@ -345,41 +364,8 @@ public class Sistema extends Observado {
 	}
 	
 	
-	//TODO: sacar esta bosta usar la "cache de reclamos"
-	public void agregarReclamoHoja(Integer nroReclamoHoja, Integer nroReclamoCompuesto) throws NegocioException{
-		
-		/*
-		 * Map<Integer, List<Reclamo>> cacheDeReclamos = new HashMap<Integer, List<Reclamo>>;
-		 * 
-		 * Esto debería hacerse en cada metodo Registrar Reclamo
-		 * si tiene nroReclamoCompuesto hacer un cacheDeReclamos.put(nroReclamoCompuesto, new Reclamo());
-		 * 
-		 * No se debe guardar el reclamo Simple, se mete en la cache y se guarda despues.
-		 * 
-		 * Cuando vas a cerrar el reclamo compuesto te obliga a hacer un SAVE.
-		 * 
-		 * borrar la caché una vez cerrado
-		 * 
-		 * */
-		
-		try {
-			
-			Reclamo hoja = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamoHoja);			
-			Reclamo reclamoCompuesto = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamoCompuesto, TipoDeReclamo.COMPUESTO);			
-			reclamoCompuesto.addHoja(hoja);
-			
-			reclamoCompuesto.guardar();
-			
-		} catch (ConexionException | AccesoException | NegocioException e) {
-			throw new NegocioException(e.getMessage());
-		}
-	}
-	
-	
-	
 	//Obtencion de Reclamos
-	
-	
+		
 	/**
 	 * Obtiene un reclamo del tipo Zona
 	 * 
@@ -389,7 +375,7 @@ public class Sistema extends Observado {
 	 */
 	public ReclamoView obtenerReclamoZona(Integer nroReclamo) throws NegocioException {
 		
-		try {
+		try {			
 			ReclamoZona reclamo = ReclamoDAO.getInstancia().obtenerReclamoZona(nroReclamo);			
 			return reclamo.toView();
 		} catch (AccesoException | ConexionException | NegocioException e) {
@@ -406,7 +392,7 @@ public class Sistema extends Observado {
 	 */
 	public ReclamoView obtenerReclamoDistribucion(Integer nroReclamo) throws NegocioException {
 		
-		try {
+		try {			
 			ReclamoDistribucion reclamo = ReclamoDAO.getInstancia().obtenerReclamoDistribucion(nroReclamo);			
 			return reclamo.toView();
 		} catch (AccesoException | ConexionException | NegocioException e) {
@@ -533,6 +519,10 @@ public class Sistema extends Observado {
 		} catch (NegocioException e){
 			throw e;
 		}				
+	}
+	
+	public boolean esReclamoCompuestoSinHojas(Integer nroReclamoCompuesto){
+		return reclamosCompuestosCache.obtenerReclamosSimplesPorReclamoCompuesto(nroReclamoCompuesto).isEmpty();
 	}
 	
 	//Fin: Reclamos

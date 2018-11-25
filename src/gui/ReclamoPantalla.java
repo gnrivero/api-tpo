@@ -31,35 +31,6 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	 * 
 	 */
 	private static final long serialVersionUID = -710535408957575880L;
-
-
-	public ReclamoPantalla(){
-		configurar();
-		eventos();
-		Sistema.getInstance().agregarObservador(this);
-	}
-	
-	public ReclamoPantalla(Integer nroReclamo){		
-		
-		this();
-		
-		if(nroReclamo != null){
-			this.txtNroReclamo.setText(nroReclamo.toString());
-			completarFormulario(false);
-		}			
-	}
-	
-	public ReclamoPantalla(TipoDeReclamo tipoDeReclamo, Integer nroReclamoCompuesto){
-		
-		this();
-		
-		this.cmbTiposDeReclamo.setSelectedItem(tipoDeReclamo);
-		
-		if(nroReclamoCompuesto != null)
-			this.txtNroReclamoCompuesto.setText(nroReclamoCompuesto.toString());
-		
-		this.setVisible(true);
-	}
 	
 	private Container cont;
 	
@@ -82,7 +53,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					   txtDescripcion,					   
 					   txtFechaDeCreacion,
 					   txtFechaDeCierre,
-					   txtNroReclamoCompuesto,
+					   //txtNroReclamoCompuesto,
 					   txtZona,
 					   txtCantidad
 					   ;
@@ -96,6 +67,40 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	private DefaultListModel<FacturaView> facturaListModel = new DefaultListModel<>();	
 	
 	private JButton btnGuardar, btnCancelar;
+	
+	//Datos
+	private Integer nroReclamoCompuesto = null; 
+	
+	public ReclamoPantalla(){
+		configurar();
+		eventos();
+		Sistema.getInstance().agregarObservador(this);
+	}
+	
+	public ReclamoPantalla(Integer nroReclamo){		
+		
+		this();
+		
+		if(nroReclamo != null){
+			this.txtNroReclamo.setText(nroReclamo.toString());
+			completarFormulario(false);
+		}			
+	}
+	
+	public ReclamoPantalla(TipoDeReclamo tipoDeReclamo, ClienteView cliente, Integer nroReclamoCompuesto){
+		
+		this();
+		
+		this.cmbTiposDeReclamo.setSelectedItem(tipoDeReclamo);
+		
+		if(nroReclamoCompuesto != null)
+			//this.txtNroReclamoCompuesto.setText(nroReclamoCompuesto.toString());
+			this.nroReclamoCompuesto = nroReclamoCompuesto;
+		
+		cmbClientes.setSelectedItem(cliente);
+		
+		this.setVisible(true);
+	}
 	
 	
 	public void configurar(){
@@ -186,10 +191,10 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		lblNroReclamoCompuesto.setBounds(10, 265, 200, 30);		
 		cont.add(lblNroReclamoCompuesto);
 		
-		txtNroReclamoCompuesto = new JTextField();
-		txtNroReclamoCompuesto.setBounds(215, 265, 200, 30);
-		txtNroReclamoCompuesto.setEnabled(false);
-		cont.add(txtNroReclamoCompuesto);
+//		txtNroReclamoCompuesto = new JTextField();
+//		txtNroReclamoCompuesto.setBounds(215, 265, 200, 30);
+//		txtNroReclamoCompuesto.setEnabled(false);
+//		cont.add(txtNroReclamoCompuesto);
 		
 		//---- Propios de cada Reclamo ----
 		
@@ -359,8 +364,26 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		btnCancelar.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
+				
+				if(TipoDeReclamo.COMPUESTO.equals(cmbTiposDeReclamo.getSelectedItem())
+						&& !txtNroReclamo.getText().isEmpty()){									
+							try {
+								ReclamoView reclamoCompuesto = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(Integer.valueOf(txtNroReclamo.getText()), (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem());
+
+								if(reclamoCompuesto.getReclamosHijos().isEmpty()){
+									JOptionPane.showMessageDialog(null, "El reclamo compuesto no contiene reclamos derivados, guarde los mismos antes de cerrar", "Reclamo Incompleto", JOptionPane.ERROR_MESSAGE);
+								}else{
+									dispose();
+								}
+							
+							} catch (NumberFormatException | NegocioException e1) {
+								e1.printStackTrace();//"Logueo" error
+							}					
+				}else{
+					dispose();
+					TableroPantalla.getInstance().getFrameContainer().remove(ReclamoPantalla.this);
+				}								
+			}				
 		});		
 	}
 	
@@ -372,7 +395,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			TipoDeReclamo tipoDeReclamo = (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem();
 			
 			Integer nroReclamo = (txtNroReclamo.getText().isEmpty()) ?  null : Integer.valueOf(txtNroReclamo.getText());
-			Integer nroReclamoCompuesto = (txtNroReclamoCompuesto.getText().isEmpty()) ? null : Integer.valueOf(txtNroReclamoCompuesto.getText());
+			Integer nroReclamoCompuesto = this.nroReclamoCompuesto;
 			String descripcion = txtDescripcion.getText();
 			ClienteView cliente = (ClienteView) cmbClientes.getSelectedItem();
 			EstadoDeReclamo estado = (EstadoDeReclamo) cmbEstadoActual.getSelectedItem();
@@ -386,13 +409,15 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					String zona = txtZona.getText();
 					
 					if(estoyGuardando){
-						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), zona);
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), zona, nroReclamoCompuesto);												
 						
-						if (nroReclamoCompuesto != null)
-							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
+						if(nroReclamoCompuesto != null){
+							dispose();
+							return;
+						}
 					}
+					reclamoView = Sistema.getInstance().obtenerReclamoZona(nroReclamo);
 					
-					reclamoView = Sistema.getInstance().obtenerReclamoZona(nroReclamo);							
 					txtZona.setText(reclamoView.getZona());
 					
 				break;
@@ -405,13 +430,14 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					selectedFacturas.forEach(f -> nrosFacturas.add(f.getNroFactura()));					
 					
 					if (estoyGuardando){
-						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas);
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, cliente.getIdCliente(), nrosFacturas, nroReclamoCompuesto);
 						
-						if (nroReclamoCompuesto != null)
-							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
+						if(nroReclamoCompuesto != null)
+							dispose();
 					}
 					
-					reclamoView = Sistema.getInstance().obtenerReclamoFacturacion(nroReclamo);
+					if (nroReclamo != null)
+						reclamoView = Sistema.getInstance().obtenerReclamoFacturacion(nroReclamo);
 					
 					cmbClientes.setSelectedItem(reclamoView.getCliente());
 					
@@ -426,11 +452,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					Integer cantidad = Integer.valueOf(txtCantidad.getText());
 					
 					if(estoyGuardando){
-						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), producto.getIdProducto(), cantidad);
+						nroReclamo = Sistema.getInstance().registrarReclamo(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente(), producto.getIdProducto(), cantidad, nroReclamoCompuesto);
 						
-						if (nroReclamoCompuesto != null)
-							Sistema.getInstance().agregarReclamoHoja(nroReclamo, nroReclamoCompuesto);
+						if(nroReclamoCompuesto != null)
+							dispose();
 					}
+						
 										
 					reclamoView = Sistema.getInstance().obtenerReclamoDistribucion(nroReclamo);
 					
@@ -443,12 +470,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					if(estoyGuardando)
 						nroReclamo = Sistema.getInstance().registrarReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente.getIdCliente());
 					
-					reclamoView = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(nroReclamo, tipoDeReclamo);
+					reclamoView = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(nroReclamo, tipoDeReclamo);					
 					
 					List<TipoDeReclamo> tiposDeReclamosSeleccionados = lstTiposReclamosHijos.getSelectedValuesList();
 					
 					for(TipoDeReclamo tipoSeleccionado : tiposDeReclamosSeleccionados){
-						TableroPantalla.getInstance().getFrameContainer().add(new ReclamoPantalla(tipoSeleccionado, nroReclamo));
+						TableroPantalla.getInstance().getFrameContainer().add(new ReclamoPantalla(tipoSeleccionado, cliente, nroReclamo));
 					}	
 					
 				break;
@@ -468,8 +495,8 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			txtFechaDeCreacion.setText(reclamoView.getFechaDeReclamo());
 			txtFechaDeCierre.setText(reclamoView.getFechaDeCierre());
 			
-			if(reclamoView.getNroReclamoCompuesto() != null)
-				txtNroReclamoCompuesto.setText(reclamoView.getNroReclamoCompuesto().toString());
+//			if(reclamoView.getNroReclamoCompuesto() != null)
+//				txtNroReclamoCompuesto.setText(reclamoView.getNroReclamoCompuesto().toString());
 								
 		}catch(NegocioException ne){
 			ne.printStackTrace();
@@ -480,6 +507,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		try {
 			List<ProductoView> productos = Sistema.getInstance().obtenerProductos();			
 			cmbProductos.removeAllItems();
+			cmbProductos.addItem(new ProductoView("Seleccionar"));
 			productos.forEach(p -> cmbProductos.addItem(p));
 			
 		} catch (NegocioException e) {
