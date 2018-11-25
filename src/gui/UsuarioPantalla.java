@@ -152,8 +152,11 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 					if (idUsuario == null){
 						Integer idNuevoUsuario = Sistema.getInstance().crearNuevoUsuario(username, password, rol.getIdRol());
 						txtIdUsuario.setText(idNuevoUsuario.toString());
+						cargarUsuarios();
+						limpiarForm();
 					}else{
 						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol.getIdRol());
+						limpiarForm();
 					}
 				} catch (NegocioException e1) { 
 					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
@@ -178,6 +181,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 					txtIdUsuario.setText("");
 					txtUserName.setText("");
 					txtPassword.setText("");
+					cmbRoles.setSelectedIndex(0);
 					chHabilitado.setSelected(true);
 				}
 			}

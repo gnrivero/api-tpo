@@ -112,8 +112,22 @@ public class UsuarioDAO extends DAO {
 		return crear(sql);
 	}
 	
-	public void actualizarUsuario(Usuario usuario) throws NegocioException {
-		throw new NegocioException("Unimplemented");
+	public void actualizarUsuario(Usuario usuario) throws NegocioException, ConexionException, AccesoException {
+		//throw new NegocioException("Unimplemented");
+		String sql = "UPDATE usuarios SET "
+				+ " username = '" + usuario.getUsername() + "', "
+				+ " password = '" + usuario.getPassword() + "', "
+				+ " idrol = '" + usuario.getRol().getIdRol() + "' ";
+		
+		if(usuario.getFechaBaja()!= null){
+			sql += ", fechabaja = '" + DAOhelper.getAnioMesDiaHoraDateFormat().format(usuario.getFechaBaja()) +"' ";
+		}else{
+			sql += ", fechabaja = NULL ";
+		}
+			
+		sql += " WHERE idusuario = " + usuario.getIdUsuario();
+		
+		actualizar(sql);
 	}
 
 	private List<Usuario> obtenerUsuarios(String SQL) throws AccesoException, ConexionException, NegocioException{
