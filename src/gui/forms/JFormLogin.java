@@ -90,6 +90,30 @@ public class JFormLogin extends JFrame {
 			}
 		});
 		
+		txtPass.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {			
+					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
+					System.out.println("User login: " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+					System.out.println("Rol: " + Sistema.getInstance().getUsuarioLogueado().getRol().toView());
+					frame.dispose();
+					login = null;
+					tablero.setEnabled(true);
+
+				} catch (NegocioException e) {
+					e.printStackTrace();
+					frame.setAlwaysOnTop(false);
+					System.out.println("Error de login");
+			        JOptionPane.showMessageDialog(null, "Usuario o password incorrectos", "ERROR: Login", JOptionPane.ERROR_MESSAGE);
+			        frame.setAlwaysOnTop(true);
+				}
+				
+			}
+			
+		});
+		
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed (ActionEvent e){
 				System.exit(0);
