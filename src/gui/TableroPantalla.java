@@ -19,6 +19,7 @@ import javax.swing.ListSelectionModel;
 import controller.Sistema;
 import excepciones.NegocioException;
 import gui.forms.JFormLogin;
+import model.Rol;
 import model.TipoDeReclamo;
 import model.Usuario;
 import observer.IObservador;
@@ -70,7 +71,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
 	
-	
 	public Container getFrameContainer(){
 		return container;
 	}
@@ -104,6 +104,10 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnAdminClientes.setBounds(400, 40, 150, 30);
 		container.add(btnAdminClientes);
 		
+		btnAdminProducto = new JButton("Admin. Producto");
+		btnAdminProducto.setBounds(600, 40, 150, 30);
+		container.add(btnAdminProducto);
+
 		// ---
 		
 		lblReclamosIngresados = new JLabel("Ingresados");
@@ -150,11 +154,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		// ---
 		
-		btnAdminProducto = new JButton("Admin. Producto");
-		btnAdminProducto.setBounds(600, 40, 150, 30);
-		container.add(btnAdminProducto);
-
-		
 		clientePantalla = ClientePantalla.getInstance();
 		container.add(clientePantalla, 1);
 		
@@ -171,6 +170,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		ayuda.add(acercaDe);
 		this.setJMenuBar(menu);
 		
+		btnCargarReclamo.setEnabled(false);
+		btnAdministrarUsuarios.setEnabled(false);
+		btnAdminClientes.setEnabled(false);
+		btnAdminProducto.setEnabled(false);
+		btnComenzarTratamiento.setEnabled(false);
+		btnPasarAsolucionado.setEnabled(false);
+		btnPasarACerrado.setEnabled(false);
+				
 		this.setVisible(true);
 		this.setEnabled(false);
 		this.setLocationRelativeTo(null);
@@ -217,9 +224,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				//System.exit(0);
 				System.out.println("Chau " + Sistema.getInstance().getUsuarioLogueado().getUsername());
 				Sistema.getInstance().desloguearUsuario();
-				tableroPantalla.setEnabled(false);
+				logout();
 				JFormLogin.getInstance(tableroPantalla);
-				
 			}
 		});
 		
@@ -286,6 +292,17 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	}
 	
+	private void logout() {
+		usuarioLogueado.setText("");
+		btnCargarReclamo.setEnabled(false);
+		btnAdministrarUsuarios.setEnabled(false);
+		btnAdminClientes.setEnabled(false);
+		btnAdminProducto.setEnabled(false);
+		btnComenzarTratamiento.setEnabled(false);
+		btnPasarAsolucionado.setEnabled(false);
+		btnPasarACerrado.setEnabled(false);
+		tableroPantalla.setEnabled(false);
+	}
 	
 	private void completarListadosDeReclamos(List<TipoDeReclamo> tiposDeReclamos){
 		
@@ -321,6 +338,38 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		}
 	}
 	
+	private void funciones(Rol rolLogueado) {
+		switch (rolLogueado.getIdRol()) {
+			case 1:
+				btnAdministrarUsuarios.setEnabled(true);
+				btnAdminClientes.setEnabled(true);
+				btnAdminProducto.setEnabled(true);
+				break;
+			case 2:
+				btnComenzarTratamiento.setEnabled(true);
+				btnPasarAsolucionado.setEnabled(true);
+				btnPasarACerrado.setEnabled(true);
+				break;
+			case 3:
+				btnComenzarTratamiento.setEnabled(true);
+				btnPasarAsolucionado.setEnabled(true);
+				btnPasarACerrado.setEnabled(true);
+				break;
+			case 4:
+				btnComenzarTratamiento.setEnabled(true);
+				btnPasarAsolucionado.setEnabled(true);
+				btnPasarACerrado.setEnabled(true);
+				break;
+			case 5:
+				btnCargarReclamo.setEnabled(true);
+				break;
+			case 6:
+				break;
+			default:
+				break;
+		}
+	}
+	
 	@Override
 	public void actualizar() {
 		
@@ -329,6 +378,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		this.getUsuarioLogueado().setText("Hola " + usuarioLogueado.getUsername());
 				
 		this.completarListadosDeReclamos(usuarioLogueado.getRol().getTiposDeReclamo());
+		
+		funciones(Sistema.getInstance().getUsuarioLogueado().getRol());
 		
 	}
 }

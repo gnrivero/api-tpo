@@ -74,7 +74,8 @@ public class JFormLogin extends JFrame {
 			public void actionPerformed (ActionEvent evt) {
 				try {			
 					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
-					System.out.println("Hola " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+					System.out.println("User login: " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+					System.out.println("Rol: " + Sistema.getInstance().getUsuarioLogueado().getRol().toView());
 					frame.dispose();
 					login = null;
 					tablero.setEnabled(true);
