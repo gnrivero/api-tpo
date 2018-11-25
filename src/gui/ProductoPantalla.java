@@ -33,7 +33,7 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 	
 	JLabel lblProductos, lblIdProducto, lblCodProducto, lblTitulo, lblDescripcion, lblPrecio;
 	JTextField txtIdProducto, txtCodProducto, txtTitulo, txtDescripcion, txtPrecio;
-	JButton btnGuardar, btnCancelar, btnSeleccionarProducto;
+	JButton btnGuardar, btnCancelar, btnSeleccionarProducto, btnEliminarProducto;
 	JComboBox<ProductoView> cmbProductos;
 	
 	Container cont = null;
@@ -62,6 +62,10 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 		btnSeleccionarProducto = new JButton("Seleccionar");
 		btnSeleccionarProducto.setBounds(420, 20, 150, 30);
 		cont.add(btnSeleccionarProducto);
+		
+		btnEliminarProducto = new JButton("Eliminar");
+		btnEliminarProducto.setBounds(420, 55, 150, 30);
+		cont.add(btnEliminarProducto);
 		
 		lblIdProducto = new JLabel("ID. de Usuario");
 		lblIdProducto.setBounds(10, 55, 200, 30);
@@ -165,14 +169,33 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 					txtTitulo.setText(producto.getTitulo());
 					txtDescripcion.setText(producto.getDescripcion());
 					txtPrecio.setText(String.valueOf(producto.getPrecio()));
+					btnEliminarProducto.setEnabled(true);
 				} else {
 					txtIdProducto.setText("");
 					txtCodProducto.setText("");
 					txtTitulo.setText("");
 					txtDescripcion.setText("");
 					txtPrecio.setText("");
+					btnEliminarProducto.setEnabled(false);
 				}
 			}
+		});
+		
+		btnEliminarProducto.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				Integer idProducto = Integer.valueOf(txtIdProducto.getText());
+								
+				try {
+					Sistema.getInstance().eliminarProducto(idProducto);
+					JOptionPane.showMessageDialog(null, "Producto eliminado con éxito! ", "Admin. Productos", JOptionPane.INFORMATION_MESSAGE);
+					actualizar();
+				} catch (NegocioException e1) { 
+					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Productos", JOptionPane.ERROR_MESSAGE);
+				}
+			}			
 		});
 		
 		btnCancelar.addActionListener(new ActionListener() {			
@@ -185,6 +208,7 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 	}
 	
 	private void limpiarForm() {
+		btnEliminarProducto.setEnabled(false);
 		cmbProductos.setSelectedIndex(0);
 		txtIdProducto.setText("");
 		txtCodProducto.setText("");
