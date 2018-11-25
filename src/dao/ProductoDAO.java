@@ -146,7 +146,5 @@ public class ProductoDAO extends DAO {
 		
 		return productos;
 	}
-	
-	
 
 }

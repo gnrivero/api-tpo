@@ -67,7 +67,7 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 		btnEliminarProducto.setBounds(420, 55, 150, 30);
 		cont.add(btnEliminarProducto);
 		
-		lblIdProducto = new JLabel("ID. de Usuario");
+		lblIdProducto = new JLabel("ID. de Producto");
 		lblIdProducto.setBounds(10, 55, 200, 30);
 		cont.add(lblIdProducto);
 		
