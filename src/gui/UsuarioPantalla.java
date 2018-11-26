@@ -152,11 +152,12 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 					if (idUsuario == null){
 						Integer idNuevoUsuario = Sistema.getInstance().crearNuevoUsuario(username, password, rol.getIdRol());
 						txtIdUsuario.setText(idNuevoUsuario.toString());
-						cargarUsuarios();
-						limpiarForm();
+						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
+						actualizar();
 					}else{
 						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol.getIdRol());
-						limpiarForm();
+						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
+						actualizar();
 					}
 				} catch (NegocioException e1) { 
 					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
@@ -227,7 +228,8 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 	}
 
 	@Override
-	public void actualizar() {		
+	public void actualizar() {
+		limpiarForm();
 		cargarUsuarios();
 	}
 	

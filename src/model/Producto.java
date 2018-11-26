@@ -60,8 +60,14 @@ public class Producto {
 		this.precio = precio;
 	}
 	
-	public void guardar() throws ConexionException, AccesoException {
-		ProductoDAO.getInstancia().crearProducto(this);
+	public Integer guardar() throws ConexionException, AccesoException {
+		if(this.getIdProducto() == null){
+			this.idProducto = ProductoDAO.getInstancia().crearProducto(this);
+		}else{
+			ProductoDAO.getInstancia().actualizarProducto(this);
+		}
+		
+		return this.idProducto;
 	}
 	
 	public void borrar() throws ConexionException, AccesoException {

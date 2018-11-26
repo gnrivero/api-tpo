@@ -164,8 +164,12 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 					if (idCliente == null){
 						Integer idNuevoCliente = Sistema.getInstance().agregarCliente(nombre, cuit, domicilio, telefono, mail);
 						txtIdCliente.setText(idNuevoCliente.toString());
+						JOptionPane.showMessageDialog(null, "Cliente guardado con éxito! ", "Admin. Clientes", JOptionPane.INFORMATION_MESSAGE);
+						actualizar();
 					}else{
 						Sistema.getInstance().modificarCliente(idCliente, nombre, cuit, domicilio, telefono, mail, fechaBaja);
+						JOptionPane.showMessageDialog(null, "Cliente guardado con éxito! ", "Admin. Clientes", JOptionPane.INFORMATION_MESSAGE);
+						actualizar();
 					}
 				} catch (NegocioException e1) { 
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Admin. Clientes", JOptionPane.ERROR_MESSAGE);
@@ -187,9 +191,7 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 					txtDomicilio.setText(cliente.getDomicilio());
 					txtTelefono.setText(cliente.getTelefono());
 					txtMail.setText(cliente.getMail());
-					
 					chHabilitado.setSelected((cliente.getFechaBaja() == null));
-					
 				} else {
 					
 					txtIdCliente.setText("");
@@ -212,6 +214,17 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 		
 	}
 	
+	private void limpiarForm() {
+		cmbClientes.setSelectedIndex(0);
+		txtIdCliente.setText("");
+		txtNombre.setText("");
+		txtCuit.setText("");
+		txtDomicilio.setText("");
+		txtTelefono.setText("");
+		txtMail.setText("");										
+		chHabilitado.setSelected(true);	
+	}
+	
 	private void cargarClientes(){
 		try {
 			List<ClienteView> clientesViews = Sistema.getInstance().obtenerTodosLosClientes(false);
@@ -224,7 +237,8 @@ public class ClientePantalla extends JInternalFrame implements IObservador {
 	}
 
 	@Override
-	public void actualizar() {		
+	public void actualizar() {
+		limpiarForm();
 		cargarClientes();
 	}	
 }

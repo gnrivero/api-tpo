@@ -71,7 +71,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
-	
+	private ProductoPantalla productoPantalla;
 	
 	public Container getFrameContainer(){
 		return container;
@@ -106,6 +106,10 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnAdminClientes.setBounds(400, 40, 150, 30);
 		container.add(btnAdminClientes);
 		
+		btnAdminProducto = new JButton("Admin. Producto");
+		btnAdminProducto.setBounds(600, 40, 150, 30);
+		container.add(btnAdminProducto);
+
 		// ---
 		
 		lblReclamosIngresados = new JLabel("Ingresados");
@@ -152,16 +156,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		// ---
 		
-		btnAdminProducto = new JButton("Admin. Producto");
-		btnAdminProducto.setBounds(600, 40, 150, 30);
-		container.add(btnAdminProducto);
-
-		
 		clientePantalla = ClientePantalla.getInstance();
 		container.add(clientePantalla, 1);
 		
 		usuarioPantalla = UsuarioPantalla.getInstance();
 		container.add(usuarioPantalla);
+		
+		productoPantalla = ProductoPantalla.getInstance();
+		container.add(productoPantalla);
 		
 		menu.add(inicio);
 		inicio.add(opcNuevo);
@@ -171,20 +173,20 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		ayuda.setEnabled(false);
 		this.setJMenuBar(menu);
 		
+		btnCargarReclamo.setEnabled(false);
+		btnAdministrarUsuarios.setEnabled(false);
+		btnAdminClientes.setEnabled(false);
+		btnAdminProducto.setEnabled(false);
+		btnComenzarTratamiento.setEnabled(false);
+		btnPasarAsolucionado.setEnabled(false);
+		btnPasarACerrado.setEnabled(false);
+				
 		this.setVisible(true);
 		this.setEnabled(false);
 		this.setLocationRelativeTo(null);
 	}
 	
 	private void eventos(){
-		
-		btnAdminClientes.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clientePantalla.setVisible(true);
-			}
-		});
 		
 		btnCargarReclamo.addActionListener(new ActionListener(){
 
@@ -195,6 +197,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				container.add(reclamoPantalla, 1);	
 			}
 		});
+
+		btnAdminClientes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clientePantalla.setVisible(true);
+			}
+		});
 		
 		btnAdministrarUsuarios.addActionListener(new ActionListener(){
 
@@ -203,6 +213,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				//UsuarioPantalla usuarioPantalla = new UsuarioPantalla();			
 				usuarioPantalla.setVisible(true);
 				//container.add(usuarioPantalla);
+			}
+		});
+
+		btnAdminProducto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				productoPantalla.setVisible(true);
 			}
 		});
 		
@@ -217,9 +235,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				//System.exit(0);
 				System.out.println("Chau " + Sistema.getInstance().getUsuarioLogueado().getUsername());
 				Sistema.getInstance().desloguearUsuario();
-				tableroPantalla.setEnabled(false);
+				logout();
 				JFormLogin.getInstance(tableroPantalla);
-				
 			}
 		});
 		
@@ -286,6 +303,17 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	}
 	
+	private void logout() {
+		usuarioLogueado.setText("");
+		btnCargarReclamo.setEnabled(false);
+		btnAdministrarUsuarios.setEnabled(false);
+		btnAdminClientes.setEnabled(false);
+		btnAdminProducto.setEnabled(false);
+		btnComenzarTratamiento.setEnabled(false);
+		btnPasarAsolucionado.setEnabled(false);
+		btnPasarACerrado.setEnabled(false);
+		tableroPantalla.setEnabled(false);
+	}
 	
 	private void completarListadosDeReclamos(List<TipoDeReclamo> tiposDeReclamos){
 		
@@ -334,6 +362,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		btnAdministrarUsuarios.setEnabled(Sistema.getInstance().tienePermisos(Modulo.USUARIOS, Permiso.ESCRITURA));
 		btnAdminProducto.setEnabled(Sistema.getInstance().tienePermisos(Modulo.PRODUCTO, Permiso.ESCRITURA));
 		btnAdminClientes.setEnabled(Sistema.getInstance().tienePermisos(Modulo.CLIENTE, Permiso.ESCRITURA));		
+
 	}
 	
 	@Override
