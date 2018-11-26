@@ -15,6 +15,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 
 import controller.Sistema;
 import excepciones.NegocioException;
@@ -50,7 +51,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private Container container;
 	
 	private JLabel usuarioLogueado, lblReclamosIngresados, lblReclamosEnTratamiento, lblReclamosSolucionados;
-	private JButton btnCargarReclamo, btnAdministrarUsuarios, btnAdminClientes, btnAdminProducto;
 	
 	private JButton btnComenzarTratamiento, btnPasarAsolucionado, btnPasarACerrado;
 	
@@ -62,12 +62,10 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private DefaultListModel<ReclamoView> reclamosEnTratamientoModel = new DefaultListModel<ReclamoView>();
 	private DefaultListModel<ReclamoView> reclamosSolucionadosModel = new DefaultListModel<ReclamoView>();
 	
-	private JMenuBar menu = new JMenuBar();
-	private JMenu inicio = new JMenu("Inicio");
-	private JMenuItem opcNuevo = new JMenuItem("Nuevo reclamo...");
-	private JMenuItem opcLogout = new JMenuItem("Logout");
+	private JMenuBar barraMenu = new JMenuBar();
+	private JMenuItem opcNuevoReclamo, opcAdminUsuarios, opcAdminClientes, opcAdminProductos, opcLogout, opcAcercaDe; 
 	private JMenu ayuda = new JMenu("Ayuda");
-	private JMenuItem acercaDe = new JMenuItem("Acerca de...");
+
 	
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
@@ -89,28 +87,43 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		container = getLayeredPane();
 		container.setLayout(null);
-
+				
+		// ---- Menu Bar ----
+		opcNuevoReclamo = new JMenuItem("Nuevo Reclamo");
+		opcNuevoReclamo.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcAdminUsuarios = new JMenuItem("Admin. Usuarios");
+		opcAdminUsuarios.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcAdminClientes = new JMenuItem("Admin. Clientes");
+		opcAdminClientes.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcAdminProductos = new JMenuItem("Admin. Productos");
+		opcAdminProductos.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcAcercaDe = new JMenuItem("Acerca de");
+		opcAcercaDe.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcLogout = new JMenuItem("Salir");
+		opcLogout.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		barraMenu.add(opcNuevoReclamo);		
+		barraMenu.add(opcAdminUsuarios);
+		barraMenu.add(opcAdminClientes);
+		barraMenu.add(opcAdminProductos);
+		barraMenu.add(opcAcercaDe);
+			ayuda.add(opcAcercaDe);
+		barraMenu.add(opcLogout);
+				
+		this.setJMenuBar(barraMenu);
+		
+		
+		// ---- Usuario Logueado
 		usuarioLogueado = new JLabel();
-		usuarioLogueado.setBounds(10, 15, 200, 30);
+		usuarioLogueado.setBounds(30, 20, 200, 30);
 		container.add(usuarioLogueado);
 		
-		btnCargarReclamo = new JButton("Cargar Reclamo");
-		btnCargarReclamo.setBounds(10, 40, 150, 30);
-		container.add(btnCargarReclamo);
-		
-		btnAdministrarUsuarios = new JButton("Admin. Usuarios");
-		btnAdministrarUsuarios.setBounds(180, 40, 180, 30);
-		container.add(btnAdministrarUsuarios);
-		
-		btnAdminClientes = new JButton("Admin. Clientes");
-		btnAdminClientes.setBounds(400, 40, 150, 30);
-		container.add(btnAdminClientes);
-		
-		btnAdminProducto = new JButton("Admin. Producto");
-		btnAdminProducto.setBounds(600, 40, 150, 30);
-		container.add(btnAdminProducto);
-
-		// ---
+		// --- 
 		
 		lblReclamosIngresados = new JLabel("Ingresados");
 		lblReclamosIngresados.setBounds(30, 165, 200, 30);
@@ -165,21 +178,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		productoPantalla = ProductoPantalla.getInstance();
 		container.add(productoPantalla);
 		
-		menu.add(inicio);
-		inicio.add(opcNuevo);
-		inicio.add(opcLogout);
-		menu.add(ayuda);
-		ayuda.add(acercaDe);
-		ayuda.setEnabled(false);
-		this.setJMenuBar(menu);
-		
-		btnCargarReclamo.setEnabled(false);
-		btnAdministrarUsuarios.setEnabled(false);
-		btnAdminClientes.setEnabled(false);
-		btnAdminProducto.setEnabled(false);
-		btnComenzarTratamiento.setEnabled(false);
-		btnPasarAsolucionado.setEnabled(false);
-		btnPasarACerrado.setEnabled(false);
 				
 		this.setVisible(true);
 		this.setEnabled(false);
@@ -188,7 +186,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private void eventos(){
 		
-		btnCargarReclamo.addActionListener(new ActionListener(){
+		opcNuevoReclamo.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -198,7 +196,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			}
 		});
 
-		btnAdminClientes.addActionListener(new ActionListener() {
+		opcAdminClientes.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -206,7 +204,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			}
 		});
 		
-		btnAdministrarUsuarios.addActionListener(new ActionListener(){
+		opcAdminUsuarios.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -216,7 +214,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			}
 		});
 
-		btnAdminProducto.addActionListener(new ActionListener() {
+		opcAdminProductos.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -224,25 +222,17 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			}
 		});
 		
-		opcNuevo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				// abrir formulario para nuevo reclamo del tipo que corresponda según el rol
-			}
-		});
-		
 		opcLogout.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent evt) {
-				//System.exit(0);
-				System.out.println("Chau " + Sistema.getInstance().getUsuarioLogueado().getUsername());
+			public void actionPerformed(ActionEvent evt) {			
 				Sistema.getInstance().desloguearUsuario();
-				logout();
+				checkPermisos();
 				JFormLogin.getInstance(tableroPantalla);
 			}
 		});
 		
-		acercaDe.addActionListener(new ActionListener() {
+		opcAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				JOptionPane.showMessageDialog(null, "Grupo 8:\n María Isabel Quevedo Pasquini\n Gonzalo Rivero\n Emilio Delgado\n Nazareno Agustín Rodríguez", "AI", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Grupo 8:\n Maria Isabel Quevedo Pasquini\n Gonzalo Rivero\n Emilio Delgado\n Nazareno Agustin Rodriguez", "AI", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 				
@@ -303,18 +293,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	}
 	
-	private void logout() {
-		usuarioLogueado.setText("");
-		btnCargarReclamo.setEnabled(false);
-		btnAdministrarUsuarios.setEnabled(false);
-		btnAdminClientes.setEnabled(false);
-		btnAdminProducto.setEnabled(false);
-		btnComenzarTratamiento.setEnabled(false);
-		btnPasarAsolucionado.setEnabled(false);
-		btnPasarACerrado.setEnabled(false);
-		tableroPantalla.setEnabled(false);
-	}
-	
 	private void completarListadosDeReclamos(List<TipoDeReclamo> tiposDeReclamos){
 		
 		try {
@@ -352,16 +330,16 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private void checkPermisos(){
 		
 		boolean puedeCrearYeditarReclamos = Sistema.getInstance().tienePermisos(Modulo.CREAR_RECLAMO, Permiso.ESCRITURA);
-		btnCargarReclamo.setEnabled(puedeCrearYeditarReclamos);
+		opcNuevoReclamo.setEnabled(puedeCrearYeditarReclamos);
 		
 		boolean puedeModificarEstadoReclamo = Sistema.getInstance().tienePermisos(Modulo.ESTADO_RECLAMO, Permiso.ESCRITURA);
 		btnComenzarTratamiento.setEnabled(puedeModificarEstadoReclamo);
 		btnPasarACerrado.setEnabled(puedeModificarEstadoReclamo);
 		btnPasarAsolucionado.setEnabled(puedeModificarEstadoReclamo);
 		
-		btnAdministrarUsuarios.setEnabled(Sistema.getInstance().tienePermisos(Modulo.USUARIOS, Permiso.ESCRITURA));
-		btnAdminProducto.setEnabled(Sistema.getInstance().tienePermisos(Modulo.PRODUCTO, Permiso.ESCRITURA));
-		btnAdminClientes.setEnabled(Sistema.getInstance().tienePermisos(Modulo.CLIENTE, Permiso.ESCRITURA));		
+		opcAdminUsuarios.setEnabled(Sistema.getInstance().tienePermisos(Modulo.USUARIOS, Permiso.ESCRITURA));
+		opcAdminProductos.setEnabled(Sistema.getInstance().tienePermisos(Modulo.PRODUCTO, Permiso.ESCRITURA));
+		opcAdminClientes.setEnabled(Sistema.getInstance().tienePermisos(Modulo.CLIENTE, Permiso.ESCRITURA));		
 
 	}
 	

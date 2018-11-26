@@ -67,7 +67,18 @@ public class UsuarioDAO extends DAO {
 		
 	}
 	
-	public Usuario obtenerUsuarioPorId(int idUsuario) throws ConexionException, AccesoException, NegocioException {  
+	
+	/**
+	 * Metodo para obtener un Usuario por su ID. 
+	 * Obtiene solamente la informacion referida al usuario, no carga su Rol. 
+	 * 
+	 * @param idUsuario
+	 * @return
+	 * @throws ConexionException
+	 * @throws AccesoException
+	 * @throws NegocioException
+	 */
+	public Usuario obtenerUsuarioPorIdLazy(int idUsuario) throws ConexionException, AccesoException, NegocioException {  
 		Connection con = null;  
 		Statement stmt = null;  
 		ResultSet rs = null;  
@@ -91,8 +102,7 @@ public class UsuarioDAO extends DAO {
 		}
 		try {
 			if(rs.next()){
-				Rol rol = RolDAO.getInstancia().obtenerRolPorId(rs.getInt("idrol"));				
-				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechabaja"), rol);
+				Usuario usuario = new Usuario(rs.getInt("idusuario"), rs.getString("username"), rs.getString("password"), rs.getDate("fechabaja"));
 				return usuario;
 			}
 			else{

@@ -94,7 +94,7 @@ public class Sistema extends Observado {
 	}
 	
 	public void desloguearUsuario(){
-		this.setUsuarioLogueado(null);		
+		this.setUsuarioLogueado(null);	
 	}
 	
 	public Integer crearNuevoUsuario(String username, String password, Integer idRol) throws NegocioException {
