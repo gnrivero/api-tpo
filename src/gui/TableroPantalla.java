@@ -19,6 +19,8 @@ import javax.swing.ListSelectionModel;
 import controller.Sistema;
 import excepciones.NegocioException;
 import gui.forms.JFormLogin;
+import model.Modulo;
+import model.Permiso;
 import model.TipoDeReclamo;
 import model.Usuario;
 import observer.IObservador;
@@ -161,14 +163,12 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		usuarioPantalla = UsuarioPantalla.getInstance();
 		container.add(usuarioPantalla);
 		
-//		if(Sistema.getInstance().getUsuarioLogueado() == null){
-//			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
-//		}
 		menu.add(inicio);
 		inicio.add(opcNuevo);
 		inicio.add(opcLogout);
 		menu.add(ayuda);
 		ayuda.add(acercaDe);
+		ayuda.setEnabled(false);
 		this.setJMenuBar(menu);
 		
 		this.setVisible(true);
@@ -321,6 +321,21 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		}
 	}
 	
+	private void checkPermisos(){
+		
+		boolean puedeCrearYeditarReclamos = Sistema.getInstance().tienePermisos(Modulo.CREAR_RECLAMO, Permiso.ESCRITURA);
+		btnCargarReclamo.setEnabled(puedeCrearYeditarReclamos);
+		
+		boolean puedeModificarEstadoReclamo = Sistema.getInstance().tienePermisos(Modulo.ESTADO_RECLAMO, Permiso.ESCRITURA);
+		btnComenzarTratamiento.setEnabled(puedeModificarEstadoReclamo);
+		btnPasarACerrado.setEnabled(puedeModificarEstadoReclamo);
+		btnPasarAsolucionado.setEnabled(puedeModificarEstadoReclamo);
+		
+		btnAdministrarUsuarios.setEnabled(Sistema.getInstance().tienePermisos(Modulo.USUARIOS, Permiso.ESCRITURA));
+		btnAdminProducto.setEnabled(Sistema.getInstance().tienePermisos(Modulo.PRODUCTO, Permiso.ESCRITURA));
+		btnAdminClientes.setEnabled(Sistema.getInstance().tienePermisos(Modulo.CLIENTE, Permiso.ESCRITURA));		
+	}
+	
 	@Override
 	public void actualizar() {
 		
@@ -330,5 +345,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				
 		this.completarListadosDeReclamos(usuarioLogueado.getRol().getTiposDeReclamo());
 		
+		checkPermisos();
 	}
 }

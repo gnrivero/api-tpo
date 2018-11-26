@@ -9,6 +9,9 @@ public class Rol {
 	private Integer idRol;
 	private String descripcion;
 	private List<TipoDeReclamo> tiposDeReclamo;
+	private List<Permiso> permisos;
+	
+	private static final Integer ADMIN = 1;
 	
 	public Rol(Integer idRol, String descripcion, List<TipoDeReclamo> tiposDeReclamo){
 		this(descripcion, tiposDeReclamo);
@@ -25,6 +28,23 @@ public class Rol {
 		this.descripcion = descripcion;		 
 	}
 	
+	//Metodos
+	public boolean tienePermiso(Modulo modulo, int modoDeAcceso){
+		
+		if(ADMIN.equals(this.idRol))
+			return true;
+		
+		for(Permiso permiso : this.permisos){
+			if(modulo.equals(permiso.getModulo())&& permiso.getValor().equals(modoDeAcceso)){				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	//Getters & Setters
 	public Integer getIdRol() {
 		return idRol;
 	}
@@ -49,16 +69,15 @@ public class Rol {
 		this.tiposDeReclamo = tiposDeReclamo;
 	}
 
-	public boolean soy(int idRol){		
-		return true;
+	public List<Permiso> getPermisos() {
+		return permisos;
 	}
-	
-	public void guardar(){
-		
+
+	public void setPermisos(List<Permiso> permisos) {
+		this.permisos = permisos;
 	}
 	
 	public RolView toView(){
-		
 		return new RolView(this.idRol, this.descripcion);
 	}
 

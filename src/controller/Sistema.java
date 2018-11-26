@@ -17,6 +17,7 @@ import excepciones.NegocioException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.Factura;
+import model.Modulo;
 import model.Producto;
 import model.Rol;
 import model.Tablero;
@@ -527,6 +528,7 @@ public class Sistema extends Observado {
 	
 	//Fin: Reclamos
 	
+	//Facturas
 	public List<FacturaView> obenerFacturasPorCliente(Integer idCliente) throws NegocioException {
 		
 		try {
@@ -541,5 +543,15 @@ public class Sistema extends Observado {
 		} catch (NegocioException e){
 			throw e;
 		}		
+	}
+	//FIN: Facturas
+	
+	//Permisos
+	public boolean tienePermisos(Modulo modulo, int modoDeAcceso){
+		
+		if(this.usuarioLogueado == null)
+			return false;
+		
+		return Sistema.getInstance().getUsuarioLogueado().getRol().tienePermiso(modulo, modoDeAcceso);
 	}
 }

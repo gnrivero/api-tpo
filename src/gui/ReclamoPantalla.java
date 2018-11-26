@@ -253,7 +253,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cmbEstadoActual.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {			
+			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
@@ -366,7 +366,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(TipoDeReclamo.COMPUESTO.equals(cmbTiposDeReclamo.getSelectedItem())
-						&& !txtNroReclamo.getText().isEmpty()){									
+						&& !txtNroReclamo.getText().isEmpty()){
 							try {
 								ReclamoView reclamoCompuesto = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(Integer.valueOf(txtNroReclamo.getText()), (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem());
 
