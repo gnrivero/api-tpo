@@ -253,7 +253,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		cmbEstadoActual.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {			
+			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
@@ -366,7 +366,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(TipoDeReclamo.COMPUESTO.equals(cmbTiposDeReclamo.getSelectedItem())
-						&& !txtNroReclamo.getText().isEmpty()){									
+						&& !txtNroReclamo.getText().isEmpty()){
 							try {
 								ReclamoView reclamoCompuesto = Sistema.getInstance().obtenerReclamosPorNumeroYTipo(Integer.valueOf(txtNroReclamo.getText()), (TipoDeReclamo) cmbTiposDeReclamo.getSelectedItem());
 
@@ -505,7 +505,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 	
 	private void cargarProductos(){
 		try {
-			List<ProductoView> productos = Sistema.getInstance().obtenerProductos();			
+			List<ProductoView> productos = Sistema.getInstance().obtenerTodosLosProductos();			
 			cmbProductos.removeAllItems();
 			cmbProductos.addItem(new ProductoView("Seleccionar"));
 			productos.forEach(p -> cmbProductos.addItem(p));

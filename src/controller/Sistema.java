@@ -17,6 +17,7 @@ import excepciones.NegocioException;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.Factura;
+import model.Modulo;
 import model.Producto;
 import model.Rol;
 import model.Tablero;
@@ -209,13 +210,16 @@ public class Sistema extends Observado {
 	//Fin: Cliente
 	
 	//Producto
-	public void agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {
+	public Integer agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {
 		Producto producto = new Producto(codigo, titulo, descripcion, precio);
+		Integer idProductoNuevo = null;
 		try {
-			producto.guardar();
+			idProductoNuevo = producto.guardar();
+			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo crear producto");
 		}
+		return idProductoNuevo;
 	}
 	
 	public void modificarProducto(Integer idProducto, String codigo, String titulo, String descripcion, float precio) throws NegocioException {
@@ -230,7 +234,6 @@ public class Sistema extends Observado {
 			throw new NegocioException("No se pudo actualizar el producto");
 			}	
 		}	
-
 
 	public void eliminarProducto(Integer idProducto) throws NegocioException {
 		Producto producto;
@@ -251,7 +254,7 @@ public class Sistema extends Observado {
 		}		
 	}
 	
-	public List<ProductoView> obtenerProductos() throws NegocioException{		
+	public List<ProductoView> obtenerTodosLosProductos() throws NegocioException{		
 		try {
 			List<Producto> productos = ProductoDAO.getInstancia().obtenerTodosLosProductos();
 			
@@ -527,6 +530,7 @@ public class Sistema extends Observado {
 	
 	//Fin: Reclamos
 	
+	//Facturas
 	public List<FacturaView> obenerFacturasPorCliente(Integer idCliente) throws NegocioException {
 		
 		try {
@@ -541,5 +545,15 @@ public class Sistema extends Observado {
 		} catch (NegocioException e){
 			throw e;
 		}		
+	}
+	//FIN: Facturas
+	
+	//Permisos
+	public boolean tienePermisos(Modulo modulo, int modoDeAcceso){
+		
+		if(this.usuarioLogueado == null)
+			return false;
+		
+		return Sistema.getInstance().getUsuarioLogueado().getRol().tienePermiso(modulo, modoDeAcceso);
 	}
 }

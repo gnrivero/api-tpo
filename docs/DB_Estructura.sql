@@ -34,6 +34,19 @@ CREATE TABLE tiposdereclamoporroles
 	CONSTRAINT rr_unique  UNIQUE (idrol, idtipodereclamo)
 )
 
+drop table permisos;
+CREATE TABLE permisos
+(
+	idrol INT NOT NULL,
+	modulo VARCHAR(20) NOT NULL,
+	valor INT NOT NULL,
+	CONSTRAINT idrol_fk FOREIGN KEY (idrol) REFERENCES roles (idrol),
+	CONSTRAINT uc_idrol_modulo UNIQUE(idrol, modulo, valor)
+)
+
+
+
+
 CREATE TABLE clientes
 (
 	idcliente INT IDENTITY,

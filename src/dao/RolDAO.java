@@ -9,6 +9,7 @@ import java.util.List;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.Permiso;
 import model.Rol;
 import model.TipoDeReclamo;
 
@@ -70,13 +71,16 @@ public class RolDAO extends DAO {
 			if(rs.next()){
 				Rol rol = new Rol(rs.getInt("idrol"), rs.getString("descripcion"));
 				
-				List<TipoDeReclamo> tiposDeReclamoPorRol = TipoDeReclamoDAO.getInstancia().getTiposdeReclamoPorRol(rol.getIdRol());  
+				List<TipoDeReclamo> tiposDeReclamoPorRol = TipoDeReclamoDAO.getInstancia().getTiposdeReclamoPorRol(rol.getIdRol());
+				List<Permiso> permisosPorRol = PermisoDAO.getInstance().obtenerPermisosPorRol(idRol); 
+				
 				rol.setTiposDeReclamo(tiposDeReclamoPorRol);
+				rol.setPermisos(permisosPorRol);
 						
 				return rol;
 			}
 			else {
-				throw new NegocioException("El rol se pudo cargar");
+				throw new NegocioException("El Rol ID: " + idRol +  " no existe");
 			}
 			
 		} catch (SQLException e) {

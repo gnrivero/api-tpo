@@ -1,0 +1,5 @@
+package model;
+
+public enum Modulo {
+	CREAR_RECLAMO, ESTADO_RECLAMO, CLIENTE, PRODUCTO, REPORTES, USUARIOS;
+}

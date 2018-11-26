@@ -19,7 +19,8 @@ import javax.swing.ListSelectionModel;
 import controller.Sistema;
 import excepciones.NegocioException;
 import gui.forms.JFormLogin;
-import model.Rol;
+import model.Modulo;
+import model.Permiso;
 import model.TipoDeReclamo;
 import model.Usuario;
 import observer.IObservador;
@@ -70,6 +71,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
+	private ProductoPantalla productoPantalla;
 	
 	public Container getFrameContainer(){
 		return container;
@@ -160,14 +162,15 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		usuarioPantalla = UsuarioPantalla.getInstance();
 		container.add(usuarioPantalla);
 		
-//		if(Sistema.getInstance().getUsuarioLogueado() == null){
-//			JFormLogin login = new JFormLogin(Sistema.getInstance().getTablero());
-//		}
+		productoPantalla = ProductoPantalla.getInstance();
+		container.add(productoPantalla);
+		
 		menu.add(inicio);
 		inicio.add(opcNuevo);
 		inicio.add(opcLogout);
 		menu.add(ayuda);
 		ayuda.add(acercaDe);
+		ayuda.setEnabled(false);
 		this.setJMenuBar(menu);
 		
 		btnCargarReclamo.setEnabled(false);
@@ -185,14 +188,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private void eventos(){
 		
-		btnAdminClientes.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clientePantalla.setVisible(true);
-			}
-		});
-		
 		btnCargarReclamo.addActionListener(new ActionListener(){
 
 			@Override
@@ -200,6 +195,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();			
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla, 1);	
+			}
+		});
+
+		btnAdminClientes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				clientePantalla.setVisible(true);
 			}
 		});
 		
@@ -210,6 +213,14 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				//UsuarioPantalla usuarioPantalla = new UsuarioPantalla();			
 				usuarioPantalla.setVisible(true);
 				//container.add(usuarioPantalla);
+			}
+		});
+
+		btnAdminProducto.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				productoPantalla.setVisible(true);
 			}
 		});
 		
@@ -338,36 +349,20 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		}
 	}
 	
-	private void funciones(Rol rolLogueado) {
-		switch (rolLogueado.getIdRol()) {
-			case 1:
-				btnAdministrarUsuarios.setEnabled(true);
-				btnAdminClientes.setEnabled(true);
-				btnAdminProducto.setEnabled(true);
-				break;
-			case 2:
-				btnComenzarTratamiento.setEnabled(true);
-				btnPasarAsolucionado.setEnabled(true);
-				btnPasarACerrado.setEnabled(true);
-				break;
-			case 3:
-				btnComenzarTratamiento.setEnabled(true);
-				btnPasarAsolucionado.setEnabled(true);
-				btnPasarACerrado.setEnabled(true);
-				break;
-			case 4:
-				btnComenzarTratamiento.setEnabled(true);
-				btnPasarAsolucionado.setEnabled(true);
-				btnPasarACerrado.setEnabled(true);
-				break;
-			case 5:
-				btnCargarReclamo.setEnabled(true);
-				break;
-			case 6:
-				break;
-			default:
-				break;
-		}
+	private void checkPermisos(){
+		
+		boolean puedeCrearYeditarReclamos = Sistema.getInstance().tienePermisos(Modulo.CREAR_RECLAMO, Permiso.ESCRITURA);
+		btnCargarReclamo.setEnabled(puedeCrearYeditarReclamos);
+		
+		boolean puedeModificarEstadoReclamo = Sistema.getInstance().tienePermisos(Modulo.ESTADO_RECLAMO, Permiso.ESCRITURA);
+		btnComenzarTratamiento.setEnabled(puedeModificarEstadoReclamo);
+		btnPasarACerrado.setEnabled(puedeModificarEstadoReclamo);
+		btnPasarAsolucionado.setEnabled(puedeModificarEstadoReclamo);
+		
+		btnAdministrarUsuarios.setEnabled(Sistema.getInstance().tienePermisos(Modulo.USUARIOS, Permiso.ESCRITURA));
+		btnAdminProducto.setEnabled(Sistema.getInstance().tienePermisos(Modulo.PRODUCTO, Permiso.ESCRITURA));
+		btnAdminClientes.setEnabled(Sistema.getInstance().tienePermisos(Modulo.CLIENTE, Permiso.ESCRITURA));		
+
 	}
 	
 	@Override
@@ -379,7 +374,6 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				
 		this.completarListadosDeReclamos(usuarioLogueado.getRol().getTiposDeReclamo());
 		
-		funciones(Sistema.getInstance().getUsuarioLogueado().getRol());
-		
+		checkPermisos();
 	}
 }

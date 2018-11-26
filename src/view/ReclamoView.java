@@ -37,7 +37,7 @@ public class ReclamoView {
 	
 	@Override
 	public String toString() {
-		return "Nro: " + this.nroReclamo + " (" + this.tipoDeReclamo + ") " + " - " + this.descripcion + " " + this.fechaDeReclamo;				
+		return "Nro: " + this.nroReclamo + " (" + this.tipoDeReclamo + ") " + " - " + this.descripcion + " - " + this.fechaDeReclamo;				
 	}
 	
 	public Integer getNroReclamo() {

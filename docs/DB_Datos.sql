@@ -18,28 +18,35 @@ INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1)
 INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
 select * from usuarios;
 
--- Tipos de reclamos por roles
+-- Permisos por rol 
+-- INSERT INTO permisos (idrol, modulo, valor) VALUES (
+
+select * from permisos;
 
 -- Permisos Admin
-INSERT INTO tiposdereclamoporroles VALUES (1, 6);
+INSERT INTO permisos (idrol, modulo, valor) VALUES (1,'RECLAMO', 6);
 
 -- Permisos Call Center
-INSERT INTO tiposdereclamoporroles VALUES (5, 6);
+INSERT INTO permisos (idrol, modulo, valor) 
+VALUES (5,'RECLAMO', 6),
+(5,'CREAR_RECLAMO',2);
 
 -- Permisos Distribucion
-INSERT INTO tiposdereclamoporroles 
-VALUES (3, 2),
-(3, 3),
-(3, 4);
+INSERT INTO permisos (idrol, modulo, valor)  
+VALUES (3,'RECLAMO', 2),
+(3,'RECLAMO', 3),
+(3,'RECLAMO', 4);
 
 -- Permisos Facturacion
-INSERT INTO tiposdereclamoporroles VALUES (3, 5);
+INSERT INTO permisos (idrol, modulo, valor)  VALUES (3,'RECLAMO',5);
 
 -- Permisos Zona
-INSERT INTO tiposdereclamoporroles (idrol, idtipodereclamo) VALUES (4, 1);
+INSERT INTO permisos (idrol, modulo, valor) VALUES (4,'RECLAMO',1);
 
+-- Permisos Consulta
+INSERT INTO permisos (idrol, modulo, valor) VALUES (6,'REPORTES', 4);
 
-select * from tiposdereclamoporroles;
+select * from permisos;
 
 -- Productos
 INSERT INTO productos (codigo, titulo, descripcion, precio)
@@ -95,9 +102,7 @@ FROM reclamos rs
 WHERE idtiporeclamo  IN (1,2,3,4,5,6)
 select * from reclamos;
 
-
 SELECT * FROM reclamos;
-
 
 -- Facturas por Reclamo
 select * from facturasreclamos;
