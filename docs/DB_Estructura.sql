@@ -34,7 +34,6 @@ CREATE TABLE tiposdereclamoporroles
 	CONSTRAINT rr_unique  UNIQUE (idrol, idtipodereclamo)
 )
 
-drop table permisos;
 CREATE TABLE permisos
 (
 	idrol INT NOT NULL,
@@ -43,8 +42,6 @@ CREATE TABLE permisos
 	CONSTRAINT idrol_fk FOREIGN KEY (idrol) REFERENCES roles (idrol),
 	CONSTRAINT uc_idrol_modulo UNIQUE(idrol, modulo, valor)
 )
-
-
 
 
 CREATE TABLE clientes
@@ -129,4 +126,18 @@ CREATE TABLE facturasreclamos
 	CONSTRAINT nroFactura_fr_fk FOREIGN KEY (nrofactura) REFERENCES facturas (nrofactura),
 	CONSTRAINT nroReclamo_fr_fk FOREIGN KEY (nroreclamo) REFERENCES reclamos (nroreclamo),
 	CONSTRAINT uc_factura_reclamo UNIQUE(nrofactura,nroreclamo)
+)
+
+
+CREATE TABLE auditoriasreclamos 
+(	
+	idauditoria INT IDENTITY,
+	nroreclamo INT NOT NULL,
+	datoanterior VARCHAR(50),
+	datonuevo VARCHAR(50),
+	idusuario INT NOT NULL,
+	fecha SMALLDATETIME NOT NULL,
+	idtiporeclamo INT NOT NULL,
+	CONSTRAINT nroReclamo_fk_a FOREIGN KEY (nroreclamo) REFERENCES reclamos (nroreclamo),
+	CONSTRAINT idusuario_fk_a FOREIGN KEY (idusuario) REFERENCES usuarios (idusuario),
 )

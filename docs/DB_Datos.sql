@@ -17,6 +17,8 @@ INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('mquevedo', '116785',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
+
+
 select * from usuarios;
 
 -- Permisos por rol 
@@ -28,6 +30,8 @@ select * from permisos;
 INSERT INTO permisos (idrol, modulo, valor) VALUES (1,'RECLAMO', 6);
 
 -- Permisos Call Center
+DELETE FROM permisos where modulo = 'RECLAMO';
+
 INSERT INTO permisos (idrol, modulo, valor) 
 VALUES (5,'RECLAMO', 6),
 (5,'CREAR_RECLAMO',2);

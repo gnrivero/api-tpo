@@ -17,6 +17,13 @@ public class Usuario {
 	private Date fechaBaja;
 	private Rol rol;
 	
+	public Usuario(Integer idUsuario, String username, String password, Date fechaBaja){
+		this.idUsuario = idUsuario;
+		this.username = username;
+		this.password = password;
+		this.fechaBaja = fechaBaja;
+	}
+	
 	public Usuario(String username, String password, Rol rol){
 		this.username = username;
 		this.password = password;

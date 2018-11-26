@@ -11,14 +11,8 @@ import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.Cliente;
-import model.EstadoDeReclamo;
-import model.EstadoDeReclamoFactory;
 import model.Factura;
 import model.FacturaReclamo;
-import model.TipoDeReclamo;
-import model.TipoDeReclamoFactory;
-import model.reclamo.Reclamo;
-import model.reclamo.ReclamoFactory;
 
 public class FacturaReclamoDAO extends DAO {
 	
