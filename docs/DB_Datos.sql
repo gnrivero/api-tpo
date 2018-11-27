@@ -16,6 +16,7 @@ select * from roles order by idrol;
 INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('mquevedo', '116785',1);
+INSERT INTO usuarios (username, password, idrol) VALUES ('nrodriguez', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
 
 
