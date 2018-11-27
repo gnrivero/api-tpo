@@ -52,7 +52,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private JLabel usuarioLogueado, lblReclamosIngresados, lblReclamosEnTratamiento, lblReclamosSolucionados;
 	
-	private JButton btnComenzarTratamiento, btnPasarAsolucionado, btnPasarACerrado;
+	private JButton btnComenzarTratamiento, btnPasarAsolucionado, btnPasarACerrado, btnEditarReclamo;
 	
 	private JList<ReclamoView> lstReclamosIngresados;
 	private JList<ReclamoView> lstReclamosEnTratamiento;
@@ -178,13 +178,27 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		productoPantalla = ProductoPantalla.getInstance();
 		container.add(productoPantalla);
 		
-				
+		btnEditarReclamo = new JButton("Editar");	
+		btnEditarReclamo.setBounds(380, 610, 150, 30);
+		container.add(btnEditarReclamo);
+		
 		this.setVisible(true);
 		this.setEnabled(false);
 		this.setLocationRelativeTo(null);
 	}
 	
 	private void eventos(){
+		
+		btnEditarReclamo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				ReclamoView reclamo = lstReclamosEnTratamiento.getSelectedValue();
+				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				rp.setVisible(true);
+				container.add(rp, 1);
+			}
+		});
 		
 		opcNuevoReclamo.addActionListener(new ActionListener(){
 

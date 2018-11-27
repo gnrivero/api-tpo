@@ -1,9 +1,13 @@
-package dao;
+package model;
 
 import java.util.Date;
 
-import model.Usuario;
+import dao.AuditoriaReclamoDAO;
+import dao.DAOhelper;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import model.reclamo.Reclamo;
+import view.AuditoriaReclamoView;
 
 public class AuditoriaReclamo {
 	
@@ -22,10 +26,20 @@ public class AuditoriaReclamo {
 		this.fecha = fecha;		
 	}
 	
-	public AuditoriaReclamo(Reclamo reclamo, String datoAnterior, String datoNuevo, Usuario usuario, Date fecha){		
-		this(datoAnterior, datoNuevo, usuario, fecha);
+	public AuditoriaReclamo(Reclamo reclamo, String datoAnterior, String datoNuevo, Usuario usuario){		
 		this.reclamo = reclamo;
-	}		
+		this.datoAnterior = datoAnterior;
+		this.datoNuevo = datoNuevo;
+		this.usuario = usuario;
+	}
+	
+	public void guardar() throws ConexionException, AccesoException{		
+		AuditoriaReclamoDAO.getInstance().crearAuditoria(this);		
+	}
+	
+	public AuditoriaReclamoView toView(){
+		return new AuditoriaReclamoView(this.datoAnterior, this.datoNuevo, this.usuario.getUsername(), DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fecha));
+	}
 	
 	public Integer getIdAuditoria() {
 		return idAuditoria;
@@ -63,7 +77,4 @@ public class AuditoriaReclamo {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	
-	
-
 }

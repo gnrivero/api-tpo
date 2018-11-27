@@ -84,6 +84,10 @@ public class ReclamoZona extends Reclamo {
 		view.setCliente(this.cliente.toView());
 		view.setZona(this.zona);
 		
+		if (this.auditoria != null)
+			this.auditoria.forEach(a -> view.getAuditorias().add(a.toView()));
+	
+		
 		return view;	
 	}
 

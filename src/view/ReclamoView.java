@@ -16,6 +16,7 @@ public class ReclamoView {
 	private String fechaDeCierre;
 	private ClienteView cliente;
 	private Integer nroReclamoCompuesto;
+	private List<AuditoriaReclamoView> auditorias;
 	
 	//Compuesto
 	private List<ReclamoView> reclamosHijos;
@@ -33,6 +34,7 @@ public class ReclamoView {
 	public ReclamoView(){ 
 		facturasReclamadas = new ArrayList<FacturaView>();
 		reclamosHijos = new ArrayList<ReclamoView>();
+		auditorias = new ArrayList<AuditoriaReclamoView>();
 	}
 	
 	@Override
@@ -142,6 +144,14 @@ public class ReclamoView {
 
 	public void setReclamosHijos(List<ReclamoView> reclamosHijos) {
 		this.reclamosHijos = reclamosHijos;
+	}
+
+	public List<AuditoriaReclamoView> getAuditorias() {
+		return auditorias;
+	}
+
+	public void setAuditorias(List<AuditoriaReclamoView> auditorias) {
+		this.auditorias = auditorias;
 	}
 	
 }

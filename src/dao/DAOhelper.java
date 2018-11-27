@@ -16,7 +16,7 @@ public class DAOhelper {
 		return year_month_day_time; 
 	}
 	
-	public static DateFormat getDiaMesAnioDateFormat(){
+	public static DateFormat getDiaMesAnioHoraDateFormat(){
 		if (day_month_year_time == null)
 			day_month_year_time = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		

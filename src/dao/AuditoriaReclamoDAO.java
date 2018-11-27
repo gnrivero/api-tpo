@@ -5,29 +5,42 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.AuditoriaReclamo;
 import model.Usuario;
 
-public class AuditoriasReclamosDAO extends DAO {
+public class AuditoriaReclamoDAO extends DAO {
 	
-	private static AuditoriasReclamosDAO instance;
+	private static AuditoriaReclamoDAO instance;
 	
-	private AuditoriasReclamosDAO(){ }
+	private AuditoriaReclamoDAO(){ }
 	
-	public static AuditoriasReclamosDAO getInstance(){
+	public static AuditoriaReclamoDAO getInstance(){
 		if (instance == null)
-			instance = new AuditoriasReclamosDAO();
+			instance = new AuditoriaReclamoDAO();
 		
 		return instance;
 	}
 	
-	//TODO: crear auditoria
-	
-	public List<AuditoriaReclamo> obtenerAuditoriaPorReclamo(Integer nroReclamo) throws ConexionException, AccesoException, NegocioException{
+	public void crearAuditoria(AuditoriaReclamo auditoria) throws ConexionException, AccesoException{
+		
+		String sql =  "INSERT INTO auditoriasreclamos (nroreclamo, datoanterior, datonuevo, idusuario, fecha, idtiporeclamo) "
+					+ "VALUES (" + auditoria.getReclamo().getNroReclamo() + ", "
+					+ "'" + auditoria.getDatoAnterior() + "', "
+					+ "'" + auditoria.getDatoNuevo() + "', "
+					+ auditoria.getUsuario().getIdUsuario() + ", "
+					+ "'" + DAOhelper.getAnioMesDiaHoraDateFormat().format(new Date()) + "', "
+					+ auditoria.getReclamo().getTipoDeReclamo().getId() + ")";  
+		
+		crear(sql);
+	}
+		
+	public List<AuditoriaReclamo> obtenerAuditoriaPorReclamo(Integer nroReclamo, Integer idTipoDeReclamo) throws ConexionException, AccesoException, NegocioException{
 		
 		Connection con = null;
 		Statement stmt = null;
@@ -47,7 +60,7 @@ public class AuditoriasReclamosDAO extends DAO {
 		}
 		
 		try {
-			rs = stmt.executeQuery("SELECT * FROM auditoriasreclamos WHERE nroreclamo = " + nroReclamo);
+			rs = stmt.executeQuery("SELECT * FROM auditoriasreclamos WHERE nroreclamo = " + nroReclamo + " AND idtiporeclamo = " + idTipoDeReclamo);
 		} catch (SQLException e1) {
 			throw new AccesoException("Error de consulta");
 		}
@@ -60,10 +73,13 @@ public class AuditoriasReclamosDAO extends DAO {
 				
 				Usuario usuario = UsuarioDAO.getInstancia().obtenerUsuarioPorIdLazy(rs.getInt("idusuario"));
 				
+				
+				Date fecha = new Date(rs.getTimestamp("fecha").getTime());
+				
 				AuditoriaReclamo auditoria = new AuditoriaReclamo(rs.getString("datoanterior"), 
-																	rs.getString("idusuario"), 
+																	rs.getString("datonuevo"), 
 																		usuario, 
-																			rs.getDate("fecha"));				
+																			fecha);				
 				
 							
 				auditorias.add(auditoria);

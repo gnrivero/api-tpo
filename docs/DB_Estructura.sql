@@ -1,6 +1,6 @@
 -- DROP DATABASE TPO_AI;
 -- select * from TPO_AI.INFORMATION_SCHEMA.TABLES
-CREATE DATABASE TPO_AI;
+-- CREATE DATABASE TPO_AI;
 
 USE TPO_AI;
 
@@ -18,7 +18,7 @@ CREATE TABLE usuarios
 	idusuario INT IDENTITY,
 	username VARCHAR(25) NOT NULL,
 	password VARCHAR(25) NOT NULL,
-	fechabaja DATETIME NULL,
+	fechabaja SMALLDATETIME NULL,
 	idrol INT,
 	CONSTRAINT username_pk PRIMARY KEY (idusuario),
 	CONSTRAINT rol_fk FOREIGN KEY (idrol) REFERENCES roles,
@@ -52,7 +52,7 @@ CREATE TABLE clientes
 	domicilio VARCHAR(25) NOT NULL,
 	telefono VARCHAR(25) NOT NULL,
 	mail VARCHAR(25) NOT NULL,
-	fechabaja DATETIME NULL,
+	fechabaja SMALLDATETIME NULL,
 	CONSTRAINT idcliente_pk PRIMARY KEY (idcliente),
 	CONSTRAINT cuit_unique UNIQUE (cuit)
 )
@@ -96,8 +96,8 @@ CREATE TABLE reclamoscompuestos
 	descripcion VARCHAR(100) NOT NULL, 
 	idestadoreclamo INT NOT NULL,
 	idtiporeclamo INT NOT NULL,
-	fecha DATETIME NOT NULL,
-	fechacierre DATETIME,
+	fecha SMALLDATETIME NOT NULL,
+	fechacierre SMALLDATETIME,
 	idcliente INT NOT NULL,	
 	CONSTRAINT nroreclamocompuesto_pk PRIMARY KEY (nroreclamo)
 )
@@ -108,8 +108,8 @@ CREATE TABLE reclamos
 	descripcion VARCHAR(100) NOT NULL, 
 	idestadoreclamo INT NOT NULL,
 	idtiporeclamo INT NOT NULL,
-	fecha DATETIME NOT NULL,
-	fechacierre DATETIME NULL,
+	fecha SMALLDATETIME NOT NULL,
+	fechacierre SMALLDATETIME NULL,
 	idcliente INT NOT NULL,
 	idproducto INT NULL,
 	cantidad INT NULL,

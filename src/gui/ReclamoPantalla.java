@@ -20,6 +20,7 @@ import excepciones.NegocioException;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
 import observer.IObservador;
+import view.AuditoriaReclamoView;
 import view.ClienteView;
 import view.FacturaView;
 import view.ProductoView;
@@ -41,7 +42,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 				   lblFechaDeCreacion,
 				   lblFechaDeCierre,
 				   lblCliente,
-				   lblNroReclamoCompuesto,
+				   //lblNroReclamoCompuesto,
 				   lblZona,
 				   lblFactura,
 				   lblProducto,
@@ -77,12 +78,13 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		Sistema.getInstance().agregarObservador(this);
 	}
 	
-	public ReclamoPantalla(Integer nroReclamo){		
+	public ReclamoPantalla(Integer nroReclamo, TipoDeReclamo tipoDeReclamo){		
 		
 		this();
 		
 		if(nroReclamo != null){
-			this.txtNroReclamo.setText(nroReclamo.toString());
+			this.txtNroReclamo.setText(nroReclamo.toString());			
+			this.cmbTiposDeReclamo.setSelectedItem(tipoDeReclamo);
 			completarFormulario(false);
 		}			
 	}
@@ -153,6 +155,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		cmbEstadoActual = new JComboBox<>();
 		cmbEstadoActual.setBounds(215, 125, 200, 30);
+		cmbEstadoActual.setEnabled(false);
 		cont.add(cmbEstadoActual);				
 		
 		for (EstadoDeReclamo estado : EstadoDeReclamo.values()){
@@ -187,9 +190,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		cargarClientes();
 		
-		lblNroReclamoCompuesto = new JLabel("Nro. Reclamo Compuesto");
-		lblNroReclamoCompuesto.setBounds(10, 265, 200, 30);		
-		cont.add(lblNroReclamoCompuesto);
+//		lblNroReclamoCompuesto = new JLabel("Nro. Reclamo Compuesto");
+//		lblNroReclamoCompuesto.setBounds(10, 265, 200, 30);		
+//		cont.add(lblNroReclamoCompuesto);
 		
 //		txtNroReclamoCompuesto = new JTextField();
 //		txtNroReclamoCompuesto.setBounds(215, 265, 200, 30);
@@ -232,6 +235,10 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		//FIN: ----Propios de cada Reclamo ----
 		
+		JLabel tituloAuditoria = new JLabel("Registro de cambios");
+		tituloAuditoria.setBounds(450, 265, 200, 30);
+		cont.add(tituloAuditoria);				
+
 		//------ Botones --------
 		
 		btnGuardar = new JButton("Guardar");
@@ -245,7 +252,6 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		this.pack();
 		this.setLocation(10, 100);
 		this.setSize(800, 600);
-		this.setClosable(true);
 	}
 	
 	public void eventos(){
@@ -277,7 +283,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 					lblCantidad.setEnabled(false);
 					txtCantidad.setEnabled(false);
 					
-					lblNroReclamoCompuesto.setEnabled(true);
+					//lblNroReclamoCompuesto.setEnabled(true);
 					lblTiposReclamosHijos.setVisible(false);
 					lstTiposReclamosHijos.setVisible(false);
 					
@@ -309,7 +315,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							
 						break;
 						case COMPUESTO:
-							lblNroReclamoCompuesto.setEnabled(false);
+							//lblNroReclamoCompuesto.setEnabled(false);
 							
 							DefaultListModel<TipoDeReclamo> tipoDeReclamoListModel = new DefaultListModel<TipoDeReclamo>();							
 							for (TipoDeReclamo tipo : TipoDeReclamo.values()){
@@ -488,6 +494,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			txtDescripcion.setText(reclamoView.getDescripcion());
 			cmbTiposDeReclamo.setSelectedItem(reclamoView.getTipoDeReclamo());
 			cmbEstadoActual.setSelectedItem(reclamoView.getEstadoDeReclamo());
+			cmbEstadoActual.setEnabled(false);
 			
 			if(!TipoDeReclamo.FACTURACION.equals(tipoDeReclamo))
 				cmbClientes.setSelectedItem(reclamoView.getCliente());
@@ -495,11 +502,23 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			txtFechaDeCreacion.setText(reclamoView.getFechaDeReclamo());
 			txtFechaDeCierre.setText(reclamoView.getFechaDeCierre());
 			
+			listarAditorias(reclamoView.getAuditorias());
+			
 //			if(reclamoView.getNroReclamoCompuesto() != null)
 //				txtNroReclamoCompuesto.setText(reclamoView.getNroReclamoCompuesto().toString());
 								
 		}catch(NegocioException ne){
 			ne.printStackTrace();
+		}
+	}
+	
+	private void listarAditorias(List<AuditoriaReclamoView> auditorias){
+		int y = 265;
+		for (AuditoriaReclamoView auditoria : auditorias){
+			 y = y + 30;
+			JLabel lblAuditoria = new JLabel(auditoria.toString());
+			lblAuditoria.setBounds(450, y, 400, 30);
+			cont.add(lblAuditoria);
 		}
 	}
 	

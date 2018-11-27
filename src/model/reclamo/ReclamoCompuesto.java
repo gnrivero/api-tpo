@@ -50,6 +50,17 @@ public class ReclamoCompuesto extends Reclamo {
 	}
 	
 	@Override
+	public void pasarEstadoEnTratamiento() throws ConexionException, AccesoException, NegocioException {
+		for(Reclamo reclamoHijo : reclamosHijos){
+			if(!reclamoHijo.estaEnTratamiento()){
+				throw new NegocioException("No se puede pasar el reclamo a " + EstadoDeReclamo.SOLUCIONADO.getDenominacion() + ", existen reclamos dependientes abiertos");
+			}
+		}
+		super.pasarEstadoEnTratamiento();
+	}
+	
+	
+	@Override
 	public void pasarEstadoSolucionado() throws ConexionException, AccesoException, NegocioException {
 		for(Reclamo reclamoHijo : reclamosHijos){
 			if(!reclamoHijo.estaSolucionado()){

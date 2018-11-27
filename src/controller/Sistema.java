@@ -14,6 +14,7 @@ import dao.UsuarioDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.Factura;
@@ -395,7 +396,7 @@ public class Sistema extends Observado {
 	 */
 	public ReclamoView obtenerReclamoDistribucion(Integer nroReclamo) throws NegocioException {
 		
-		try {			
+		try {
 			ReclamoDistribucion reclamo = ReclamoDAO.getInstancia().obtenerReclamoDistribucion(nroReclamo);			
 			return reclamo.toView();
 		} catch (AccesoException | ConexionException | NegocioException e) {
@@ -464,8 +465,16 @@ public class Sistema extends Observado {
 	 */
 	public void comenzarTratamientoReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
 		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);			
+			String datoAnterior = reclamo.getEstado().getDenominacion();
 			reclamo.pasarEstadoEnTratamiento();
+			reclamo.guardar();
+			
+			AuditoriaReclamo auditoria = new AuditoriaReclamo(reclamo, 
+																datoAnterior, 
+																	reclamo.getEstado().getDenominacion(), 
+																		usuarioLogueado);
+			auditoria.guardar();
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo pasar reclamo a Tratamiento " + nroReclamo);
 		} catch (NegocioException e){
@@ -482,8 +491,18 @@ public class Sistema extends Observado {
 	 */
 	public void marcarReclamoComoSolucionado(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException{
 		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);			
-			reclamo.pasarEstadoSolucionado();						
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);	
+			String datoAnterior = reclamo.getEstado().getDenominacion();
+			reclamo.pasarEstadoSolucionado();
+			reclamo.guardar();
+			
+			AuditoriaReclamo auditoria = new AuditoriaReclamo(reclamo, 
+																datoAnterior, 
+																	reclamo.getEstado().getDenominacion(), 
+																		usuarioLogueado);
+			auditoria.guardar();
+			
+			
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo pasar reclamo a Solucionado " + nroReclamo);
 		} catch (NegocioException e){
@@ -491,32 +510,25 @@ public class Sistema extends Observado {
 		}
 	}
 	
-	
 	/**
 	 * Cierra el reclamo indicado
 	 * 
 	 * @param nroReclamo
 	 * @throws NegocioException
 	 */
-	public void cerrarReclamo(Integer nroReclamo) throws NegocioException {
-		
-		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
-			reclamo.pasarEstadoCerrado();
-		} catch (ConexionException | AccesoException ae) {
-			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
-		} catch (NegocioException e){
-			throw e;
-		}				
-	}
-	
-	
-	//TODO: ver si vale la pena
 	public void cerrarReclamo(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws NegocioException {
 		
 		try {
-			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamosPorNumeroYtipo(nroReclamo, tipoDeReclamo);
+			Reclamo reclamo = ReclamoDAO.getInstancia().obtenerReclamoPorNroDeReclamo(nroReclamo);
+			String datoAnterior = reclamo.getEstado().getDenominacion();
 			reclamo.pasarEstadoCerrado();
+			reclamo.guardar();
+			
+			AuditoriaReclamo auditoria = new AuditoriaReclamo(reclamo, 
+											datoAnterior, 
+												reclamo.getEstado().getDenominacion(), 
+													usuarioLogueado);
+			auditoria.guardar();
 		} catch (ConexionException | AccesoException ae) {
 			throw new NegocioException("No se pudo cerrar reclamo " + nroReclamo);
 		} catch (NegocioException e){

@@ -107,7 +107,7 @@ public class Cliente {
 	
 	public ClienteView toView(){
 		
-		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioDateFormat().format(this.fechaBaja);
+		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fechaBaja);
 		
 		return new ClienteView(this.idCliente, this.nombre, this.cuit, this.domicilio, this.telefono, this.mail, fechaBaja);
 	}

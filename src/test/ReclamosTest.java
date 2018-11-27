@@ -185,7 +185,7 @@ public class ReclamosTest {
 	
 	public static void cerrarReclamo(Integer nroReclamo){
 		try {
-			Sistema.getInstance().cerrarReclamo(nroReclamo);
+			Sistema.getInstance().cerrarReclamo(nroReclamo, TipoDeReclamo.COMPUESTO);
 		} catch (NegocioException e) {
 			e.printStackTrace();
 		}

@@ -79,7 +79,7 @@ public class Usuario {
 	
 	public UsuarioView toView(){
 		
-		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioDateFormat().format(this.fechaBaja);
+		String fechaBaja = (this.fechaBaja == null) ? null :  DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fechaBaja);
 		
 		return new UsuarioView(this.idUsuario, this.username, this.password, fechaBaja, this.rol);
 	}

@@ -13,42 +13,67 @@ INSERT INTO roles (descripcion) VALUES ('Consulta');
 select * from roles order by idrol;
 
 -- Usuarios
-INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123456',1);
+INSERT INTO usuarios (username, password, idrol) VALUES ('grivero', '123',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
 
 
 select * from usuarios;
 
--- Permisos por rol 
--- INSERT INTO permisos (idrol, modulo, valor) VALUES (
+-- Tipos de reclamos por rol
+INSERT INTO tiposdereclamoporroles (idrol, idtipodereclamo)
+VALUES (1,6),
+(2, 5),
+(3, 2),
+(3, 3),
+(3, 4),
+(4, 1),
+(5, 1),
+(5, 2),
+(5, 3),
+(5, 4),
+(5, 5),
+(5, 6),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 6);
 
+INSERT into tiposdereclamoporroles
+VALUES
+(5, 1),
+(5, 2),
+(5, 3),
+(5, 4),
+(5, 5);
+
+
+
+select * from tiposdereclamoporroles;
+
+-- Permisos por rol 
 select * from permisos;
 
--- Permisos Admin
-INSERT INTO permisos (idrol, modulo, valor) VALUES (1,'RECLAMO', 6);
-
 -- Permisos Call Center
-DELETE FROM permisos where modulo = 'RECLAMO';
-
 INSERT INTO permisos (idrol, modulo, valor) 
-VALUES (5,'RECLAMO', 6),
+VALUES (5, 'CLIENTE',2),
 (5,'CREAR_RECLAMO',2);
 
 -- Permisos Distribucion
-INSERT INTO permisos (idrol, modulo, valor)  
-VALUES (3,'RECLAMO', 2),
-(3,'RECLAMO', 3),
-(3,'RECLAMO', 4);
+INSERT INTO permisos (idrol, modulo, valor) VALUES (3,'PRODUCTO', 2);
 
 -- Permisos Facturacion
-INSERT INTO permisos (idrol, modulo, valor)  VALUES (3,'RECLAMO',5);
-
--- Permisos Zona
-INSERT INTO permisos (idrol, modulo, valor) VALUES (4,'RECLAMO',1);
+INSERT INTO permisos (idrol, modulo, valor)  VALUES (2,'CLIENTE',2);
 
 -- Permisos Consulta
 INSERT INTO permisos (idrol, modulo, valor) VALUES (6,'REPORTES', 4);
+
+-- Permisos ZOna
+INSERT INTO permisos (idrol, modulo, valor) VALUES (4,'ESTADO_RECLAMO', 2);
+
+
 
 select * from permisos;
 
@@ -82,21 +107,25 @@ select * from itemsfacturas;
 
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-01 14:04:33', 1);
 INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-05 12:01:33', 1);
-INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-07 13:01:33', 1);
+INSERT INTO facturas (fechafactura, idcliente) VALUES ('2018-11-07 13:01:33', 2);
 
-
-INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
-VALUES (2, 34, 2, 2),
-(3, 500, 1, 2);
+select * from facturas;
 
 INSERT INTO itemsfacturas (idproducto, montoitem, cantidad, nrofactura) 
-VALUES (3, 500, 1, 3);
+VALUES (2, 34, 2, 4),
+(3, 500, 1, 4),
+(2, 500, 1, 5),
+(1, 500, 1, 6);
+
 
 select * from itemsfacturas; 
 
 -- Productos
 
 select * from productos;
+
+-- Facturas Reclamos
+select * from facturasreclamos;
 
 
 -- Reclamos

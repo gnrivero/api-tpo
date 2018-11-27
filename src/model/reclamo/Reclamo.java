@@ -1,10 +1,13 @@
 package model.reclamo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
@@ -12,7 +15,7 @@ import view.ReclamoView;
 
 public abstract class Reclamo {
 	
-	//protected List<AuditoriaReclamo> auditoria;
+
 	protected Integer nroReclamo;
 	protected String descripcion;
 	protected TipoDeReclamo tipoDeReclamo;
@@ -21,6 +24,7 @@ public abstract class Reclamo {
 	protected Date fechaCierre;
 	protected Cliente cliente;
 	protected Integer nroReclamoCompuesto;
+	protected List<AuditoriaReclamo> auditoria;
 	
 	//Constructor Default
 	public Reclamo(){}
@@ -32,6 +36,7 @@ public abstract class Reclamo {
 		this.estado = EstadoDeReclamo.INGRESADO;
 		this.fecha = new Date();
 		this.cliente = cliente;
+		this.auditoria = new ArrayList<AuditoriaReclamo>();
 	}
 	
 	public Integer getNroReclamo() {
@@ -83,12 +88,19 @@ public abstract class Reclamo {
 		this.nroReclamoCompuesto = nroReclamoCompuesto;
 	}
 	
-	//Métodos
-	public boolean soy(Integer nroReclamo){		
-		return (this.nroReclamo.equals(nroReclamo));
+	public List<AuditoriaReclamo> getAuditoria() {
+		return auditoria;
 	}
-	
-	
+
+	public void setAuditoria(List<AuditoriaReclamo> auditoria) {
+		this.auditoria = auditoria;
+	}
+
+	//Metodos
+	public boolean estaEnTratamiento(){
+		return EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado);
+	}
+		
 	public boolean estaSolucionado(){
 		return EstadoDeReclamo.SOLUCIONADO.equals(this.estado);
 	}
@@ -97,18 +109,14 @@ public abstract class Reclamo {
 		return EstadoDeReclamo.CERRADO.equals(this.estado);
 	}
 	
-	public void pasarEstadoEnTratamiento() throws ConexionException, AccesoException, NegocioException {
-		
-		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);
-		
-		this.guardar();
+	public void pasarEstadoEnTratamiento() throws ConexionException, AccesoException, NegocioException {		
+		this.setEstado(EstadoDeReclamo.EN_TRATAMIENTO);		
 	}
 	
 	public void pasarEstadoSolucionado() throws ConexionException, AccesoException, NegocioException {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.SOLUCIONADO);
 			this.setFechaCierre(new Date());
-			this.guardar();
 		}else{
 			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.SOLUCIONADO.getDenominacion());
 		}		
@@ -117,8 +125,7 @@ public abstract class Reclamo {
 	public void pasarEstadoCerrado() throws NegocioException, ConexionException, AccesoException {
 		if(EstadoDeReclamo.EN_TRATAMIENTO.equals(this.estado)){
 			this.setEstado(EstadoDeReclamo.CERRADO);
-			this.setFechaCierre(new Date());			
-			this.guardar();
+			this.setFechaCierre(new Date());
 		}else{
 			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.CERRADO.getDenominacion());
 		}

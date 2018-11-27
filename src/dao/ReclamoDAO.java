@@ -10,6 +10,7 @@ import java.util.List;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
+import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.EstadoDeReclamoFactory;
@@ -216,9 +217,10 @@ public class ReclamoDAO extends DAO {
 			if(rs.next()){
 				
 				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
-				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
+				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
-								
+				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());
+				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
 				reclamo.setEstado(estado);
@@ -226,6 +228,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setCliente(cliente);
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				reclamo.setAuditoria(auditoria);
 				
 				return reclamo;
 			}
@@ -273,6 +276,7 @@ public class ReclamoDAO extends DAO {
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
 				Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(rs.getInt("idproducto"));
+				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());
 								
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
@@ -283,6 +287,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setCantidad(rs.getInt("cantidad"));
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				reclamo.setAuditoria(auditoria);
 				
 				return reclamo;
 			}
@@ -329,6 +334,7 @@ public class ReclamoDAO extends DAO {
 				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
+				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());
 				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
@@ -338,6 +344,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setZona(rs.getString("zona"));
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				reclamo.setAuditoria(auditoria);
 				
 				return reclamo;
 			}
@@ -383,7 +390,8 @@ public class ReclamoDAO extends DAO {
 				
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));				
 				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
-				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));			
+				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
+				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());
 				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));
@@ -392,6 +400,7 @@ public class ReclamoDAO extends DAO {
 				reclamo.setCliente(cliente);
 				reclamo.setFecha(rs.getDate("fecha"));
 				reclamo.setFechaCierre(rs.getDate("fechacierre"));
+				reclamo.setAuditoria(auditoria);
 				
 				reclamo.setFacturas(FacturaReclamoDAO.getInstancia().obtenerFacturasPorNroReclamo(nroReclamo));
 				

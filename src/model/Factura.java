@@ -83,7 +83,7 @@ public class Factura {
 		FacturaView view = new FacturaView();
 		view.setNroFactura(this.nroFactura);
 		view.setCliente(this.cliente.getNombre());
-		view.setFecha(DAOhelper.getDiaMesAnioDateFormat().format(this.fechaFactura));
+		view.setFecha(DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fechaFactura));
 		
 		return view;
 	}
