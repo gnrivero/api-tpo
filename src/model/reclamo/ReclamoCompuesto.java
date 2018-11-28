@@ -45,10 +45,10 @@ public class ReclamoCompuesto extends Reclamo {
 		reclamosHijos.remove(reclamo);
 	}
 
-	@Override
-	public void getReclamos(Reclamo reclamo) {
-		// TODO Auto-generated method stub		
-	}
+//	@Override
+//	public void getReclamos(Reclamo reclamo) {
+//		// TODO Auto-generated method stub		
+//	}
 	
 	@Override
 	public void pasarEstadoEnTratamiento() throws ConexionException, AccesoException, NegocioException {
