@@ -70,14 +70,14 @@ public class Factura {
 		return subTotal;
 	}
 	
-	public void guardar(){
-		if (this.nroFactura==null) {
-			
-		} else {
-			
-		}		
-	}
-	
+//	public void guardar(){
+//		if (this.nroFactura==null) {
+//			
+//		} else {
+//			
+//		}		
+//	}
+//	
 	public FacturaView toView(){
 		
 		FacturaView view = new FacturaView();
