@@ -162,11 +162,12 @@ public class ReclamoDAO extends DAO {
 						
 						ReclamoFacturacion rFact = (ReclamoFacturacion) reclamo;										
 						
-						for (Factura factura : rFact.getFacturas()){
-							FacturaReclamo fr = new FacturaReclamo(factura, reclamo);
-							fr.guardar();			
+						if (rFact.getFacturas() != null){
+							for (Factura factura : rFact.getFacturas()){
+								FacturaReclamo fr = new FacturaReclamo(factura, reclamo);
+								fr.guardar();			
+							}
 						}
-						
 					break;
 					case COMPUESTO:
 						tabla = "reclamoscompuestos";
@@ -581,6 +582,88 @@ public class ReclamoDAO extends DAO {
 		}
 				
 		return reclamo;
+	}
+	
+	// Reportes de reclamos
+	
+	/*
+	 * Reportes de consulta: ranking de clientes con mayor cantidad de reclamos, 
+	 * cantidad de reclamos tratados por mes, ranking de tratamiento de reclamos, 
+	 * tiempo promedio de respuesta de los reclamos por responsable.
+	 * 
+	 */
+	
+	//-Cantidad de reclamos tratados por mes
+	public ResultSet cantReclamosMes() throws AccesoException, ConexionException, NegocioException {
+		String sql = "SELECT Mes = CASE\n" + 
+				"	WHEN MONTH(rec.fecha) = 11 then 'Noviembre'\n" + 
+				"	WHEN MONTH(rec.fecha) = 12 then 'Diciembre'\n" + 
+				"	END,\n" + 
+				"	COUNT (*) as 'Cantidad de Reclamos'\n" + 
+				"FROM reclamos rec\n" + 
+				"GROUP BY MONTH(rec.fecha)";
+		
+		return reporteTabla(sql);
+	}
+	
+	//-Ranking TOP10 clientes con más reclamos
+	public ResultSet rankingClientes() throws AccesoException, ConexionException, NegocioException {
+		
+		String sql = "SELECT TOP 10 cli.nombre as 'Cliente', COUNT (*) as 'Cant. Reclamos'\n" + 
+				"FROM reclamos rec\n" + 
+				"INNER JOIN clientes cli ON rec.idcliente = cli.idcliente\n" + 
+				"GROUP BY cli.nombre\n" + 
+				"ORDER BY 'Cant. Reclamos' DESC";
+		
+		return reporteTabla(sql);
+	}
+	
+	//-Tiempo promedio de respuesta por responsable: fecha de resolución - fecha de creación
+	public ResultSet tiempoPromedio() throws AccesoException, ConexionException, NegocioException {
+		String sql = "SELECT usr.username, SUM(DATEDIFF(hh, rec.fecha, aud.fecha))/COUNT (aud.idusuario) as 'promedio de tiempo'\n" + 
+				"FROM reclamos rec \n" + 
+				"INNER JOIN auditoriasreclamos aud ON rec.nroreclamo = aud.nroreclamo\n" + 
+				"INNER JOIN usuarios usr ON aud.idusuario = usr.idusuario\n" + 
+				"WHERE aud.datonuevo = 'Solucionado'\n" + 
+				"GROUP BY usr.username";
+		
+		return reporteTabla(sql);
+	}
+
+	//-Ranking TOP10 tratamiento de reclamos
+	public ResultSet rankingTratados() throws AccesoException, ConexionException, NegocioException {
+		String sql = "SELECT TOP 10 us.username as 'Usuario', COUNT (*) as 'Cantidad'\n" + 
+				"FROM usuarios us \n" + 
+				"INNER JOIN auditoriasreclamos aud ON us.idusuario = aud.idusuario\n" + 
+				"GROUP BY us.username\n";
+		
+		return reporteTabla(sql);
+	}
+	
+	public ResultSet reporteTabla(String sql) throws AccesoException, ConexionException, NegocioException {
+		Connection con = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try {
+			con = ConnectionFactory.getInstancia().getConection();
+		}
+		catch (ClassNotFoundException | SQLException e) {
+			throw new ConexionException("No esta disponible el acceso al Servidor");
+		}
+		
+		try {
+			stmt = con.createStatement();
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de acceso");
+		}
+		
+		try {
+			rs = stmt.executeQuery(sql);
+			return rs;
+		} catch (SQLException e1) {
+			throw new AccesoException("Error de consulta");
+		}		
 	}
 
 }

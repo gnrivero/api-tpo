@@ -367,8 +367,8 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		
 		btnGuardar.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {				
-				completarFormulario(true);				
+			public void actionPerformed(ActionEvent e) {
+				completarFormulario(true);								
 			}
 		});
 		
@@ -393,8 +393,9 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							}					
 				}else{
 					dispose();
+
 					TableroPantalla.getInstance().decrementarLayerCount();
-					TableroPantalla.getInstance().getFrameContainer().remove(ReclamoPantalla.this);
+					TableroPantalla.getInstance().getFrameContainer().remove(ReclamoPantalla.this);										
 				}								
 			}				
 		});		

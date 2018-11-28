@@ -2,6 +2,7 @@ package gui.forms;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import javax.swing.*;
 import controller.Sistema;
 import excepciones.NegocioException;
@@ -72,10 +73,12 @@ public class JFormLogin extends JFrame {
 		btnLogin.addActionListener(new ActionListener() {
 			@SuppressWarnings("deprecation")
 			public void actionPerformed (ActionEvent evt) {
-				try {			
+				try {
 					Sistema.getInstance().loguearUsuario(txtUser.getText(), txtPass.getText());	// ver si se puede usar otro método para recuperar el texto del password								
-					System.out.println("User login: " + Sistema.getInstance().getUsuarioLogueado().getUsername());
-					System.out.println("Rol: " + Sistema.getInstance().getUsuarioLogueado().getRol().toView());
+					System.out.println("[" + new Date().toString()
+							+ "] User login: '" + Sistema.getInstance().getUsuarioLogueado().getUsername() 
+							+ "' with role: '" + Sistema.getInstance().getUsuarioLogueado().getRol().toView()
+							+ "'");
 					frame.dispose();
 					login = null;
 					tablero.setEnabled(true);
