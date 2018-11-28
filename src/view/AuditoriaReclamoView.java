@@ -18,7 +18,11 @@ public class AuditoriaReclamoView {
 	
 	@Override
 	public String toString() {
-		return "[" + this.fecha + "]El reclamo cambio de " + this.datoAnterior + " a " + this.datoNuevo + " por Usr: " + this.username ;
+		
+		if (this.datoAnterior == null || this.datoAnterior.isEmpty())
+			return "[" + this.fecha + "] Reclamo creado por Usuario: " + this.username ;
+		
+		return "[" + this.fecha + "] Cambio de  " + this.datoAnterior + " a " + this.datoNuevo + " por Usuario: " + this.username ;
 	}
 
 	public String getDatoAnterior() {

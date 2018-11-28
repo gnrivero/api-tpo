@@ -278,6 +278,7 @@ public class Sistema extends Observado {
 	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado,Integer idCliente, Integer idProducto, Integer cantidad, Integer nroReclamoCompuesto) throws NegocioException{
 		
 		try {
+
 			Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
@@ -286,8 +287,8 @@ public class Sistema extends Observado {
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
 			} else {
-				nroReclamo = reclamo.guardar();
-				this.notificarObservadores();
+				nroReclamo = reclamo.guardar();										
+				this.notificarObservadores();								
 			}
 			
 			return nroReclamo;
@@ -300,14 +301,14 @@ public class Sistema extends Observado {
 	//Zona
 	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente, String zona, Integer nroReclamoCompuesto) throws NegocioException {
 		try {
-			
+						
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
 			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
 			
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);												
 			} else {			
-				nroReclamo = reclamo.guardar();
+				nroReclamo = reclamo.guardar();												
 				this.notificarObservadores();
 			}
 			
@@ -330,7 +331,7 @@ public class Sistema extends Observado {
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
 			} else {			
-				nroReclamo = reclamo.guardar();
+				nroReclamo = reclamo.guardar();				
 				this.notificarObservadores();
 			}			
 			
@@ -345,6 +346,7 @@ public class Sistema extends Observado {
 	public Integer registrarReclamoCompuesto(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente) throws NegocioException { 
 		
 		try {
+			
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
 			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);			
@@ -355,7 +357,6 @@ public class Sistema extends Observado {
 						.forEach(rs -> reclamoCompuesto.addHoja(rs));
 			
 			nroReclamo = reclamoCompuesto.guardar();
-			
 			reclamosCompuestosCache.agregarReclamoCompuestoKey(nroReclamo);			
 			
 			this.notificarObservadores();
@@ -419,6 +420,23 @@ public class Sistema extends Observado {
 		} catch (AccesoException | ConexionException | NegocioException e) {
 			throw new NegocioException ("No se pudo obtener Reclamo Nro.: " +  nroReclamo);
 		}		
+	}
+	
+	
+	/**
+	 * Obtiene un reclamo desde la tabla reclamos compuestos
+	 * 
+	 * @param nroReclamo
+	 * @return
+	 * @throws NegocioException
+	 */
+	public ReclamoView obtenerReclamoCompuesto(Integer nroReclamo) throws NegocioException{		
+		try {
+			ReclamoCompuesto reclamo = ReclamoDAO.getInstancia().obtenerReclamoCompuesto(nroReclamo);		
+			return reclamo.toView();
+		} catch (AccesoException | ConexionException | NegocioException e) {
+			throw new NegocioException ("No se pudo obtener Reclamo Compuesto Nro.: " +  nroReclamo);
+		}
 	}
 	
 	/**

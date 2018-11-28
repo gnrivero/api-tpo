@@ -140,3 +140,5 @@ SELECT * FROM reclamos;
 
 -- Facturas por Reclamo
 select * from facturasreclamos;
+
+-- Auditorias

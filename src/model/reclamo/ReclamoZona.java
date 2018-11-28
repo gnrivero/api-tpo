@@ -1,9 +1,10 @@
 package model.reclamo;
 
-import dao.DAOhelper;
+import controller.Sistema;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
@@ -57,6 +58,11 @@ public class ReclamoZona extends Reclamo {
 	public Integer guardar() throws ConexionException, AccesoException {		
 		if (this.nroReclamo == null){
 			this.nroReclamo = ReclamoDAO.getInstancia().crearReclamoZona(this);
+			AuditoriaReclamo auditoria = new AuditoriaReclamo(this, 
+					"", 
+					this.getEstado().getDenominacion(), 
+						Sistema.getInstance().getUsuarioLogueado());
+			auditoria.guardar();
 		} else {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}
@@ -67,27 +73,9 @@ public class ReclamoZona extends Reclamo {
 	@Override
 	public ReclamoView toView() {
 		
-		ReclamoView view = new ReclamoView();
-		
-		view.setNroReclamo(this.nroReclamo);
-		view.setDescripcion(this.descripcion);
-		view.setTipoDeReclamo(this.tipoDeReclamo);
-		view.setEstadoDeReclamo(this.estado);
-		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
-		
-		if(this.fechaCierre != null)
-			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
-		
-		if(this.nroReclamoCompuesto != null)
-			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
-
-		view.setCliente(this.cliente.toView());
+		ReclamoView view = super.toView();
 		view.setZona(this.zona);
-		
-		if (this.auditoria != null)
-			this.auditoria.forEach(a -> view.getAuditorias().add(a.toView()));
-	
-		
+				
 		return view;	
 	}
 

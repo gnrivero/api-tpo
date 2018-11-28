@@ -2,10 +2,11 @@ package model.reclamo;
 
 import java.util.List;
 
-import dao.DAOhelper;
+import controller.Sistema;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import model.AuditoriaReclamo;
 import model.Cliente;
 import model.Factura;
 import model.TipoDeReclamo;
@@ -54,6 +55,13 @@ public class ReclamoFacturacion extends Reclamo {
 	public Integer guardar() throws ConexionException, AccesoException {
 		if (this.nroReclamo == null){
 			this.nroReclamo  = ReclamoDAO.getInstancia().crearReclamoFacturacion(this);
+			
+			AuditoriaReclamo auditoria = new AuditoriaReclamo(this, 
+					"", 
+					this.getEstado().getDenominacion(), 
+						Sistema.getInstance().getUsuarioLogueado());
+			auditoria.guardar();
+			
 		} else {
 			ReclamoDAO.getInstancia().actualizarReclamo(this);
 		}	
@@ -64,22 +72,10 @@ public class ReclamoFacturacion extends Reclamo {
 	@Override
 	public ReclamoView toView() {
 		
-		ReclamoView view = new ReclamoView();
+		ReclamoView view = super.toView();
 		
-		view.setNroReclamo(this.nroReclamo);
-		view.setDescripcion(this.descripcion);
-		view.setTipoDeReclamo(this.tipoDeReclamo);
-		view.setEstadoDeReclamo(this.estado);
-		view.setFechaDeReclamo(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fecha));
-		view.setCliente(this.cliente.toView());
-		
-		if(this.fechaCierre != null)
-			view.setFechaDeCierre(DAOhelper.getAnioMesDiaHoraDateFormat().format(this.fechaCierre));
-		
-		if(this.nroReclamoCompuesto != null)
-			view.setNroReclamoCompuesto(this.nroReclamoCompuesto);
-		
-		this.facturasReclamadas.forEach(fr -> view.getFacturasReclamadas().add(fr.toView()));		
+		if(this.facturasReclamadas != null)
+			this.facturasReclamadas.forEach(fr -> view.getFacturasReclamadas().add(fr.toView()));		
 		
 		return view;	
 	}

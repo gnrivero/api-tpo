@@ -50,17 +50,20 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private Container container;
 	
-	private JLabel usuarioLogueado, lblReclamosIngresados, lblReclamosEnTratamiento, lblReclamosSolucionados;
+	private JLabel usuarioLogueado, lblReclamosIngresados, lblReclamosEnTratamiento, lblReclamosSolucionados, lblReclamosCerrados;
 	
-	private JButton btnComenzarTratamiento, btnPasarAsolucionado, btnPasarACerrado, btnEditarReclamo;
+	private JButton btnComenzarTratamiento, btnPasarAsolucionado, btnPasarACerrado;
+	private JButton btnEditarReclamoIngresado, btnEditarReclamoTratamiento, btnVerReclamoSolucionado, btnVerReclamoCerrado;
 	
 	private JList<ReclamoView> lstReclamosIngresados;
 	private JList<ReclamoView> lstReclamosEnTratamiento;
 	private JList<ReclamoView> lstReclamosSolucionados;
+	private JList<ReclamoView> lstReclamosCerrados;
 	
 	private DefaultListModel<ReclamoView> reclamosIngresadosModel = new DefaultListModel<ReclamoView>();
 	private DefaultListModel<ReclamoView> reclamosEnTratamientoModel = new DefaultListModel<ReclamoView>();
 	private DefaultListModel<ReclamoView> reclamosSolucionadosModel = new DefaultListModel<ReclamoView>();
+	private DefaultListModel<ReclamoView> reclamosCerradosModel = new DefaultListModel<ReclamoView>();
 	
 	private JMenuBar barraMenu = new JMenuBar();
 	private JMenuItem opcNuevoReclamo, opcAdminUsuarios, opcAdminClientes, opcAdminProductos, opcLogout, opcAcercaDe; 
@@ -71,6 +74,16 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private UsuarioPantalla usuarioPantalla;
 	private ProductoPantalla productoPantalla;
 	
+	private int layerCount = 0;
+	
+	public int incrementarLayerCount() {
+		return this.layerCount++;
+	}
+
+	public void decrementarLayerCount() {
+		this.layerCount--;
+	}
+
 	public Container getFrameContainer(){
 		return container;
 	}
@@ -86,8 +99,8 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private void configurar(){
 		
 		container = getLayeredPane();
-		container.setLayout(null);
-				
+		container.setLayout(null);					
+		
 		// ---- Menu Bar ----
 		opcNuevoReclamo = new JMenuItem("Nuevo Reclamo");
 		opcNuevoReclamo.setHorizontalAlignment(SwingConstants.LEFT);
@@ -123,7 +136,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		usuarioLogueado.setBounds(30, 20, 200, 30);
 		container.add(usuarioLogueado);
 		
-		// --- 
+		// --- Listas de reclamos
 		
 		lblReclamosIngresados = new JLabel("Ingresados");
 		lblReclamosIngresados.setBounds(30, 165, 200, 30);
@@ -140,37 +153,66 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		container.add(lstReclamosIngresados);
 		
 		lblReclamosEnTratamiento = new JLabel("En Tratamiento");
-		lblReclamosEnTratamiento.setBounds(380, 165, 200, 30);
+		lblReclamosEnTratamiento.setBounds(360, 165, 200, 30);
 		container.add(lblReclamosEnTratamiento);
 		
 		btnPasarAsolucionado = new JButton("Solucionado");
-		btnPasarAsolucionado.setBounds(530, 165, 150, 30);
+		btnPasarAsolucionado.setBounds(510, 165, 150, 30);
 		container.add(btnPasarAsolucionado);
 		
 		btnPasarACerrado = new JButton("Cerrado");
-		btnPasarACerrado.setBounds(530, 130, 150, 30);
+		btnPasarACerrado.setBounds(510, 130, 150, 30);
 		container.add(btnPasarACerrado);		
 		
 		lstReclamosEnTratamiento = new JList<ReclamoView>();
-		lstReclamosEnTratamiento.setBounds(380, 200, 300, 400);
+		lstReclamosEnTratamiento.setBounds(360, 200, 300, 400);
 		lstReclamosEnTratamiento.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstReclamosEnTratamiento.setModel(reclamosEnTratamientoModel);
 		container.add(lstReclamosEnTratamiento);
 		
 		lblReclamosSolucionados = new JLabel("Solucionados");
-		lblReclamosSolucionados.setBounds(730, 165, 200, 30);		
+		lblReclamosSolucionados.setBounds(690, 165, 200, 30);		
 		container.add(lblReclamosSolucionados);
 		
 		lstReclamosSolucionados = new JList<ReclamoView>();
-		lstReclamosSolucionados.setBounds(730, 200, 300, 400);		
+		lstReclamosSolucionados.setBounds(690, 200, 300, 400);		
 		lstReclamosSolucionados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		lstReclamosSolucionados.setModel(reclamosSolucionadosModel);
 		container.add(lstReclamosSolucionados);
 		
-		// ---
+		lblReclamosCerrados = new JLabel("Cerrados");
+		lblReclamosCerrados.setBounds(1020, 165, 200, 30);		
+		container.add(lblReclamosCerrados);		
+		
+		lstReclamosCerrados = new JList<ReclamoView>();
+		lstReclamosCerrados.setBounds(1020, 200, 300, 400);
+		lstReclamosCerrados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lstReclamosCerrados.setModel(reclamosCerradosModel);
+		container.add(lstReclamosCerrados);
+		
+		// ---- Botones Editar Reclamo
+		
+		btnEditarReclamoIngresado = new JButton("Editar");	
+		btnEditarReclamoIngresado.setBounds(30, 610, 150, 30);
+		container.add(btnEditarReclamoIngresado);
+		
+		btnEditarReclamoTratamiento = new JButton("Editar");	
+		btnEditarReclamoTratamiento.setBounds(360, 610, 150, 30);
+		container.add(btnEditarReclamoTratamiento);
+		
+		btnVerReclamoSolucionado= new JButton("Ver");	
+		btnVerReclamoSolucionado.setBounds(690, 610, 150, 30);
+		container.add(btnVerReclamoSolucionado);
+		
+		btnVerReclamoCerrado= new JButton("Ver");	
+		btnVerReclamoCerrado.setBounds(1020, 610, 150, 30);
+		container.add(btnVerReclamoCerrado);
+		
+		//---
+		
 		
 		clientePantalla = ClientePantalla.getInstance();
-		container.add(clientePantalla, 1);
+		container.add(clientePantalla);
 		
 		usuarioPantalla = UsuarioPantalla.getInstance();
 		container.add(usuarioPantalla);
@@ -178,9 +220,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		productoPantalla = ProductoPantalla.getInstance();
 		container.add(productoPantalla);
 		
-		btnEditarReclamo = new JButton("Editar");	
-		btnEditarReclamo.setBounds(380, 610, 150, 30);
-		container.add(btnEditarReclamo);
+		
 		
 		this.setVisible(true);
 		this.setEnabled(false);
@@ -189,24 +229,61 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	
 	private void eventos(){
 		
-		btnEditarReclamo.addActionListener(new ActionListener() {
+		
+		//---- Botones Editar
+		btnEditarReclamoIngresado.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				ReclamoView reclamo = lstReclamosIngresados.getSelectedValue();
+				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				rp.setVisible(true);
+				container.add(rp, incrementarLayerCount());
+			}
+		});
+		
+		btnEditarReclamoTratamiento.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {				
 				ReclamoView reclamo = lstReclamosEnTratamiento.getSelectedValue();
 				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
 				rp.setVisible(true);
-				container.add(rp, 1);
+				container.add(rp, incrementarLayerCount());
 			}
 		});
 		
+		btnVerReclamoSolucionado.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				ReclamoView reclamo = lstReclamosSolucionados.getSelectedValue();
+				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				rp.setVisible(true);
+				container.add(rp, incrementarLayerCount());
+			}
+		});
+		
+		btnVerReclamoCerrado.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {				
+				ReclamoView reclamo = lstReclamosCerrados.getSelectedValue();
+				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				rp.setVisible(true);
+				container.add(rp, incrementarLayerCount());
+			}
+		});
+		
+		
+		//---- Menu
 		opcNuevoReclamo.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ReclamoPantalla reclamoPantalla = new ReclamoPantalla();			
 				reclamoPantalla.setVisible(true);
-				container.add(reclamoPantalla, 1);	
+				container.add(reclamoPantalla, incrementarLayerCount());				
 			}
 		});
 
@@ -249,7 +326,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				JOptionPane.showMessageDialog(null, "Grupo 8:\n Maria Isabel Quevedo Pasquini\n Gonzalo Rivero\n Emilio Delgado\n Nazareno Agustin Rodriguez", "AI", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-				
+		
+		
+		//---- Tratamiento de reclamos		
 		btnComenzarTratamiento.addActionListener(new ActionListener() {
 			
 			@Override
@@ -316,6 +395,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			reclamosIngresadosModel.clear();
 			reclamosEnTratamientoModel.clear();
 			reclamosSolucionadosModel.clear();
+			reclamosCerradosModel.clear();
 			
 			for (ReclamoView reclamo : reclamos){
 				
@@ -329,6 +409,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 					break;
 					case SOLUCIONADO:
 						reclamosSolucionadosModel.addElement(reclamo);
+					break;
+					case CERRADO:
+						reclamosCerradosModel.addElement(reclamo);
 					break;
 					default:
 						//throw new UnsupportedOperationException("No hay listado para este estado de reclamo");

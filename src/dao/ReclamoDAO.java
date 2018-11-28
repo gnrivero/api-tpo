@@ -219,7 +219,9 @@ public class ReclamoDAO extends DAO {
 				TipoDeReclamo tipoDeReclamo = TipoDeReclamoFactory.get(rs.getInt("idtiporeclamo"));
 				EstadoDeReclamo estado = EstadoDeReclamoFactory.get(rs.getInt("idestadoreclamo"));
 				Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(rs.getInt("idcliente"));
-				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());
+				List<AuditoriaReclamo> auditoria = AuditoriaReclamoDAO.getInstance().obtenerAuditoriaPorReclamo(nroReclamo, tipoDeReclamo.getId());											
+				List<Reclamo> reclamosHoja = this.obtenerReclamosPorReclamoCompuesto(nroReclamo);				
+				reclamosHoja.forEach(rh -> reclamo.addHoja(rh));
 				
 				reclamo.setNroReclamo(rs.getInt("nroreclamo"));
 				reclamo.setDescripcion(rs.getString("descripcion"));

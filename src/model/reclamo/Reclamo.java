@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import dao.DAOhelper;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
 import excepciones.NegocioException;
@@ -131,10 +132,29 @@ public abstract class Reclamo {
 		}
 	}	
 	
+	public ReclamoView toView(){
+		
+		ReclamoView view = new ReclamoView();
+		
+		view.setNroReclamo(this.nroReclamo);
+		view.setDescripcion(this.descripcion);
+		view.setTipoDeReclamo(this.tipoDeReclamo);
+		view.setEstadoDeReclamo(this.estado);
+		view.setFechaDeReclamo(DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fecha));
+		view.setCliente(this.cliente.toView());
+		
+		if(this.fechaCierre != null)
+			view.setFechaDeCierre(DAOhelper.getDiaMesAnioHoraDateFormat().format(this.fechaCierre));
+		
+		if (this.auditoria != null)
+			this.auditoria.forEach(a -> view.getAuditorias().add(a.toView()));
+		
+		return view;
+	};
 	
+
 	abstract public Integer guardar() throws ConexionException, AccesoException, NegocioException;
 	
-	abstract public ReclamoView toView();
 	
 	//Relacionados con composite
 	abstract public void addHoja(Reclamo reclamo);
