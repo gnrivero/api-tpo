@@ -3,6 +3,7 @@ package model;
 import dao.ProductoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import view.ProductoView;
 
 /**
@@ -58,6 +59,21 @@ public class Producto {
 	}
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+	
+	public void validar() throws NegocioException {
+		if (this.codigo.isEmpty()){
+			throw new NegocioException("El Codigo de producto no puede estar vacio");
+		}		
+		if (this.titulo.isEmpty()){
+			throw new NegocioException("El Titulo de producto no puede estar vacio");
+		}		
+		if (this.descripcion.isEmpty()){
+			throw new NegocioException("La descripcion de producto no puede estar vacia");
+		}		
+		if(this.precio <= 0F){
+			throw new NegocioException("El precio del producto no puede ser 0 o inferior");
+		}
 	}
 	
 	public Integer guardar() throws ConexionException, AccesoException {

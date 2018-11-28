@@ -6,6 +6,7 @@ import controller.Sistema;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.AuditoriaReclamo;
 import model.Cliente;
 import model.Factura;
@@ -49,6 +50,15 @@ public class ReclamoFacturacion extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void validar() throws NegocioException {		
+		super.validar();
+		
+		if (facturasReclamadas.isEmpty()){
+			throw new NegocioException("Debe seleccionar al menos una factura");
+		}
 	}
 
 	@Override

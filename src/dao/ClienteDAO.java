@@ -61,7 +61,7 @@ public class ClienteDAO extends DAO {
 		}
 	}
 
-	public Cliente obtenerClientePorId(int idCliente) throws ConexionException, AccesoException, NegocioException {  
+	public Cliente obtenerClientePorId(Integer idCliente) throws ConexionException, AccesoException, NegocioException {  
 		
 		String SQL = "SELECT * FROM clientes WHERE idcliente = " + idCliente;
 				

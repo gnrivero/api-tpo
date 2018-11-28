@@ -4,6 +4,7 @@ import controller.Sistema;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
@@ -57,6 +58,21 @@ public class ReclamoDistribucion extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void validar() throws NegocioException {
+		super.validar();
+		
+		if (this.producto == null){
+			throw new NegocioException("Debe seleccionar un producto");
+		}
+		
+		if (this.cantidad == null){
+			throw new NegocioException("Debe especificar una cantidad");
+		}else if(this.cantidad <= 0){
+			throw new NegocioException("La cantidad no puede ser menor o igual a 0");
+		}
 	}
 	
 	@Override

@@ -152,15 +152,15 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 					if (idUsuario == null){
 						Integer idNuevoUsuario = Sistema.getInstance().crearNuevoUsuario(username, password, rol.getIdRol());
 						txtIdUsuario.setText(idNuevoUsuario.toString());
-						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Usuario guardado con Exito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
 						actualizar();
 					}else{
 						Sistema.getInstance().modificarUsuario(idUsuario, username, password, fechaBaja, rol.getIdRol());
-						JOptionPane.showMessageDialog(null, "Usuario guardado con éxito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Usuario guardado con Exito! ", "Admin. Usuarios", JOptionPane.INFORMATION_MESSAGE);
 						actualizar();
 					}
 				} catch (NegocioException e1) { 
-					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -213,7 +213,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 			cmbUsuarios.addItem(new UsuarioView("Nuevo Usuario"));
 			usuarioViews.forEach(c -> cmbUsuarios.addItem(c));
 		} catch (NegocioException e) {
-			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar usuarios. " + e, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar usuarios. " + e.getMessage(), "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
 		} 
 	}
 	
@@ -223,7 +223,7 @@ public class UsuarioPantalla extends JInternalFrame implements IObservador {
 			cmbRoles.removeAllItems();
 			rolesViews.forEach(r -> cmbRoles.addItem(r));
 		} catch (NegocioException e) {
-			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar roles. " + e, "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Error: no se pudo cargar roles. " + e.getMessage(), "Admin. Usuarios", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

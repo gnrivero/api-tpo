@@ -67,6 +67,16 @@ public class Usuario {
 		this.rol = rol;
 	}
 	
+	public void validar() throws NegocioException{
+		if (this.username.isEmpty()){
+			throw new NegocioException("El Username no puede estar vacio");
+		}
+		
+		if (this.password.isEmpty()){
+			throw new NegocioException("El Password no puede estar vacio");
+		}
+	}
+	
 	public Integer guardar() throws ConexionException, AccesoException, NegocioException {
 		if (this.getIdUsuario() == null){
 			this.idUsuario = UsuarioDAO.getInstancia().crearUsuario(this);

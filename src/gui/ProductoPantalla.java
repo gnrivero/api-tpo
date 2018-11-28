@@ -134,12 +134,15 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 				if (!txtIdProducto.getText().isEmpty())
 					idProducto = Integer.valueOf(txtIdProducto.getText());
 				
-				String codigo = txtCodProducto.getText();
-				String titulo = txtTitulo.getText();
-				String descripcion = txtDescripcion.getText();
-				Float precio = Float.valueOf(txtPrecio.getText());
-								
 				try {
+					String codigo = txtCodProducto.getText();
+					String titulo = txtTitulo.getText();
+					String descripcion = txtDescripcion.getText();
+					Float precio = 0F;
+					
+					if (!txtPrecio.getText().isEmpty())
+						precio = Float.valueOf(txtPrecio.getText());
+								
 					if (idProducto == null){
 						Integer idNuevoProducto = Sistema.getInstance().agregarProducto(codigo, titulo, descripcion, precio);
 						txtIdProducto.setText(idNuevoProducto.toString());
@@ -151,7 +154,7 @@ public class ProductoPantalla extends JInternalFrame implements IObservador {
 						actualizar();
 					}
 				} catch (NegocioException e1) { 
-					JOptionPane.showMessageDialog(null, "Error: " + e1, "Admin. Productos", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage(), "Admin. Productos", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

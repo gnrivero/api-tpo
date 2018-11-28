@@ -4,6 +4,7 @@ import controller.Sistema;
 import dao.ReclamoDAO;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import model.AuditoriaReclamo;
 import model.Cliente;
 import model.EstadoDeReclamo;
@@ -52,7 +53,16 @@ public class ReclamoZona extends Reclamo {
 	public void getReclamos(Reclamo reclamo) {
 		// TODO Auto-generated method stub
 		
-	}	
+	}
+	
+	@Override
+	public void validar() throws NegocioException {
+		super.validar();
+		
+		if(this.zona.isEmpty()){
+			throw new NegocioException("Debe especificar una zona");
+		}			
+	}
 
 	@Override
 	public Integer guardar() throws ConexionException, AccesoException {		

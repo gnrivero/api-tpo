@@ -539,7 +539,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 //				txtNroReclamoCompuesto.setText(reclamoView.getNroReclamoCompuesto().toString());
 								
 		}catch(NegocioException ne){
-			ne.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error: " + ne.getMessage(), "Reclamos", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -562,7 +562,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 			productos.forEach(p -> cmbProductos.addItem(p));
 			
 		} catch (NegocioException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Error: " + e.getMessage(), "Reclamos", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

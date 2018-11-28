@@ -102,7 +102,8 @@ public class Sistema extends Observado {
 		
 		try {		
 			Rol rol = RolDAO.getInstancia().obtenerRolPorId(idRol);			
-			Usuario nuevoUsuario = new Usuario(username, password, rol);
+			Usuario nuevoUsuario = new Usuario(username, password, rol);			
+			nuevoUsuario.validar();
 			return nuevoUsuario.guardar();			
 		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo crear usuario");
@@ -123,7 +124,8 @@ public class Sistema extends Observado {
 	public void modificarUsuario(Integer idUsuario, String username, String password, Date fechaBaja, Integer idRol) throws NegocioException {
 		try {			
 			Rol rol = RolDAO.getInstancia().obtenerRolPorId(idRol);						
-			Usuario usuario = new Usuario(idUsuario, username, password, fechaBaja, rol);
+			Usuario usuario = new Usuario(idUsuario, username, password, fechaBaja, rol);			
+			usuario.validar();			
 			usuario.guardar();
 			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
@@ -133,11 +135,6 @@ public class Sistema extends Observado {
 	}
 
 	/*Fin: Usuario*/
-	
-	//Roles
-	public void crearNuevoRol(String nombre, List<Integer> idsTiposReclamo) {
-		
-	}
 	
 	public List<RolView> obtenerRoles() throws NegocioException{
 		try {
@@ -211,10 +208,12 @@ public class Sistema extends Observado {
 	//Fin: Cliente
 	
 	//Producto
-	public Integer agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {
+	public Integer agregarProducto(String codigo, String titulo, String descripcion, float precio) throws NegocioException {			
 		Producto producto = new Producto(codigo, titulo, descripcion, precio);
+		
 		Integer idProductoNuevo = null;
 		try {
+			producto.validar();
 			idProductoNuevo = producto.guardar();
 			this.notificarObservadores();
 		} catch (ConexionException | AccesoException e) {
@@ -226,14 +225,13 @@ public class Sistema extends Observado {
 	public void modificarProducto(Integer idProducto, String codigo, String titulo, String descripcion, float precio) throws NegocioException {
 		Producto product = new Producto(idProducto, codigo, titulo, descripcion, precio);
 		try 
-		{
+		{	
+			product.validar();
 			product.guardar();
-		}
-			catch (ConexionException | AccesoException e) 
-			{
-			e.printStackTrace();
-			throw new NegocioException("No se pudo actualizar el producto");
-			}	
+		} catch (ConexionException | AccesoException e) {
+				e.printStackTrace();
+				throw new NegocioException("No se pudo actualizar el producto");
+			}
 		}	
 
 	public void eliminarProducto(Integer idProducto) throws NegocioException {
@@ -278,12 +276,18 @@ public class Sistema extends Observado {
 	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado,Integer idCliente, Integer idProducto, Integer cantidad, Integer nroReclamoCompuesto) throws NegocioException{
 		
 		try {
-
+			
+			if(idProducto == null)
+				throw new NegocioException("Debe seleccionar un producto");
+			
+			if(idCliente == null)
+				throw new NegocioException("Debe seleccionar un cliente");
+			
 			Producto producto = ProductoDAO.getInstancia().obtenerProductoPorId(idProducto);
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
 			Reclamo reclamo = new ReclamoDistribucion(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, producto, cantidad);
-			
+			reclamo.validar();
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
 			} else {
@@ -293,18 +297,24 @@ public class Sistema extends Observado {
 			
 			return nroReclamo;
 			
-		} catch (ConexionException | AccesoException | NegocioException e) {
+		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
+		} catch (NegocioException e){
+			throw new NegocioException(e.getMessage());
 		}
 	}
 	
 	//Zona
 	public Integer registrarReclamo(Integer nroReclamo, String descripcion, TipoDeReclamo tipoDeReclamo, EstadoDeReclamo estado, Integer idCliente, String zona, Integer nroReclamoCompuesto) throws NegocioException {
 		try {
-						
-			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);			
-			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
 			
+			if (idCliente == null)
+				throw new NegocioException("Debe seleccionar un cliente");
+			
+			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);	
+			
+			Reclamo reclamo = new ReclamoZona(nroReclamo, descripcion, tipoDeReclamo, estado, cliente, zona);			
+			reclamo.validar();
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);												
 			} else {			
@@ -314,8 +324,10 @@ public class Sistema extends Observado {
 			
 			return nroReclamo;
 			
-		} catch (ConexionException | AccesoException | NegocioException e) {
+		} catch (ConexionException | AccesoException e) {
 			throw new NegocioException("No se pudo generar reclamo " + tipoDeReclamo);
+		} catch(NegocioException e){
+			throw new NegocioException(e.getMessage());
 		}
 	}
 	
@@ -327,7 +339,7 @@ public class Sistema extends Observado {
 			List<Factura> facturas = FacturaDAO.getInstancia().obtenerFacturasPorNro(nrosFacturas);
 			
 			Reclamo reclamo = new ReclamoFacturacion(nroReclamo, descripcion, tipoDeReclamo, cliente, facturas);
-			
+			reclamo.validar();
 			if (nroReclamoCompuesto != null){
 				reclamosCompuestosCache.agregarReclamoSimple(nroReclamoCompuesto, reclamo);				
 			} else {			
@@ -350,7 +362,7 @@ public class Sistema extends Observado {
 			Cliente cliente = ClienteDAO.getInstancia().obtenerClientePorId(idCliente);
 			
 			Reclamo reclamoCompuesto = new ReclamoCompuesto(nroReclamo, descripcion, tipoDeReclamo, estado, cliente);			
-			
+			reclamoCompuesto.validar();
 			if (reclamosCompuestosCache.existeReclamoCompuesto(nroReclamo))
 				reclamosCompuestosCache.
 					obtenerReclamosSimplesPorReclamoCompuesto(nroReclamo)

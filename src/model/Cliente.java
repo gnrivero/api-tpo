@@ -6,6 +6,7 @@ import dao.ClienteDAO;
 import dao.DAOhelper;
 import excepciones.AccesoException;
 import excepciones.ConexionException;
+import excepciones.NegocioException;
 import view.ClienteView;
 
 public class Cliente {
@@ -30,6 +31,24 @@ public class Cliente {
 		this(nombre, cuit, domicilio, telefono, mail);
 		this.idCliente = idCliente;	
 		this.fechaBaja = fechaBaja;
+	}
+	
+	public void validar() throws NegocioException {
+		if(this.nombre.isEmpty()){
+			throw new NegocioException("El Nombre del cliente no puede estar vacio");
+		}
+		if(this.cuit.isEmpty()){
+			throw new NegocioException("El Cuit del cliente no puede estar vacio");
+		}
+		if(this.domicilio.isEmpty()){
+			throw new NegocioException("El domicilio del cliente no puede estar vacio");
+		}
+		if(this.telefono.isEmpty()){
+			throw new NegocioException("El telefono del cliente no puede estar vacio");
+		}
+		if(this.mail.isEmpty()){
+			throw new NegocioException("El Codigo del cliente no puede estar vacio");
+		}
 	}
 	
 	public void setIdCliente(Integer idCliente) {

@@ -130,7 +130,21 @@ public abstract class Reclamo {
 		}else{
 			throw new NegocioException("No se puede pasar del estado " + this.estado.getDenominacion() + " a " + EstadoDeReclamo.CERRADO.getDenominacion());
 		}
-	}	
+	}
+	
+	public void validar() throws NegocioException{
+		
+		if(this.descripcion.isEmpty()){
+			throw new NegocioException("La descripcion no puede estar vacia");
+		}else if(this.descripcion.length() > 25){
+			throw new NegocioException("La descripcion no puede superar los 25 caracteres");
+		}
+		
+		if(this.cliente == null){
+			throw new NegocioException("Debe seleccionar un cliente");
+		}
+		
+	}
 	
 	public ReclamoView toView(){
 		
