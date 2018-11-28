@@ -21,7 +21,6 @@ import model.Factura;
 import model.Modulo;
 import model.Producto;
 import model.Rol;
-import model.Tablero;
 import model.TipoDeReclamo;
 import model.Usuario;
 import model.reclamo.Reclamo;
@@ -44,7 +43,6 @@ public class Sistema extends Observado {
 
 	private Sistema(){
 		this.usuarioLogueado = null;
-		this.tablero = new Tablero();
 		this.reclamosCompuestosCache = new ReclamoCompuestoCache();
 	}
 	
@@ -60,7 +58,6 @@ public class Sistema extends Observado {
 	
 	//Miembros de Sistema
 	private Usuario usuarioLogueado;
-	private Tablero tablero;
 	
 	private ReclamoCompuestoCache reclamosCompuestosCache; 
 	
@@ -70,14 +67,6 @@ public class Sistema extends Observado {
 
 	public void setUsuarioLogueado(Usuario usuarioLogueado) {
 		this.usuarioLogueado = usuarioLogueado;
-	}
-
-	public Tablero getTablero() {
-		return tablero;
-	}
-
-	public void setTablero(Tablero tablero) {
-		this.tablero = tablero;
 	}
 	//Fin Miembros de Sistema
 	
