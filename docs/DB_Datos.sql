@@ -18,6 +18,12 @@ INSERT INTO usuarios (username, password, idrol) VALUES ('edelgado', '123456',1)
 INSERT INTO usuarios (username, password, idrol) VALUES ('mquevedo', '116785',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('nrodriguez', '123456',1);
 INSERT INTO usuarios (username, password, idrol) VALUES ('curioso', '000', 6);
+INSERT INTO usuarios (username, password, idrol) VALUES ('admin', '000', 1);
+INSERT INTO usuarios (username, password, idrol) VALUES ('facturacion', '000', 2);
+INSERT INTO usuarios (username, password, idrol) VALUES ('distribucion', '000', 3);
+INSERT INTO usuarios (username, password, idrol) VALUES ('zona', '000', 4);
+INSERT INTO usuarios (username, password, idrol) VALUES ('callcenter', '000', 5);
+INSERT INTO usuarios (username, password, idrol) VALUES ('consulta', '000', 6);
 
 
 select * from usuarios;

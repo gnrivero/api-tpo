@@ -3,6 +3,7 @@ package gui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import controller.Sistema;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import excepciones.NegocioException;
 import model.EstadoDeReclamo;
 import model.TipoDeReclamo;
@@ -78,7 +81,7 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		Sistema.getInstance().agregarObservador(this);
 	}
 	
-	public ReclamoPantalla(Integer nroReclamo, TipoDeReclamo tipoDeReclamo){		
+	public ReclamoPantalla(Integer nroReclamo, TipoDeReclamo tipoDeReclamo) throws AccesoException, ConexionException, SQLException{		
 		
 		this();
 		
@@ -363,7 +366,12 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 		btnGuardar.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {				
-				completarFormulario(true);				
+				try {
+					completarFormulario(true);
+				} catch (AccesoException | ConexionException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
 			}
 		});
 		
@@ -387,14 +395,19 @@ public class ReclamoPantalla extends JInternalFrame implements IObservador {
 							}					
 				}else{
 					dispose();
-					TableroPantalla.getInstance().getFrameContainer().remove(ReclamoPantalla.this);
+					try {
+						TableroPantalla.getInstance().getFrameContainer().remove(ReclamoPantalla.this);
+					} catch (AccesoException | ConexionException | NegocioException | SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}								
 			}				
 		});		
 	}
 	
 	
-	private void completarFormulario(boolean estoyGuardando){
+	private void completarFormulario(boolean estoyGuardando) throws AccesoException, ConexionException, SQLException{
 		
 		try{
 			

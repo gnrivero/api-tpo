@@ -3,6 +3,8 @@ package gui;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -10,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -18,6 +19,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
 import controller.Sistema;
+import excepciones.AccesoException;
+import excepciones.ConexionException;
 import excepciones.NegocioException;
 import gui.forms.JFormLogin;
 import model.Modulo;
@@ -34,13 +37,13 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	//Singleton
 	private static TableroPantalla tableroPantalla = null;
 		
-	private TableroPantalla(){
+	private TableroPantalla() throws AccesoException, ConexionException, NegocioException, SQLException{
 		Sistema.getInstance().agregarObservador(this);		
 		configurar();
 		eventos();		
 	}
 	
-	public static TableroPantalla getInstance(){
+	public static TableroPantalla getInstance() throws AccesoException, ConexionException, NegocioException, SQLException{
 		if (tableroPantalla == null)
 			tableroPantalla = new TableroPantalla();
 		
@@ -63,13 +66,12 @@ public class TableroPantalla extends JFrame implements IObservador  {
 	private DefaultListModel<ReclamoView> reclamosSolucionadosModel = new DefaultListModel<ReclamoView>();
 	
 	private JMenuBar barraMenu = new JMenuBar();
-	private JMenuItem opcNuevoReclamo, opcAdminUsuarios, opcAdminClientes, opcAdminProductos, opcLogout, opcAcercaDe; 
-	private JMenu ayuda = new JMenu("Ayuda");
-
+	private JMenuItem opcNuevoReclamo, opcReportes, opcAdminUsuarios, opcAdminClientes, opcAdminProductos, opcLogout, opcAcercaDe; 
 	
 	private ClientePantalla clientePantalla;
 	private UsuarioPantalla usuarioPantalla;
 	private ProductoPantalla productoPantalla;
+	private ReportePantalla reportePantalla;
 	
 	public Container getFrameContainer(){
 		return container;
@@ -83,7 +85,7 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		this.usuarioLogueado = usuarioLogueado;
 	}
 		
-	private void configurar(){
+	private void configurar() throws AccesoException, ConexionException, NegocioException, SQLException{
 		
 		container = getLayeredPane();
 		container.setLayout(null);
@@ -91,6 +93,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		// ---- Menu Bar ----
 		opcNuevoReclamo = new JMenuItem("Nuevo Reclamo");
 		opcNuevoReclamo.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		opcReportes = new JMenuItem("Reportes");
+		opcReportes.setHorizontalAlignment(SwingConstants.LEFT);
 		
 		opcAdminUsuarios = new JMenuItem("Admin. Usuarios");
 		opcAdminUsuarios.setHorizontalAlignment(SwingConstants.LEFT);
@@ -107,16 +112,15 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		opcLogout = new JMenuItem("Salir");
 		opcLogout.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		barraMenu.add(opcNuevoReclamo);		
+		barraMenu.add(opcNuevoReclamo);
+		barraMenu.add(opcReportes);
 		barraMenu.add(opcAdminUsuarios);
 		barraMenu.add(opcAdminClientes);
 		barraMenu.add(opcAdminProductos);
 		barraMenu.add(opcAcercaDe);
-			ayuda.add(opcAcercaDe);
 		barraMenu.add(opcLogout);
 				
 		this.setJMenuBar(barraMenu);
-		
 		
 		// ---- Usuario Logueado
 		usuarioLogueado = new JLabel();
@@ -178,6 +182,9 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		productoPantalla = ProductoPantalla.getInstance();
 		container.add(productoPantalla);
 		
+		reportePantalla = ReportePantalla.getInstance();
+		container.add(reportePantalla);
+		
 		btnEditarReclamo = new JButton("Editar");	
 		btnEditarReclamo.setBounds(380, 610, 150, 30);
 		container.add(btnEditarReclamo);
@@ -194,7 +201,13 @@ public class TableroPantalla extends JFrame implements IObservador  {
 			@Override
 			public void actionPerformed(ActionEvent e) {				
 				ReclamoView reclamo = lstReclamosEnTratamiento.getSelectedValue();
-				ReclamoPantalla rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				ReclamoPantalla rp = null;
+				try {
+					rp = new ReclamoPantalla(reclamo.getNroReclamo(), reclamo.getTipoDeReclamo());
+				} catch (AccesoException | ConexionException | SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				rp.setVisible(true);
 				container.add(rp, 1);
 			}
@@ -208,6 +221,16 @@ public class TableroPantalla extends JFrame implements IObservador  {
 				reclamoPantalla.setVisible(true);
 				container.add(reclamoPantalla, 1);	
 			}
+		});
+		
+		opcReportes.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				reportePantalla.actualizar();
+				reportePantalla.setVisible(true);				
+			}
+			
 		});
 
 		opcAdminClientes.addActionListener(new ActionListener() {
@@ -238,6 +261,10 @@ public class TableroPantalla extends JFrame implements IObservador  {
 		
 		opcLogout.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt) {			
+				System.out.println("[" + new Date().toString()
+						+ "] User logout: '" + Sistema.getInstance().getUsuarioLogueado().getUsername() 
+						+ "' with role: '" + Sistema.getInstance().getUsuarioLogueado().getRol().toView()
+						+ "'");
 				Sistema.getInstance().desloguearUsuario();
 				checkPermisos();
 				JFormLogin.getInstance(tableroPantalla);
